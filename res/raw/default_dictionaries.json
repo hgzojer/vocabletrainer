@@ -1,0 +1,155 @@
+{
+"dictionaries": [
+	{
+	"name": "Deutsch/English 1",
+	"language1": "Deutsch",
+	"language2": "English",
+	"vocables": [
+		{ "word": "Tee", "translation": "tea" },
+		{ "word": "Kaffee", "translation": "coffee" },
+		{ "word": "Wein", "translation": "wine" },
+		{ "word": "Saft", "translation": "juice" },
+		{ "word": "Kuchen", "translation": "cake" },
+		{ "word": "Brot", "translation": "bread" },
+		{ "word": "Butter", "translation": "butter" },
+		{ "word": "Pfeffer", "translation": "pepper" },
+		{ "word": "K\u00e4se", "translation": "cheese" },
+		{ "word": "Salz", "translation": "salt" },
+		{ "word": "Zucker", "translation": "sugar" },
+		{ "word": "Apfel", "translation": "apple" },
+		{ "word": "Banane", "translation": "banana" },
+		{ "word": "Orange", "translation": "orange" },
+		{ "word": "Erdbeere", "translation": "strawberry" },
+		{ "word": "Himbeere", "translation": "raspberry" },
+		{ "word": "Birne", "translation": "pear" },
+		{ "word": "Pfirsich", "translation": "peach" },
+		{ "word": "Zitrone", "translation": "lemon" },
+		{ "word": "Limette", "translation": "lime" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch Zahlworte",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" },
+		{ "word": "wan", "translation": "eins" },
+		{ "word": "tu", "translation": "zwei" },
+		{ "word": "tu wan", "translation": "drei" },
+		{ "word": "tu tu", "translation": "vier" },
+		{ "word": "luka", "translation": "f\u00fcnf" },
+		{ "word": "luka wan", "translation": "sechs" },
+		{ "word": "luka tu", "translation": "sieben" },
+		{ "word": "luka tu wan", "translation": "acht" },
+		{ "word": "luka tu tu", "translation": "neun" },
+		{ "word": "luka luka", "translation": "zehn" },
+		{ "word": "luka luka luka tu", "translation": "siebzehn" },
+		{ "word": "mute", "translation": "viele" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 2",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 3",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 4",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 5",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 6",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 7",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 8",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 9",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 10",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 11",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 12",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 13",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	},
+	{
+	"name": "Toki Pona/Deutsch 14",
+	"language1": "Toki Pona",
+	"language2": "Deutsch",
+	"vocables": [
+		{ "word": "ala", "translation": "null" }
+	]
+	}
+]
+}

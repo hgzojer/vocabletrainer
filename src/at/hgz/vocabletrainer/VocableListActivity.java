@@ -6,13 +6,15 @@ import java.util.List;
 import android.app.ListActivity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import at.hgz.vocabletrainer.db.Vocable;
 
 public class VocableListActivity extends ListActivity {
@@ -41,13 +43,13 @@ public class VocableListActivity extends ListActivity {
 	@Override
 	protected void onDestroy() {
 		
-		saveState();
+		//saveState();
 		
 		super.onDestroy();
 	}
 
 	private void saveState() {
-		State state = TrainingApplication.getState();
+		/*State state = TrainingApplication.getState();
 		
 		EditText editTextDictionaryName = (EditText) findViewById(R.id.editTextDictionaryName);
 		state.getDictionary().setName(editTextDictionaryName.getText().toString());
@@ -67,13 +69,14 @@ public class VocableListActivity extends ListActivity {
 			Vocable v = (Vocable) l.getItemAtPosition(i);
 			v.setWord(word);
 			v.setTranslation(translation);
+			backup.add(v);
 		}
 		
 		List<Vocable> vocables = state.getVocables();
 		vocables.clear();
 		for (int i = 0; i < backup.size() - 1; i++) {
 			vocables.add(backup.get(i));
-		}
+		}*/
 	}
 
 	private class VocableArrayAdapter extends ArrayAdapter<Vocable> {
@@ -86,7 +89,7 @@ public class VocableListActivity extends ListActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
-			Vocable vocable = getItem(position);
+			final Vocable vocable = getItem(position);
 
 			if (convertView == null) {
 				convertView = LayoutInflater.from(getContext()).inflate(
@@ -95,30 +98,67 @@ public class VocableListActivity extends ListActivity {
 
 			EditText listItemEditWord = (EditText) convertView.findViewById(R.id.listItemEditWord);
 			EditText listItemEditTranslation = (EditText) convertView.findViewById(R.id.listItemEditTranslation);
-			View buttonDeleteVocable = convertView.findViewById(R.id.buttonDeleteVocable);
+			final View buttonDeleteVocable = convertView.findViewById(R.id.buttonDeleteVocable);
 
 			listItemEditWord.setText(vocable.getWord());
-			listItemEditTranslation.setText(vocable.getTranslation());
-			final int location = position;
-			buttonDeleteVocable.setOnClickListener(new OnClickListener() {
+			listItemEditWord.addTextChangedListener(new TextWatcher() {
 				@Override
-				public void onClick(View v) {
-					removeAt(location);
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				}
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+				}
+				@Override
+				public void afterTextChanged(Editable s) {
+					//vocable.setWord(s.toString());
+					Log.e(TAG, "s == '" + s.toString() + "' word=" + vocable.getWord() + " translation=" + vocable.getTranslation());
+					if (isLast(vocable) && !s.toString().equals("")) {
+						buttonDeleteVocable.setVisibility(View.VISIBLE);
+						add(new Vocable(-1, -1, "", ""));
+					}
 				}
 			});
 			
-			if (position != getCount() - 1) {
-				buttonDeleteVocable.setVisibility(View.VISIBLE);
-			} else {
+			listItemEditTranslation.setText(vocable.getTranslation());
+			listItemEditTranslation.addTextChangedListener(new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				}
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+				}
+				@Override
+				public void afterTextChanged(Editable s) {
+					//vocable.setTranslation(s.toString());
+					Log.e(TAG, "s == '" + s.toString() + "' word=" + vocable.getWord() + " translation=" + vocable.getTranslation());
+					if (isLast(vocable) && !s.toString().equals("")) {
+						buttonDeleteVocable.setVisibility(View.VISIBLE);
+						add(new Vocable(-1, -1, "", ""));
+					}
+				}
+			});
+			
+			buttonDeleteVocable.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					VocableArrayAdapter.this.remove(vocable);
+				}
+			});
+			if (isLast(vocable)) {
 				// last view
 				buttonDeleteVocable.setVisibility(View.INVISIBLE);
+			} else {
+				buttonDeleteVocable.setVisibility(View.VISIBLE);
 			}
 
 			return convertView;
 		}
 		
-		private void removeAt(int position) {
-			remove(getItem(position));
+		private static final String TAG = "VocableListActivity";
+		
+		private boolean isLast(Vocable vocable) {
+			Log.e(TAG, "pos=" + getPosition(vocable) + " count=" + getCount());
+			return getPosition(vocable) == getCount() - 1;
 		}
 
 	}

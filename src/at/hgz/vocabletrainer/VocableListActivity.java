@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -111,10 +112,6 @@ public class VocableListActivity extends ListActivity {
 					public void afterTextChanged(Editable arg0) {
 						String word = vh.listItemEditWord.getText().toString();
 						vh.vocable.setWord(word);
-						if (isLast(vh.vocable) && !"".equals(word)) {
-							vh.buttonDeleteVocable.setVisibility(View.VISIBLE);
-							add(new Vocable(-1, -1, "", ""));
-						}
 					}
 					@Override
 					public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
@@ -123,22 +120,42 @@ public class VocableListActivity extends ListActivity {
 					public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 					}
 				});
+				vh.listItemEditWord.setOnFocusChangeListener(new OnFocusChangeListener() {
+					@Override
+					public void onFocusChange(View v, boolean hasFocus) {
+						if (!hasFocus) {
+							String word = vh.listItemEditWord.getText().toString();
+							if (isLast(vh.vocable) && !"".equals(word)) {
+								vh.buttonDeleteVocable.setVisibility(View.VISIBLE);
+								add(new Vocable(-1, -1, "", ""));
+							}
+						}
+					}
+				});
 				
 				vh.listItemEditTranslation.addTextChangedListener(new TextWatcher() {
 					@Override
 					public void afterTextChanged(Editable arg0) {
 						String translation = vh.listItemEditTranslation.getText().toString();
 						vh.vocable.setTranslation(translation);
-						if (isLast(vh.vocable) && !"".equals(translation)) {
-							vh.buttonDeleteVocable.setVisibility(View.VISIBLE);
-							add(new Vocable(-1, -1, "", ""));
-						}
 					}
 					@Override
 					public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 					}
 					@Override
 					public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+					}
+				});
+				vh.listItemEditTranslation.setOnFocusChangeListener(new OnFocusChangeListener() {
+					@Override
+					public void onFocusChange(View v, boolean hasFocus) {
+						if (!hasFocus) {
+							String translation = vh.listItemEditTranslation.getText().toString();
+							if (isLast(vh.vocable) && !"".equals(translation)) {
+								vh.buttonDeleteVocable.setVisibility(View.VISIBLE);
+								add(new Vocable(-1, -1, "", ""));
+							}
+						}
 					}
 				});
 				

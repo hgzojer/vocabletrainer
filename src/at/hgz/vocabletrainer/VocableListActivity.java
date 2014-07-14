@@ -1,6 +1,5 @@
 package at.hgz.vocabletrainer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ListActivity;
@@ -8,17 +7,20 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import at.hgz.vocabletrainer.db.Vocable;
 
 public class VocableListActivity extends ListActivity {
+	
+	private VocableArrayAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +36,35 @@ public class VocableListActivity extends ListActivity {
 		EditText editTextLanguage2 = (EditText) findViewById(R.id.editTextLanguage2);
 		editTextLanguage2.setText(state.getDictionary().getLanguage2());
 
-		List<Vocable> list = new ArrayList<Vocable>(state.getVocables());
-		list.add(new Vocable(-1, -1, "", ""));
-
-		final VocableArrayAdapter adapter = new VocableArrayAdapter(this, R.layout.vocable_list_item, list);
+		adapter = new VocableArrayAdapter(this, R.layout.vocable_list_item, state.getVocables());
 		setListAdapter(adapter);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.vocable_list_menu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.addVocable:
+	            adapter.add(new Vocable(-1, -1, "", ""));
+	            setSelection(adapter.getCount() - 1);
+	            return true;
+	        case R.id.deleteDictionary:
+	            deleteDictionary();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+	private void deleteDictionary() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -120,18 +146,6 @@ public class VocableListActivity extends ListActivity {
 					public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 					}
 				});
-				vh.listItemEditWord.setOnFocusChangeListener(new OnFocusChangeListener() {
-					@Override
-					public void onFocusChange(View v, boolean hasFocus) {
-						if (!hasFocus) {
-							String word = vh.listItemEditWord.getText().toString();
-							if (isLast(vh.vocable) && !"".equals(word)) {
-								vh.buttonDeleteVocable.setVisibility(View.VISIBLE);
-								add(new Vocable(-1, -1, "", ""));
-							}
-						}
-					}
-				});
 				
 				vh.listItemEditTranslation.addTextChangedListener(new TextWatcher() {
 					@Override
@@ -144,18 +158,6 @@ public class VocableListActivity extends ListActivity {
 					}
 					@Override
 					public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-					}
-				});
-				vh.listItemEditTranslation.setOnFocusChangeListener(new OnFocusChangeListener() {
-					@Override
-					public void onFocusChange(View v, boolean hasFocus) {
-						if (!hasFocus) {
-							String translation = vh.listItemEditTranslation.getText().toString();
-							if (isLast(vh.vocable) && !"".equals(translation)) {
-								vh.buttonDeleteVocable.setVisibility(View.VISIBLE);
-								add(new Vocable(-1, -1, "", ""));
-							}
-						}
 					}
 				});
 				
@@ -172,21 +174,8 @@ public class VocableListActivity extends ListActivity {
 			vh.vocable = vocable;
 			vh.listItemEditWord.setText(vocable.getWord());
 			vh.listItemEditTranslation.setText(vocable.getTranslation());
-			if (isLast(vocable)) {
-				// last view
-				vh.buttonDeleteVocable.setVisibility(View.INVISIBLE);
-			} else {
-				vh.buttonDeleteVocable.setVisibility(View.VISIBLE);
-			}
 
 			return convertView;
-		}
-		
-		private static final String TAG = "VocableListActivity";
-		
-		private boolean isLast(Vocable vocable) {
-			Log.e(TAG, "pos=" + getPosition(vocable) + " count=" + getCount() + " word=" + vocable.getWord() + " translation=" + vocable.getTranslation());
-			return getPosition(vocable) == getCount() - 1;
 		}
 
 	}

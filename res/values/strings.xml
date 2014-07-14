@@ -22,7 +22,8 @@
     <string name="finishedToast">*** Fertig ***</string>
     <string name="finishedToastDetails">Gratulation, Sie haben das Training-Set erfolgreich abgeschlossen.</string>
     
-    <string name="select_dictionary">Wörterbuch auswählen</string>
+    <string name="addVocable">Vokabel hinzufügen</string>
+    <string name="deleteDictionary">Wörterbuch löschen</string>
     
     <string name="language12">Deutsch &lt;-&gt; English</string>
     <string name="count">Anzahl: %d</string>

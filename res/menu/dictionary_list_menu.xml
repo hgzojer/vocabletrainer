@@ -7,4 +7,10 @@
           android:showAsAction="ifRoom"
           />
     
+    <item android:id="@+id/openConfig"
+          android:icon="@drawable/ic_action_config"
+          android:title="@string/openConfig"
+          android:showAsAction="ifRoom"
+          />
+    
 </menu>

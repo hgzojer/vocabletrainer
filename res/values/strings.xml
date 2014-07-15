@@ -42,5 +42,15 @@
     <string name="deletingDictionary">Wörterbuch wird gelöscht.</string>
     <string name="confirmDeleteDictionaryTitle">Wörterbuch löschen</string>
     <string name="confirmDeleteDictionaryText">Möchten Sie das Wörterbuch wirklich löschen?</string>
+    
+    <string name="openConfig">Einstellungen</string>
+    <string name="translationDirection">Übersetzungsrichtung</string>
+    <string name="translateForward">Sprache 1 -&gt; Sprache 2</string>
+    <string name="translateBidrectional">Sprache 1 &lt;-&gt; Sprache 2</string>
+    <string name="translateBackward">Sprache 1 &lt;- Sprache 2</string>
+    <string name="resetDatabase">Datenbank wiederherstellen</string>
+    
+    <string name="confirmResetDatabaseTitle">Datenbank wiederherstellen</string>
+    <string name="confirmResetDatabaseText">Möchten Sie wirklich die Standard-Wörterbucher wiederherstellen? Achtung: dabei werden alle aktuellen Wörterbücher gelöscht!</string>
     	
 </resources>

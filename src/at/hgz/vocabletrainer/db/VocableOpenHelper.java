@@ -78,6 +78,11 @@ public final class VocableOpenHelper extends SQLiteOpenHelper {
         
         loadJsonDefaultDictionary(db);
     }
+    
+    public void resetDatabase() {
+		SQLiteDatabase db = getWritableDatabase();
+		onCreate(db);
+    }
 
 	private void loadJsonDefaultDictionary(final SQLiteDatabase db) {
 		int dictionaryIdNext = 1;

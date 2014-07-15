@@ -26,6 +26,7 @@ import at.hgz.vocabletrainer.db.VocableOpenHelper;
 public class DictionaryListActivity extends ListActivity {
 
 	private static final int EDIT_ACTION = 1;
+	private static final int CONFIG_ACTION = 1;
 	private List<Dictionary> list = new ArrayList<Dictionary>();
 	
 	private DictionaryArrayAdapter adapter;
@@ -49,12 +50,27 @@ public class DictionaryListActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case R.id.addDictionary:
+	        {
 	        	TrainingApplication.getState().setDictionary(new Dictionary(-1, "", "", ""));
-	        	TrainingApplication.getState().setVocables(new ArrayList<Vocable>());
+	        	List<Vocable> vocables = new ArrayList<Vocable>(1);
+	        	vocables.add(new Vocable(-1, -1, "", ""));
+	        	vocables.add(new Vocable(-1, -1, "", ""));
+	        	vocables.add(new Vocable(-1, -1, "", ""));
+	        	vocables.add(new Vocable(-1, -1, "", ""));
+	        	vocables.add(new Vocable(-1, -1, "", ""));
+	        	TrainingApplication.getState().setVocables(vocables);
 				Intent intent = new Intent(DictionaryListActivity.this, VocableListActivity.class);
 				//intent.putExtra("dictionaryId", dictionaryId);
 				DictionaryListActivity.this.startActivityForResult(intent, EDIT_ACTION);
 	            return true;
+	        }
+	        case R.id.openConfig:
+	        {
+				Intent intent = new Intent(DictionaryListActivity.this, VocableListActivity.class);
+				//intent.putExtra("dictionaryId", dictionaryId);
+				DictionaryListActivity.this.startActivityForResult(intent, CONFIG_ACTION);
+	            return true;
+	        }
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
@@ -140,7 +156,7 @@ public class DictionaryListActivity extends ListActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == EDIT_ACTION) {
+		if (requestCode == EDIT_ACTION || requestCode == CONFIG_ACTION) {
 			String result = "";
 			if (resultCode == RESULT_OK) {
 				result = data.getStringExtra("result");

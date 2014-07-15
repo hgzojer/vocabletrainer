@@ -8,7 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -21,21 +25,49 @@ import at.hgz.vocabletrainer.db.VocableOpenHelper;
 
 public class DictionaryListActivity extends ListActivity {
 
-	private List<Dictionary> list;
+	private static final int EDIT_ACTION = 1;
+	private List<Dictionary> list = new ArrayList<Dictionary>();
+	
+	private DictionaryArrayAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dictionary_list);
 
-		VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
+		loadDictionaryList();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.dictionary_list_menu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.addDictionary:
+	        	TrainingApplication.getState().setDictionary(new Dictionary(-1, "", "", ""));
+	        	TrainingApplication.getState().setVocables(new ArrayList<Vocable>());
+				Intent intent = new Intent(DictionaryListActivity.this, VocableListActivity.class);
+				//intent.putExtra("dictionaryId", dictionaryId);
+				DictionaryListActivity.this.startActivityForResult(intent, EDIT_ACTION);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 
-		list = new ArrayList<Dictionary>();
+	private void loadDictionaryList() {
+		VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
+		list.clear();
 		for (Dictionary lib : helper.getDictionaries()) {
 			list.add(lib);
 		}
 
-		final DictionaryArrayAdapter adapter = new DictionaryArrayAdapter(this, R.layout.dictionary_list_item, list);
+		adapter = new DictionaryArrayAdapter(this, R.layout.dictionary_list_item, list);
 		setListAdapter(adapter);
 	}
 
@@ -54,8 +86,12 @@ public class DictionaryListActivity extends ListActivity {
 			}
 		}
 		
+		expandItem(v, position1);
+	}
+
+	private void expandItem(View v, final int position) {
 		VocableOpenHelper helper = VocableOpenHelper.getInstance(DictionaryListActivity.this);
-		Dictionary dictionary = list.get(position1);
+		Dictionary dictionary = list.get(position);
 		List<Vocable> vocables = helper.getVocables(dictionary.getId());
 		TrainingApplication.getState().setDictionary(dictionary);
 		TrainingApplication.getState().setVocables(vocables);
@@ -73,7 +109,7 @@ public class DictionaryListActivity extends ListActivity {
 			public void onClick(View v) {
 				Intent intent = new Intent(DictionaryListActivity.this, VocableListActivity.class);
 				//intent.putExtra("dictionaryId", dictionaryId);
-				DictionaryListActivity.this.startActivity(intent);
+				DictionaryListActivity.this.startActivityForResult(intent, EDIT_ACTION);
 			}
 		});
 		
@@ -99,6 +135,37 @@ public class DictionaryListActivity extends ListActivity {
 					DictionaryListActivity.this.startActivity(intent);
 				}
 			});
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == EDIT_ACTION) {
+			String result = "";
+			if (resultCode == RESULT_OK) {
+				result = data.getStringExtra("result");
+			}
+			if (resultCode == RESULT_CANCELED) {
+			}
+			
+			ListView l = getListView();
+			for (int i = 0; i < l.getChildCount(); i++) {
+				View c = l.getChildAt(i);
+				c.findViewById(R.id.listItemCount).setVisibility(View.GONE);
+				c.findViewById(R.id.buttonEdit).setVisibility(View.GONE);
+				c.findViewById(R.id.buttonTraining).setVisibility(View.GONE);
+				c.findViewById(R.id.buttonMultipleChoice).setVisibility(View.GONE);
+			}
+			loadDictionaryList();
+			adapter.notifyDataSetChanged();
+			if ("save".equals(result)) {
+				for (int i = 0; i < l.getChildCount(); i++) {
+					if (l.getItemAtPosition(i) == TrainingApplication.getState().getDictionary()) {
+						View c = l.getChildAt(i);
+						expandItem(c, i);
+					}
+				}
+			}
 		}
 	}
 

@@ -25,7 +25,7 @@ import com.google.gson.JsonParser;
 
 public final class VocableOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
     private static final String DATABASE_NAME = "vocabledb";
     
     private static final String VOCABLE_TABLE_NAME = "vocable";
@@ -318,5 +318,55 @@ public final class VocableOpenHelper extends SQLiteOpenHelper {
 		values.put(TRANSLATION_COL_NAME, translation);
 		db.insert(VOCABLE_TABLE_NAME, null, values);
 	}
+
+	public void persist(Dictionary dictionary, List<Vocable> vocables) {
+		SQLiteDatabase db = getWritableDatabase();
+		
+    	db.beginTransaction();
+    	try {
+			int dictionaryId = dictionary.getId();
+			if (dictionaryId != -1) {
+				ContentValues values = new ContentValues();
+				values.put(NAME_COL_NAME, dictionary.getName());
+				values.put(LANGUAGE1_COL_NAME, dictionary.getLanguage1());
+				values.put(LANGUAGE2_COL_NAME, dictionary.getLanguage2());
+				db.update(DICTIONARY_TABLE_NAME, values, ID_COL_NAME + " = ?", new String[] {""+dictionaryId});
+			} else {
+				dictionaryId = getDictionaryIdNext(db);
+				addDictionary(db, dictionaryId, dictionary.getName(), dictionary.getLanguage1(), dictionary.getLanguage2());
+			}
+			
+			db.delete(VOCABLE_TABLE_NAME, DICTIONARY_ID_COL_NAME + " = ?", new String[] {""+dictionaryId});
+			
+			int vocableId = getVocableIdNext(db);
+			for (Vocable vocable : vocables) {
+				addVocable(db, vocableId, dictionaryId, vocable.getWord(), vocable.getTranslation());
+				vocableId++;
+			}
+	    	
+    		db.setTransactionSuccessful();
+    	} catch (Exception e) {
+    		throw new RuntimeException(e.getMessage(), e);
+		} finally {
+    		db.endTransaction();
+    	}
+	}
 	
+	public void remove(Dictionary dictionary, List<Vocable> vocables) {
+		SQLiteDatabase db = getWritableDatabase();
+		
+    	db.beginTransaction();
+    	try {
+			if (dictionary.getId() != -1) {
+				db.delete(VOCABLE_TABLE_NAME, DICTIONARY_ID_COL_NAME + " = ?", new String[] {""+dictionary.getId()});
+				db.delete(DICTIONARY_TABLE_NAME, ID_COL_NAME + " = ?", new String[] {""+dictionary.getId()});
+			}
+	    	
+    		db.setTransactionSuccessful();
+    	} catch (Exception e) {
+    		throw new RuntimeException(e.getMessage(), e);
+		} finally {
+    		db.endTransaction();
+    	}
+	}
 }

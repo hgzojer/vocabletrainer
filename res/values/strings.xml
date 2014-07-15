@@ -22,9 +22,6 @@
     <string name="finishedToast">*** Fertig ***</string>
     <string name="finishedToastDetails">Gratulation, Sie haben das Training-Set erfolgreich abgeschlossen.</string>
     
-    <string name="addVocable">Vokabel hinzufügen</string>
-    <string name="deleteDictionary">Wörterbuch löschen</string>
-    
     <string name="language12">Deutsch &lt;-&gt; English</string>
     <string name="count">Anzahl: %d</string>
     <string name="edit">bearbeiten</string>
@@ -37,6 +34,13 @@
     <string name="dictionaryNameLabel">Wörterbuchname</string>
     <string name="language1Label">Sprache 1</string>
     <string name="language2Label">Sprache 2</string>
-    <string name="deleteVocable">Vokabel löschen</string>
-    
+	<string name="addVocable">Vokabel hinzufügen</string>
+	<string name="deleteVocable">Vokabel löschen</string>
+    <string name="addDictionary">Wörterbuch hinzufügen</string>
+	<string name="deleteDictionary">Wörterbuch löschen</string>
+    <string name="savingDictionary">Wörterbuch wird gespeichert.</string>
+    <string name="deletingDictionary">Wörterbuch wird gelöscht.</string>
+    <string name="confirmDeleteDictionaryTitle">Wörterbuch löschen</string>
+    <string name="confirmDeleteDictionaryText">Möchten Sie das Wörterbuch wirklich löschen?</string>
+    	
 </resources>

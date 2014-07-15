@@ -2,8 +2,12 @@ package at.hgz.vocabletrainer;
 
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,7 +20,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Toast;
+import at.hgz.vocabletrainer.db.Dictionary;
 import at.hgz.vocabletrainer.db.Vocable;
+import at.hgz.vocabletrainer.db.VocableOpenHelper;
 
 public class VocableListActivity extends ListActivity {
 	
@@ -63,47 +70,74 @@ public class VocableListActivity extends ListActivity {
 	}
 	
 	private void deleteDictionary() {
-		// TODO Auto-generated method stub
+
+		Resources resources = getApplicationContext().getResources();
+		String confirmDeleteDictionaryTitle = resources.getString(R.string.confirmDeleteDictionaryTitle);
+		String confirmDeleteDictionaryText = resources.getString(R.string.confirmDeleteDictionaryText);
 		
+		new AlertDialog.Builder(this)
+		.setTitle(confirmDeleteDictionaryTitle)
+		.setMessage(confirmDeleteDictionaryText)
+		.setIcon(android.R.drawable.ic_dialog_alert)
+		.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int whichButton) {
+				deleteState();
+				Intent returnIntent = new Intent();
+				returnIntent.putExtra("result", "delete");
+				setResult(RESULT_OK,returnIntent);
+				finish();
+		    }})
+		.setNegativeButton(android.R.string.no, null).show();
 	}
 
 	@Override
-	protected void onDestroy() {
-		
-		//saveState();
-		
-		super.onDestroy();
+	public void onBackPressed() {
+		saveState();
+		Intent returnIntent = new Intent();
+		returnIntent.putExtra("result", "save");
+		setResult(RESULT_OK,returnIntent);
+		//finish();
+		super.onBackPressed();
 	}
 
 	private void saveState() {
-		/*State state = TrainingApplication.getState();
+		State state = TrainingApplication.getState();
+		Dictionary dictionary = state.getDictionary();
 		
 		EditText editTextDictionaryName = (EditText) findViewById(R.id.editTextDictionaryName);
-		state.getDictionary().setName(editTextDictionaryName.getText().toString());
+		dictionary.setName(editTextDictionaryName.getText().toString());
 		EditText editTextLanguage1 = (EditText) findViewById(R.id.editTextLanguage1);
-		state.getDictionary().setLanguage1(editTextLanguage1.getText().toString());
+		dictionary.setLanguage1(editTextLanguage1.getText().toString());
 		EditText editTextLanguage2 = (EditText) findViewById(R.id.editTextLanguage2);
-		state.getDictionary().setLanguage2(editTextLanguage2.getText().toString());
-		
-		ListView l = getListView();
-		List<Vocable> backup = new ArrayList<Vocable>(l.getChildCount());
-		for (int i = 0; i < l.getChildCount(); i++) {
-			View c = l.getChildAt(i);
-			EditText listItemEditWord = (EditText) c.findViewById(R.id.listItemEditWord);
-			EditText listItemEditTranslation = (EditText) c.findViewById(R.id.listItemEditTranslation);
-			String word = listItemEditWord.getText().toString();
-			String translation = listItemEditTranslation.getText().toString();
-			Vocable v = (Vocable) l.getItemAtPosition(i);
-			v.setWord(word);
-			v.setTranslation(translation);
-			backup.add(v);
-		}
+		dictionary.setLanguage2(editTextLanguage2.getText().toString());
 		
 		List<Vocable> vocables = state.getVocables();
-		vocables.clear();
-		for (int i = 0; i < backup.size() - 1; i++) {
-			vocables.add(backup.get(i));
+		/*vocables.clear();
+		for (int i = 0; i < adapter.getCount(); i++) {
+			vocables.add(adapter.getItem(i));
 		}*/
+		
+		Resources resources = getApplicationContext().getResources();
+		String text = resources.getString(R.string.savingDictionary);
+		Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
+		toast.show();
+		
+		VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
+		helper.persist(dictionary, vocables);
+	}
+
+	private void deleteState() {
+		State state = TrainingApplication.getState();
+		Dictionary dictionary = state.getDictionary();
+		List<Vocable> vocables = state.getVocables();
+		
+		Resources resources = getApplicationContext().getResources();
+		String text = resources.getString(R.string.deletingDictionary);
+		Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
+		toast.show();
+		
+		VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
+		helper.remove(dictionary, vocables);
 	}
 
 	private class VocableArrayAdapter extends ArrayAdapter<Vocable> {

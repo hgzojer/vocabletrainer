@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Vokabel Trainer</string>
+    <string name="app_name">Vocable Trainer</string>
     
-    <string name="statistic">Statistik</string>
-    <string name="right">richtig</string>
-    <string name="wrong">falsch</string>
-    <string name="todo">offen</string>
+    <string name="statistic">Statistic</string>
+    <string name="right">right</string>
+    <string name="wrong">wrong</string>
+    <string name="todo">to do</string>
     
     <string name="dictionary1">Deutsch/English 1</string>
     <string name="language1">Deutsch</string>
@@ -16,41 +16,41 @@
     <string name="bla">abc</string>
     <string name="bla123">123</string>
     
-    <string name="rightToast">Richtig.</string>
-    <string name="wrongToast">!!! FALSCH !!!</string>
-    <string name="wrongToastDetails">Erwartet: %s</string>
-    <string name="finishedToast">*** Fertig ***</string>
-    <string name="finishedToastDetails">Gratulation, Sie haben das Training-Set erfolgreich abgeschlossen.</string>
+    <string name="rightToast">Right.</string>
+    <string name="wrongToast">!!! WRONG !!!</string>
+    <string name="wrongToastDetails">Expected: %s</string>
+    <string name="finishedToast">*** Complete ***</string>
+    <string name="finishedToastDetails">Congratulation, you have successfully solved the training set.</string>
     
     <string name="language12">Deutsch &lt;-&gt; English</string>
-    <string name="count">Anzahl: %d</string>
-    <string name="edit">bearbeiten</string>
-    <string name="training">Training</string>
+    <string name="count">count: %d</string>
+    <string name="edit">edit</string>
+    <string name="training">training</string>
     <string name="multipleChoice">MC</string>
-    <string name="nodata">Keine Wörterbücher vorhanden</string>
+    <string name="nodata">No dictionaries present</string>
     
     <string name="languageDirection12">Deutsch -&gt; Toki Pona</string>
     
-    <string name="dictionaryNameLabel">Wörterbuchname</string>
-    <string name="language1Label">Sprache 1</string>
-    <string name="language2Label">Sprache 2</string>
-	<string name="addVocable">Vokabel hinzufügen</string>
-	<string name="deleteVocable">Vokabel löschen</string>
-    <string name="addDictionary">Wörterbuch hinzufügen</string>
-	<string name="deleteDictionary">Wörterbuch löschen</string>
-    <string name="savingDictionary">Wörterbuch wird gespeichert.</string>
-    <string name="deletingDictionary">Wörterbuch wird gelöscht.</string>
-    <string name="confirmDeleteDictionaryTitle">Wörterbuch löschen</string>
-    <string name="confirmDeleteDictionaryText">Möchten Sie das Wörterbuch wirklich löschen?</string>
+    <string name="dictionaryNameLabel">dictionary name</string>
+    <string name="language1Label">language 1</string>
+    <string name="language2Label">language 2</string>
+	<string name="addVocable">add vocable</string>
+	<string name="deleteVocable">delete vocable</string>
+    <string name="addDictionary">add dictionary</string>
+	<string name="deleteDictionary">delete dictionary</string>
+    <string name="savingDictionary">Saving dictionary.</string>
+    <string name="deletingDictionary">Deleting dictionary.</string>
+    <string name="confirmDeleteDictionaryTitle">Delete dictionary</string>
+    <string name="confirmDeleteDictionaryText">You are deleting that dictionary. Are you sure?</string>
     
-    <string name="openConfig">Einstellungen</string>
-    <string name="translationDirection">Übersetzungsrichtung</string>
-    <string name="translateForward">Sprache 1 -&gt; Sprache 2</string>
-    <string name="translateBidrectional">Sprache 1 &lt;-&gt; Sprache 2</string>
-    <string name="translateBackward">Sprache 1 &lt;- Sprache 2</string>
-    <string name="resetDatabase">Datenbank wiederherstellen</string>
+    <string name="openConfig">configuration</string>
+    <string name="translationDirection">translation direction</string>
+    <string name="translateForward">language1 1 -&gt; language 2</string>
+    <string name="translateBidrectional">language 1 &lt;-&gt; language 2</string>
+    <string name="translateBackward">language 1 &lt;- language 2</string>
+    <string name="resetDatabase">reset database</string>
     
-    <string name="confirmResetDatabaseTitle">Datenbank wiederherstellen</string>
-    <string name="confirmResetDatabaseText">Möchten Sie wirklich die Standard-Wörterbucher wiederherstellen? Achtung: dabei werden alle aktuellen Wörterbücher gelöscht!</string>
+    <string name="confirmResetDatabaseTitle">Reset database</string>
+    <string name="confirmResetDatabaseText">You are recovering default dictionaries. Are you sure? Warning: all current dictionaries will be lost!</string>
     	
 </resources>

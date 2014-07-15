@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Vokabel Trainer</string>
+    
+    <string name="statistic">Statistik</string>
+    <string name="right">richtig</string>
+    <string name="wrong">falsch</string>
+    <string name="todo">offen</string>
+    
+    <string name="dictionary1">Deutsch/English 1</string>
+    <string name="language1">Deutsch</string>
+    <string name="language2">English</string>
+    <string name="next">&gt;</string>
+    
+    <string name="bla">abc</string>
+    <string name="bla123">123</string>
+    
+    <string name="rightToast">Richtig.</string>
+    <string name="wrongToast">!!! FALSCH !!!</string>
+    <string name="wrongToastDetails">Erwartet: %s</string>
+    <string name="finishedToast">*** Fertig ***</string>
+    <string name="finishedToastDetails">Gratulation, Sie haben das Training-Set erfolgreich abgeschlossen.</string>
+    
+    <string name="language12">Deutsch &lt;-&gt; English</string>
+    <string name="count">Anzahl: %d</string>
+    <string name="edit">bearbeiten</string>
+    <string name="training">Training</string>
+    <string name="multipleChoice">MC</string>
+    <string name="nodata">Keine Wörterbücher vorhanden</string>
+    
+    <string name="languageDirection12">Deutsch -&gt; Toki Pona</string>
+    
+    <string name="dictionaryNameLabel">Wörterbuchname</string>
+    <string name="language1Label">Sprache 1</string>
+    <string name="language2Label">Sprache 2</string>
+	<string name="addVocable">Vokabel hinzufügen</string>
+	<string name="deleteVocable">Vokabel löschen</string>
+    <string name="addDictionary">Wörterbuch hinzufügen</string>
+	<string name="deleteDictionary">Wörterbuch löschen</string>
+    <string name="savingDictionary">Wörterbuch wird gespeichert.</string>
+    <string name="deletingDictionary">Wörterbuch wird gelöscht.</string>
+    <string name="confirmDeleteDictionaryTitle">Wörterbuch löschen</string>
+    <string name="confirmDeleteDictionaryText">Möchten Sie das Wörterbuch wirklich löschen?</string>
+    
+    <string name="openConfig">Einstellungen</string>
+    <string name="translationDirection">Übersetzungsrichtung</string>
+    <string name="translateForward">Sprache 1 -&gt; Sprache 2</string>
+    <string name="translateBidrectional">Sprache 1 &lt;-&gt; Sprache 2</string>
+    <string name="translateBackward">Sprache 1 &lt;- Sprache 2</string>
+    <string name="resetDatabase">Datenbank wiederherstellen</string>
+    
+    <string name="confirmResetDatabaseTitle">Datenbank wiederherstellen</string>
+    <string name="confirmResetDatabaseText">Möchten Sie wirklich die Standard-Wörterbucher wiederherstellen? Achtung: dabei werden alle aktuellen Wörterbücher gelöscht!</string>
+    	
+</resources>

@@ -45,7 +45,7 @@
     
     <string name="openConfig">configuration</string>
     <string name="translationDirection">translation direction</string>
-    <string name="translateForward">language1 1 -&gt; language 2</string>
+    <string name="translateForward">language 1 -&gt; language 2</string>
     <string name="translateBidrectional">language 1 &lt;-&gt; language 2</string>
     <string name="translateBackward">language 1 &lt;- language 2</string>
     <string name="resetDatabase">reset database</string>

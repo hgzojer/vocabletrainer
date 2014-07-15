@@ -1,6 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android1="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="20dp"
@@ -8,43 +7,46 @@
     tools:context="${relativePackage}.ConfigActivity" >
 
     <TextView
-        android1:id="@+id/textView1"
-        android1:layout_width="wrap_content"
-        android1:layout_height="wrap_content"
-        android1:text="@string/translationDirection" />
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/translationDirection" />
 
     <RadioGroup
-        android1:id="@+id/radioGroupDirection"
-        android1:layout_width="wrap_content"
-        android1:layout_height="wrap_content"
+        android:id="@+id/radioGroupDirection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="6dp" >
 
         <RadioButton
-            android1:id="@+id/radioDirection1"
-            android1:layout_width="wrap_content"
-            android1:layout_height="wrap_content"
-            android1:checked="true"
-            android1:text="@string/translateForward" />
+            android:id="@+id/radioDirection1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:checked="true"
+            android:text="@string/translateForward" />
 
         <RadioButton
-            android1:id="@+id/radioDirection2"
-            android1:layout_width="wrap_content"
-            android1:layout_height="wrap_content"
-            android1:text="@string/translateBidrectional" />
+            android:id="@+id/radioDirection2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/translateBidrectional" />
 
         <RadioButton
-            android1:id="@+id/radioDirection3"
-            android1:layout_width="wrap_content"
-            android1:layout_height="wrap_content"
-            android1:text="@string/translateBackward" />
+            android:id="@+id/radioDirection3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/translateBackward" />
     </RadioGroup>
 
     <Button
-        android1:id="@+id/buttonResetDatabase"
-        android1:layout_width="wrap_content"
-        android1:layout_height="wrap_content"
+        android:id="@+id/buttonResetDatabase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="12dp"
-	    android:onClick="onClickResetDatabase"
-        android1:text="@string/resetDatabase" />
+        android:onClick="onClickResetDatabase"
+        android:text="@string/resetDatabase" />
 
 </LinearLayout>

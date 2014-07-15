@@ -3,25 +3,64 @@ package at.hgz.vocabletrainer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import at.hgz.vocabletrainer.db.VocableOpenHelper;
+import at.hgz.vocabletrainer.set.TrainingSet;
 
 public class ConfigActivity extends Activity {
 	
-    @Override
+    public static final String TRANSLATION_DIRECTION = "translationDirection";
+
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
+        
+        int direction = TrainingApplication.getState().getDirection();
+        
+        RadioGroup radioGroupDirection = (RadioGroup) this.findViewById(R.id.radioGroupDirection);
+		switch (direction) {
+		case TrainingSet.DIRECTION_FORWARD:
+			radioGroupDirection.check(R.id.radioDirection1);
+			break;
+		case TrainingSet.DIRECTION_BIDIRECTIONAL:
+			radioGroupDirection.check(R.id.radioDirection2);
+			break;
+		case TrainingSet.DIRECTION_BACKWARD:
+			radioGroupDirection.check(R.id.radioDirection3);
+			break;
+		}
     }
+    
+	public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+        
+        // Check which radio button was clicked
+		if (checked) {
+			switch (view.getId()) {
+			case R.id.radioDirection1:
+				TrainingApplication.getState().setDirection(TrainingSet.DIRECTION_FORWARD);
+				break;
+			case R.id.radioDirection2:
+				TrainingApplication.getState().setDirection(TrainingSet.DIRECTION_BIDIRECTIONAL);
+				break;
+			case R.id.radioDirection3:
+				TrainingApplication.getState().setDirection(TrainingSet.DIRECTION_BACKWARD);
+				break;
+			}
+		}
+	}
     
 	public void onClickResetDatabase(View view) {
 
 		Resources resources = getApplicationContext().getResources();
-		String confirmDeleteDictionaryTitle = resources.getString(R.string.confirmDeleteDictionaryTitle);
-		String confirmDeleteDictionaryText = resources.getString(R.string.confirmDeleteDictionaryText);
+		String confirmDeleteDictionaryTitle = resources.getString(R.string.confirmResetDatabaseTitle);
+		String confirmDeleteDictionaryText = resources.getString(R.string.confirmResetDatabaseText);
 		
 		new AlertDialog.Builder(this)
 		.setTitle(confirmDeleteDictionaryTitle)

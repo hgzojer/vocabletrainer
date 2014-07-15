@@ -98,7 +98,7 @@ public abstract class AbstractTrainingActivity extends Activity {
     }
 
 	private void init() {
-		state.setList(new TrainingSet(state.getDictionary(), state.getVocables(), TrainingSet.DIRECTION_BIDIRECTIONAL).getList());
+        state.setList(new TrainingSet(state.getDictionary(), state.getVocables(), state.getDirection()).getList());
 		state.setRight(0);
 		state.setWrong(0);
 		state.setTodo(state.getList().size());

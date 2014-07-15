@@ -6,9 +6,9 @@ import java.util.List;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +22,7 @@ import android.widget.TextView;
 import at.hgz.vocabletrainer.db.Dictionary;
 import at.hgz.vocabletrainer.db.Vocable;
 import at.hgz.vocabletrainer.db.VocableOpenHelper;
+import at.hgz.vocabletrainer.set.TrainingSet;
 
 public class DictionaryListActivity extends ListActivity {
 
@@ -30,15 +31,30 @@ public class DictionaryListActivity extends ListActivity {
 	private List<Dictionary> list = new ArrayList<Dictionary>();
 	
 	private DictionaryArrayAdapter adapter;
+	
+	private String directionSymbol = "<->";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dictionary_list);
 
+        SharedPreferences settings = DictionaryListActivity.this.getPreferences(MODE_PRIVATE);
+        int direction = settings.getInt(ConfigActivity.TRANSLATION_DIRECTION, TrainingSet.DIRECTION_BIDIRECTIONAL);
+        TrainingApplication.getState().setDirection(direction);
+
 		loadDictionaryList();
 	}
 	
+	@Override
+	protected void onDestroy() {
+        SharedPreferences settings = this.getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+		editor.putInt(ConfigActivity.TRANSLATION_DIRECTION, TrainingApplication.getState().getDirection());
+		editor.commit();
+		super.onDestroy();
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
@@ -66,7 +82,7 @@ public class DictionaryListActivity extends ListActivity {
 	        }
 	        case R.id.openConfig:
 	        {
-				Intent intent = new Intent(DictionaryListActivity.this, VocableListActivity.class);
+				Intent intent = new Intent(DictionaryListActivity.this, ConfigActivity.class);
 				//intent.putExtra("dictionaryId", dictionaryId);
 				DictionaryListActivity.this.startActivityForResult(intent, CONFIG_ACTION);
 	            return true;
@@ -77,6 +93,19 @@ public class DictionaryListActivity extends ListActivity {
 	}
 
 	private void loadDictionaryList() {
+		int direction = TrainingApplication.getState().getDirection();
+		switch (direction) {
+		case TrainingSet.DIRECTION_FORWARD:
+			directionSymbol = "->";
+			break;
+		case TrainingSet.DIRECTION_BIDIRECTIONAL:
+			directionSymbol = "<->";
+			break;
+		case TrainingSet.DIRECTION_BACKWARD:
+			directionSymbol = "<-";
+			break;
+		}
+
 		VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
 		list.clear();
 		for (Dictionary lib : helper.getDictionaries()) {
@@ -203,9 +232,9 @@ public class DictionaryListActivity extends ListActivity {
 
 	       TextView listItemName = (TextView) convertView.findViewById(R.id.listItemName);
 	       TextView listItemLanguage12 = (TextView) convertView.findViewById(R.id.listItemLanguage12);
-
+	        
 	       listItemName.setText(dictionary.getName());
-	       listItemLanguage12.setText(String.format("%s <-> %s",  dictionary.getLanguage1(), dictionary.getLanguage2()));
+	       listItemLanguage12.setText(String.format("%s %s %s",  dictionary.getLanguage1(), directionSymbol, dictionary.getLanguage2()));
 
 	       return convertView;
 	   }		

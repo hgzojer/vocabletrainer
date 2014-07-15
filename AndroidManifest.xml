@@ -35,6 +35,10 @@
             android:name="at.hgz.vocabletrainer.VocableListActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="at.hgz.vocabletrainer.ConfigActivity"
+            android:label="@string/app_name" >
+        </activity>
         </application>
 
 </manifest>

@@ -18,6 +18,8 @@ public class State {
 	private int todo;
 	private boolean needInit = true;
 	
+	private int direction;
+	
 	public Dictionary getDictionary() {
 		return dictionary;
 	}
@@ -96,5 +98,13 @@ public class State {
 
 	public void setNeedInit(boolean needInit) {
 		this.needInit = needInit;
+	}
+
+	public int getDirection() {
+		return direction;
+	}
+
+	public void setDirection(int direction) {
+		this.direction = direction;
 	}
 }

@@ -4,21 +4,17 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.content.Context;
 import at.hgz.vocabletrainer.db.Dictionary;
 import at.hgz.vocabletrainer.db.Vocable;
 
 public class TrainingSet {
 	
-	public static int DIRECTION_FORWARD = 1;
-	public static int DIRECTION_BACKWARD = 2;
-	public static int DIRECTION_BIDIRECTIONAL = 3;
+	public static final int DIRECTION_FORWARD = 1;
+	public static final int DIRECTION_BACKWARD = 2;
+	public static final int DIRECTION_BIDIRECTIONAL = 3;
 
 	private List<TrainingElem> list;
 	private Dictionary dictionary;
-
-	public TrainingSet(Context context, int dictionaryId) {
-	}
 
 	public TrainingSet(Dictionary dictionary, List<Vocable> vocables, int direction) {
 		this.dictionary = dictionary;

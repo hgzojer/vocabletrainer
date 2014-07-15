@@ -81,7 +81,7 @@ public final class VocableOpenHelper extends SQLiteOpenHelper {
     
     public void resetDatabase() {
 		SQLiteDatabase db = getWritableDatabase();
-		onCreate(db);
+		resetDatabase(db);
     }
 
 	private void loadJsonDefaultDictionary(final SQLiteDatabase db) {
@@ -251,6 +251,10 @@ public final class VocableOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		resetDatabase(db);
+	}
+
+	private void resetDatabase(SQLiteDatabase db) {
 		db.execSQL("DROP TABLE IF EXISTS " + VOCABLE_TABLE_NAME + ";");
 		db.execSQL("DROP TABLE IF EXISTS " + DICTIONARY_TABLE_NAME + ";");
 		onCreate(db);

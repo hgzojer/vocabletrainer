@@ -119,7 +119,7 @@ public class VocableListActivity extends ListActivity {
 		
 		Resources resources = getApplicationContext().getResources();
 		String text = resources.getString(R.string.savingDictionary);
-		Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
+		Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
 		toast.show();
 		
 		VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
@@ -133,7 +133,7 @@ public class VocableListActivity extends ListActivity {
 		
 		Resources resources = getApplicationContext().getResources();
 		String text = resources.getString(R.string.deletingDictionary);
-		Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
+		Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
 		toast.show();
 		
 		VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());

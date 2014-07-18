@@ -52,5 +52,6 @@
     
     <string name="confirmResetDatabaseTitle">Reset database</string>
     <string name="confirmResetDatabaseText">You are recovering default dictionaries. Are you sure? Warning: all current dictionaries will be lost!</string>
+    <string name="resettingDatabase">Resetting database.</string>
     	
 </resources>

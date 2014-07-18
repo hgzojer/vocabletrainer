@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import at.hgz.vocabletrainer.db.VocableOpenHelper;
 import at.hgz.vocabletrainer.set.TrainingSet;
 
@@ -68,6 +69,10 @@ public class ConfigActivity extends Activity {
 		.setIcon(android.R.drawable.ic_dialog_alert)
 		.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int whichButton) {
+				Resources resources = getApplicationContext().getResources();
+				String text = resources.getString(R.string.resettingDatabase);
+				Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+				toast.show();
 		    	VocableOpenHelper helper = VocableOpenHelper.getInstance(ConfigActivity.this);
 		    	helper.resetDatabase();
 		    }})

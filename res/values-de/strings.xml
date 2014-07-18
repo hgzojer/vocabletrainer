@@ -52,5 +52,6 @@
     
     <string name="confirmResetDatabaseTitle">Datenbank wiederherstellen</string>
     <string name="confirmResetDatabaseText">Möchten Sie wirklich die Standard-Wörterbucher wiederherstellen? Achtung: dabei werden alle aktuellen Wörterbücher gelöscht!</string>
+    <string name="resettingDatabase">Datenbank wird wiederhergestellt.</string>
     	
 </resources>

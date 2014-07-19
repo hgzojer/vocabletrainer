@@ -11,6 +11,6 @@ Source/IDE installation:
 * Eclipse/ADK-Installation, see http://developer.android.com/sdk/installing/index.html?pkg=adt
 * see http://www.vogella.com/tutorials/Android/article.html
 
-Third party library licence and source code:
+Third party library license and source code:
 * gson, see https://code.google.com/p/google-gson/
 * commons-io, see http://commons.apache.org/proper/commons-io/

@@ -102,14 +102,14 @@ public abstract class AbstractTrainingActivity extends Activity {
 		state.setRight(0);
 		state.setWrong(0);
 		state.setTodo(state.getList().size());
-    	ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar1);
-    	progressBar.setMax(state.getTodo());
-    	progressBar.setProgress(state.getRight());
 	}
 
 	protected abstract void updateDisplay();
 
 	protected void updateDisplayStatistic() {
+    	ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+    	progressBar.setMax(state.getRight() + state.getTodo());
+    	progressBar.setProgress(state.getRight());
 		// Statistik:
 		TextView outputRight = (TextView) findViewById(R.id.textViewRightCount);
 		outputRight.setText("" + state.getRight());
@@ -117,7 +117,5 @@ public abstract class AbstractTrainingActivity extends Activity {
 		outputWrong.setText("" + state.getWrong());
 		TextView outputTodo = (TextView) findViewById(R.id.textViewTodoCount);
 		outputTodo.setText("" + state.getTodo());
-		ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar1);
-		progressBar.setProgress(state.getRight());
 	}
 }

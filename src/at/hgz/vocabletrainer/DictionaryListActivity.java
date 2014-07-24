@@ -181,6 +181,7 @@ public class DictionaryListActivity extends ListActivity {
 				}
 			});
 		}
+		setSelection(position);
 	}
 
 	@Override

@@ -1,134 +1,140 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:id="@+id/scroll"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_margin="20dp"
     tools:context="${relativePackage}.MultipleCoiceActivity" >
-	 
-	 <TextView
-	     android:id="@+id/textViewLanguageDirection12"
-	     android:layout_width="wrap_content"
-	     android:layout_height="wrap_content"
-	     android:text="@string/languageDirection12"
-	     android:layout_margin="3dp"
-	     android:textAppearance="?android:attr/textAppearanceLarge" />
-	
-	 <TextView
-	     android:id="@+id/textViewWordLanguage1"
-	     android:layout_width="wrap_content"
-	     android:layout_height="wrap_content"
-	     android:layout_margin="3dp"
-	     android:text="@string/bla" />
-	
-	 <Button
-	     android:id="@+id/buttonChoice1"
-	     android:layout_width="match_parent"
-	     android:layout_height="wrap_content"
-	     android:layout_margin="3dp"
-	     android:onClick="onClick"
-	     android:text="@string/bla" />
-	
-	 <Button
-	     android:id="@+id/buttonChoice2"
-	     android:layout_width="match_parent"
-	     android:layout_height="wrap_content"
-	     android:layout_margin="3dp"
-	     android:onClick="onClick"
-	     android:text="@string/bla" />
-	
-	 <Button
-	     android:id="@+id/buttonChoice3"
-	     android:layout_width="match_parent"
-	     android:layout_height="wrap_content"
-	     android:layout_margin="3dp"
-	     android:onClick="onClick"
-	     android:text="@string/bla" />
-	 	 
-	 <ProgressBar
-	     android:id="@+id/progressBar1"
-	     style="?android:attr/progressBarStyleHorizontal"
-	     android:layout_width="match_parent"
-	     android:layout_height="wrap_content"
-	     android:layout_margin="3dp" />
-	 
-    <TextView
-        android:id="@+id/textViewStatistic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-	    android:layout_margin="6dp"
-        android:text="@string/statistic"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <GridLayout
-        android:id="@+id/gridLayout1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:columnCount="2"
-        android:useDefaultMargins="true" >
-	    
-	    <TextView
-	        android:id="@+id/textViewRight"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-        	android:layout_gravity="right"
-	        android:layout_column="0"
-	        android:layout_row="1"
-	        android:text="@string/right"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
-	    
-	    <TextView
-	        android:id="@+id/textViewRightCount"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-        	android:layout_gravity="left"
-	        android:layout_column="1"
-	        android:layout_row="1"
-	        android:text="@string/bla123"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
-	
-	    <TextView
-	        android:id="@+id/textViewWrong"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-        	android:layout_gravity="right"
-	        android:layout_column="0"
-	        android:layout_row="2"
-	        android:text="@string/wrong"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
-	
-	    <TextView
-	        android:id="@+id/textViewWrongCount"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-        	android:layout_gravity="left"
-	        android:layout_column="1"
-	        android:layout_row="2"
-	        android:text="@string/bla123"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
-	
-	    <TextView
-	        android:id="@+id/textViewTodo"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-        	android:layout_gravity="right"
-	        android:layout_column="0"
-	        android:layout_row="3"
-	        android:text="@string/todo"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
-	
-	    <TextView
-	        android:id="@+id/textViewTodoCount"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-        	android:layout_gravity="left"
-	        android:layout_column="1"
-	        android:layout_row="3"
-	        android:text="@string/bla123"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
-	 
-	 </GridLayout>
-	 
-</LinearLayout>
+        android:layout_margin="20dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textViewLanguageDirection12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="@string/languageDirection12"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textViewWordLanguage1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="@string/bla" />
+
+        <Button
+            android:id="@+id/buttonChoice1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:onClick="onClick"
+            android:text="@string/bla" />
+
+        <Button
+            android:id="@+id/buttonChoice2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:onClick="onClick"
+            android:text="@string/bla" />
+
+        <Button
+            android:id="@+id/buttonChoice3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:onClick="onClick"
+            android:text="@string/bla" />
+
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp" />
+
+        <TextView
+            android:id="@+id/textViewStatistic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="6dp"
+            android:text="@string/statistic"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <GridLayout
+            android:id="@+id/gridLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:columnCount="2"
+            android:rowCount="3"
+            android:useDefaultMargins="true" >
+
+            <TextView
+                android:id="@+id/textViewRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_gravity="right"
+                android:layout_row="0"
+                android:text="@string/right"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/textViewRightCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_gravity="left"
+                android:layout_row="0"
+                android:text="@string/bla123"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/textViewWrong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_gravity="right"
+                android:layout_row="1"
+                android:text="@string/wrong"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/textViewWrongCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_gravity="left"
+                android:layout_row="1"
+                android:text="@string/bla123"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/textViewTodo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_gravity="right"
+                android:layout_row="2"
+                android:text="@string/todo"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/textViewTodoCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_gravity="left"
+                android:layout_row="2"
+                android:text="@string/bla123"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </GridLayout>
+    </LinearLayout>
+
+</ScrollView>

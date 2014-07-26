@@ -19,6 +19,7 @@ public class State {
 	private boolean needInit = true;
 	
 	private int direction;
+	private boolean configChanged;
 	
 	public Dictionary getDictionary() {
 		return dictionary;
@@ -106,5 +107,13 @@ public class State {
 
 	public void setDirection(int direction) {
 		this.direction = direction;
+	}
+
+	public boolean hasConfigChanged() {
+		return configChanged;
+	}
+
+	public void setConfigChanged(boolean configChanged) {
+		this.configChanged = configChanged;
 	}
 }

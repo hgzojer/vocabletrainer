@@ -164,7 +164,7 @@ public class DictionaryListActivity extends ListActivity {
 		    File file;
 		    int i = 1;
 		    do {
-		    	file = new File(storageDir, "VT-DICT_"+ timeStamp + (i > 1 ? "_" + i : "") + ".xml");
+		    	file = new File(storageDir, "DICT_"+ timeStamp + (i > 1 ? "_" + i : "") + ".vt");
 		    	i++;
 		    } while (file.exists());
 		    try {

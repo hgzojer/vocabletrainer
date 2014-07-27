@@ -1,9 +1,12 @@
 package at.hgz.vocabletrainer;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -30,7 +33,18 @@ public class ImportActivity extends ListActivity {
 		
 		File dir = getExternalFilesDir(null);
 		list.clear();
-		list.addAll(Arrays.asList(dir.listFiles()));
+		File[] files = dir.listFiles(new FilenameFilter() {
+			private Pattern p = Pattern.compile("^.*\\.vt$");
+			@Override
+			public boolean accept(File dir, String filename) {
+				return p.matcher(filename.toLowerCase(Locale.US)).matches();
+			}
+			
+		});
+		if (files == null) {
+			files = new File[0];
+		}
+		list.addAll(Arrays.asList(files));
 		adapter = new FileArrayAdapter(this, R.layout.import_item, list);
 		setListAdapter(adapter);
 	}

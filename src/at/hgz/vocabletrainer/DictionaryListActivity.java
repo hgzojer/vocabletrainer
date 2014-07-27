@@ -48,11 +48,30 @@ public class DictionaryListActivity extends ListActivity {
 	
 	@Override
 	protected void onDestroy() {
-        SharedPreferences settings = this.getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-		editor.putInt(ConfigActivity.TRANSLATION_DIRECTION, TrainingApplication.getState().getDirection());
-		editor.commit();
+        saveConfig();
 		super.onDestroy();
+	}
+
+	@Override
+	protected void onPause() {
+        saveConfig();
+		super.onPause();
+	}
+
+	@Override
+	protected void onStop() {
+        saveConfig();
+		super.onStop();
+	}
+
+	private void saveConfig() {
+		if (TrainingApplication.getState().hasConfigChanged()) {
+			SharedPreferences settings = this.getPreferences(MODE_PRIVATE);
+	        SharedPreferences.Editor editor = settings.edit();
+			editor.putInt(ConfigActivity.TRANSLATION_DIRECTION, TrainingApplication.getState().getDirection());
+			editor.commit();
+			TrainingApplication.getState().setConfigChanged(false);
+		}
 	}
 
 	@Override

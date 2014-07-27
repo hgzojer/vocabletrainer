@@ -16,13 +16,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class ImportActivity extends ListActivity {
-	
+
 	private List<File> list = new ArrayList<File>();
 	private FileArrayAdapter adapter;
 
@@ -30,16 +31,17 @@ public class ImportActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_import);
-		
+
 		File dir = getExternalFilesDir(null);
 		list.clear();
 		File[] files = dir.listFiles(new FilenameFilter() {
 			private Pattern p = Pattern.compile("^.*\\.vt$");
+
 			@Override
 			public boolean accept(File dir, String filename) {
 				return p.matcher(filename.toLowerCase(Locale.US)).matches();
 			}
-			
+
 		});
 		if (files == null) {
 			files = new File[0];
@@ -47,15 +49,6 @@ public class ImportActivity extends ListActivity {
 		list.addAll(Arrays.asList(files));
 		adapter = new FileArrayAdapter(this, R.layout.import_item, list);
 		setListAdapter(adapter);
-	}
-	
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		File file = list.get(position);
-		Intent resultIntent = new Intent();
-		resultIntent.setData(Uri.fromFile(file));
-		setResult(Activity.RESULT_OK, resultIntent);
-		finish();
 	}
 
 	private class FileArrayAdapter extends ArrayAdapter<File> {
@@ -65,21 +58,52 @@ public class ImportActivity extends ListActivity {
 			super(context, resource, objects);
 		}
 
-	    @Override
-	    public View getView(int position, View convertView, ViewGroup parent) {
+		private class ViewHolder {
+			public ImageButton buttonDelete;
+			public ImageButton buttonImport;
+			public TextView listItemName;
+			public File file;
+		}
 
-	       File file = getItem(position);    
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
 
-	       if (convertView == null) {
-	          convertView = LayoutInflater.from(getContext()).inflate(R.layout.import_item, parent, false);
-	       }
+			File file = getItem(position);
 
-	       TextView listItemName = (TextView) convertView.findViewById(R.id.listItemName);
-	        
-	       listItemName.setText(file.getName());
+			if (convertView == null) {
+				convertView = LayoutInflater.from(getContext()).inflate(
+						R.layout.import_item, parent, false);
+				final ViewHolder vh = new ViewHolder();
+				vh.buttonDelete = (ImageButton) convertView.findViewById(R.id.buttonDelete);
+				vh.buttonImport = (ImageButton) convertView.findViewById(R.id.buttonImport);
+				vh.listItemName = (TextView) convertView.findViewById(R.id.listItemName);
+				
+				vh.buttonDelete.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (vh.file.delete()) {
+							FileArrayAdapter.this.remove(vh.file);
+						}
+					}
+				});
+				vh.buttonImport.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent resultIntent = new Intent();
+						resultIntent.setData(Uri.fromFile(vh.file));
+						setResult(Activity.RESULT_OK, resultIntent);
+						ImportActivity.this.finish();
+					}
+				});
+				convertView.setTag(vh);
+			}
 
-	       return convertView;
-	   }		
+			ViewHolder vh = (ViewHolder) convertView.getTag();
+			vh.file = file;
+			vh.listItemName.setText(file.getName());
+
+			return convertView;
+		}
 
 	}
 }

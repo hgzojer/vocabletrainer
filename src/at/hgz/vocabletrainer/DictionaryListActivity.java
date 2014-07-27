@@ -49,7 +49,7 @@ public class DictionaryListActivity extends ListActivity {
 	
 	private DictionaryArrayAdapter adapter;
 	
-	private String directionSymbol = "<->";
+	private String directionSymbol = "↔";
 	
 	private boolean dictionarySelected;
 
@@ -194,13 +194,13 @@ public class DictionaryListActivity extends ListActivity {
 		int direction = TrainingApplication.getState().getDirection();
 		switch (direction) {
 		case TrainingSet.DIRECTION_FORWARD:
-			directionSymbol = "->";
+			directionSymbol = "→";
 			break;
 		case TrainingSet.DIRECTION_BIDIRECTIONAL:
-			directionSymbol = "<->";
+			directionSymbol = "↔";
 			break;
 		case TrainingSet.DIRECTION_BACKWARD:
-			directionSymbol = "<-";
+			directionSymbol = "←";
 			break;
 		}
 

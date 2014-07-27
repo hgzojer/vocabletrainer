@@ -42,6 +42,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_action_edit"
             android:text="@string/edit"
             android:visibility="gone" />
 
@@ -50,6 +51,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_action_training"
             android:text="@string/training"
             android:visibility="gone" />
 
@@ -58,6 +60,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_action_multiple_choice"
             android:text="@string/multipleChoice"
             android:visibility="gone" />
     </LinearLayout>

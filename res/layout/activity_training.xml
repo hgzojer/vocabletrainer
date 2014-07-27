@@ -45,13 +45,14 @@
             <requestFocus />
         </EditText>
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
             android:onClick="onClick"
-            android:text="@string/next" />
+            android:src="@drawable/ic_action_training"
+            android:contentDescription="@string/next" />
 
         <ProgressBar
             android:id="@+id/progressBar1"

@@ -22,14 +22,14 @@
     <string name="finishedToast">*** Complete ***</string>
     <string name="finishedToastDetails">Congratulation, you have successfully solved the training set.</string>
     
-    <string name="language12">Deutsch &lt;-&gt; English</string>
+    <string name="language12">Deutsch ↔ English</string>
     <string name="count">count: %d</string>
     <string name="edit">edit</string>
     <string name="training">training</string>
     <string name="multipleChoice">MC</string>
     <string name="nodata">No dictionaries present</string>
     
-    <string name="languageDirection12">Deutsch -&gt; Toki Pona</string>
+    <string name="languageDirection12">Deutsch → Toki Pona</string>
     
     <string name="dictionaryNameLabel">dictionary name</string>
     <string name="language1Label">language 1</string>
@@ -45,9 +45,9 @@
     
     <string name="openConfig">configuration</string>
     <string name="translationDirection">translation direction</string>
-    <string name="translateForward">language 1 -&gt; language 2</string>
-    <string name="translateBidrectional">language 1 &lt;-&gt; language 2</string>
-    <string name="translateBackward">language 1 &lt;- language 2</string>
+    <string name="translateForward">language 1 → language 2</string>
+    <string name="translateBidrectional">language 1 ↔ language 2</string>
+    <string name="translateBackward">language 1 ← language 2</string>
     <string name="resetDatabase">reset database</string>
     
     <string name="confirmResetDatabaseTitle">Reset database</string>

@@ -60,7 +60,7 @@ public class MultipleChoiceActivity extends AbstractTrainingActivity {
 		Collections.shuffle(choices);
 		
 		TextView textViewLanguageDirection12 = (TextView) findViewById(R.id.textViewLanguageDirection12);
-		textViewLanguageDirection12.setText(String.format("%s -> %s", vocable.getLanguage1(), vocable.getLanguage2()));
+		textViewLanguageDirection12.setText(String.format("%s → %s", vocable.getLanguage1(), vocable.getLanguage2()));
 		
 		TextView outputWord = (TextView) findViewById(R.id.textViewWordLanguage1);
 		outputWord.setText(vocable.getWord());

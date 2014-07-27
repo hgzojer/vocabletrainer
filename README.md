@@ -14,3 +14,4 @@ Source/IDE installation:
 Third party library license and source code:
 * gson, see https://code.google.com/p/google-gson/
 * commons-io, see http://commons.apache.org/proper/commons-io/
+* simple-xml, see http://simple.sourceforge.net/

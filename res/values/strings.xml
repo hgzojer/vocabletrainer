@@ -53,5 +53,11 @@
     <string name="confirmResetDatabaseTitle">Reset database</string>
     <string name="confirmResetDatabaseText">You are recovering default dictionaries. Are you sure? Warning: all current dictionaries will be lost!</string>
     <string name="resettingDatabase">Resetting database.</string>
-    	
+
+    <string name="exportToExternalStorage">export to external storage</string>
+    <string name="importFromExternalStorage">import from external storage</string>
+    
+    <string name="errorExportingDictionary">Error exporting dictionary to external storage.</string>
+    <string name="exportedDictionary">Exported dictionary to external storage.</string>
+    
 </resources>

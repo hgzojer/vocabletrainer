@@ -13,4 +13,14 @@
           android:showAsAction="ifRoom"
           />
     
+    <item android:id="@+id/exportToExternalStorage"
+          android:icon="@drawable/ic_action_export_to_external_storage"
+          android:title="@string/exportToExternalStorage"
+          />
+    
+    <item android:id="@+id/importFromExternalStorage"
+          android:icon="@drawable/ic_action_import_from_external_storage"
+          android:title="@string/importFromExternalStorage"
+          />
+    
 </menu>

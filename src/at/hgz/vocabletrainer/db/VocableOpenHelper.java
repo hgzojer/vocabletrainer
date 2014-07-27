@@ -1,18 +1,14 @@
 package at.hgz.vocabletrainer.db;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -127,127 +123,6 @@ public final class VocableOpenHelper extends SQLiteOpenHelper {
     		db.endTransaction();
     	}
 	}
-
-	private void loadXmlDefaultDictionary(final SQLiteDatabase db) {
-		int dictionaryIdNext = 1;
-        int vocableIdNext = 1;
-        
-    	db.beginTransaction();
-    	try {
-			Resources res = context.getResources();
-			
-			XmlResourceParser xrp = res.getXml(R.xml.default_dictionaries_old);
-			xrp.next();
-			
-			assertDoc(xrp, XmlPullParser.START_DOCUMENT);
-			xrp.next();
-			
-	    	assertType(xrp, XmlPullParser.START_TAG, "dictionaries");
-			xrp.next();
-
-	    	while (xrp.getEventType() == XmlPullParser.START_TAG && xrp.getName().equals("dictionary"))
-    		{
-    	    	assertType(xrp, XmlPullParser.START_TAG, "dictionary");
-	    		String name = getString(xrp, "name");
-	    		String language1 = getString(xrp, "language1");
-	    		String language2 = getString(xrp, "language2");
-				xrp.next();
-	    		
-		    	int dictionaryId = dictionaryIdNext++;
-		    	addDictionary(db, dictionaryId, name, language1, language2);
-	        	
-				if (xrp.getEventType() == XmlPullParser.START_TAG && xrp.getName().equals("vocables")) {
-					
-			    	assertType(xrp, XmlPullParser.START_TAG, "vocables");
-					xrp.next();
-		        	
-			    	while (xrp.getEventType() == XmlPullParser.START_TAG && xrp.getName().equals("vocable"))
-		    		{
-		    	    	assertType(xrp, XmlPullParser.START_TAG, "vocable");
-			    		String word = getString(xrp, "word");
-						String translation = getString(xrp, "translation");
-						xrp.next();
-						
-						int vocableId = vocableIdNext++;
-						addVocable(db, vocableId, dictionaryId, word, translation);
-						
-		    	    	assertType(xrp, XmlPullParser.END_TAG, "vocable");
-						xrp.next();
-		    		}
-		    		
-			    	assertType(xrp, XmlPullParser.END_TAG, "vocables");
-			    	xrp.next();
-	        	}
-				
-    	    	assertType(xrp, XmlPullParser.END_TAG, "dictionary");
-    	    	xrp.next();
-    		}
-    		
-	    	assertType(xrp, XmlPullParser.END_TAG, "dictionaries");
-			xrp.next();
-			
-			assertDoc(xrp, XmlPullParser.END_DOCUMENT);
-	    	
-    		db.setTransactionSuccessful();
-    	} catch (Exception e) {
-    		throw new RuntimeException(e.getMessage(), e);
-		} finally {
-    		db.endTransaction();
-    	}
-	}
-    
-    private void assertDoc(XmlResourceParser xrp, int expectedType) {
-    	try {
-        	int eventType = xrp.getEventType();
-        	if (eventType != expectedType) {
-        		throw new RuntimeException("eventType " + eventType + " != expectedType " + expectedType);
-        	}
-    	} catch (XmlPullParserException e) {
-    		throw new RuntimeException(e.getMessage(), e);
-    	}
-    }
-    
-    private void assertType(XmlResourceParser xrp, int expectedType, String expectedTag) {
-    	try {
-        	int eventType = xrp.getEventType();
-        	if (eventType != expectedType) {
-        		throw new RuntimeException("eventType " + eventType + " != expectedType " + expectedType);
-        	}
-        	if (!xrp.getName().equals(expectedTag)) {
-        		throw new RuntimeException("tagName " + xrp.getName() + " != expectedTag " + expectedTag);
-        	}
-    	} catch (XmlPullParserException e) {
-    		throw new RuntimeException(e.getMessage(), e);
-    	}
-    }
-    
-    private String getText(XmlResourceParser xrp) {
-    	try {
-        	int eventType = xrp.getEventType();
-        	if (eventType != XmlPullParser.TEXT) {
-        		throw new RuntimeException("eventType " + eventType + " != expectedType " + XmlPullParser.TEXT);
-        	}
-    	} catch (XmlPullParserException e) {
-    		throw new RuntimeException(e.getMessage(), e);
-    	}
-    	return xrp.getText();
-    }
-    
-    private String getString(XmlResourceParser xrp, String tag) {
-    	try {
-	    	xrp.next();
-	    	assertType(xrp, XmlPullParser.START_TAG, tag);
-	    	xrp.next();
-	    	String string = getText(xrp);
-	    	xrp.next();
-	    	assertType(xrp, XmlPullParser.END_TAG, tag);
-	    	return string;
-    	} catch (XmlPullParserException e) {
-    		throw new RuntimeException(e.getMessage(), e);
-    	} catch (IOException e) {
-    		throw new RuntimeException(e.getMessage(), e);
-    	}
-    }
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

@@ -12,6 +12,10 @@ Source/IDE installation:
 * see http://www.vogella.com/tutorials/Android/article.html
 
 Third party library license and source code:
+* android-support, see http://developer.android.com/
 * gson, see https://code.google.com/p/google-gson/
 * commons-io, see http://commons.apache.org/proper/commons-io/
 * simple-xml, see http://simple.sourceforge.net/
+
+Third party picture license and source:
+* menu icons, action icons, see http://developer.android.com/

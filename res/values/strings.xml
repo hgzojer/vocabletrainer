@@ -62,5 +62,7 @@
     
     <string name="title_activity_import">ImportActivity</string>
     <string name="selectFileToImport">Select file to import:</string>
-
+    <string name="deleteFile">delete file</string>
+    <string name="file">DICT_123.vt</string>
+    
 </resources>

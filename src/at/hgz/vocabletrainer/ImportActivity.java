@@ -9,9 +9,12 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -51,6 +54,25 @@ public class ImportActivity extends ListActivity {
 		setListAdapter(adapter);
 	}
 
+	private void deleteFile(final File file) {
+
+		Resources resources = getApplicationContext().getResources();
+		String confirmDeleteDictionaryTitle = resources.getString(R.string.confirmDeleteDictionaryTitle);
+		String confirmDeleteDictionaryText = resources.getString(R.string.confirmDeleteDictionaryText);
+		
+		new AlertDialog.Builder(this)
+		.setTitle(confirmDeleteDictionaryTitle)
+		.setMessage(confirmDeleteDictionaryText)
+		.setIcon(android.R.drawable.ic_dialog_alert)
+		.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int whichButton) {
+				if (file.delete()) {
+					adapter.remove(file);
+				}
+		    }})
+		.setNegativeButton(android.R.string.no, null).show();
+	}
+	
 	private class FileArrayAdapter extends ArrayAdapter<File> {
 
 		public FileArrayAdapter(Context context, int resource,
@@ -60,7 +82,6 @@ public class ImportActivity extends ListActivity {
 
 		private class ViewHolder {
 			public ImageButton buttonDelete;
-			public ImageButton buttonImport;
 			public TextView listItemName;
 			public File file;
 		}
@@ -75,18 +96,15 @@ public class ImportActivity extends ListActivity {
 						R.layout.import_item, parent, false);
 				final ViewHolder vh = new ViewHolder();
 				vh.buttonDelete = (ImageButton) convertView.findViewById(R.id.buttonDelete);
-				vh.buttonImport = (ImageButton) convertView.findViewById(R.id.buttonImport);
 				vh.listItemName = (TextView) convertView.findViewById(R.id.listItemName);
 				
 				vh.buttonDelete.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if (vh.file.delete()) {
-							FileArrayAdapter.this.remove(vh.file);
-						}
+						deleteFile(vh.file);
 					}
 				});
-				vh.buttonImport.setOnClickListener(new OnClickListener() {
+				vh.listItemName.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Intent resultIntent = new Intent();

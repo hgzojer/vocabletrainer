@@ -58,7 +58,7 @@
     <string name="importFromExternalStorage">import from external storage</string>
     
     <string name="errorExportingDictionary">Error exporting dictionary to external storage.</string>
-    <string name="exportedDictionary">Exported dictionary to external storage.</string>
+    <string name="exportedDictionary">Exported dictionary to external storage file %s.</string>
     
     <string name="title_activity_import">ImportActivity</string>
     <string name="selectFileToImport">Select file to import:</string>

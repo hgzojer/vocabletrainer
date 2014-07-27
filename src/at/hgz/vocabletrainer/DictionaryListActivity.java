@@ -3,6 +3,7 @@ package at.hgz.vocabletrainer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,11 +11,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.io.IOUtils;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -34,11 +38,13 @@ import at.hgz.vocabletrainer.db.Vocable;
 import at.hgz.vocabletrainer.db.VocableOpenHelper;
 import at.hgz.vocabletrainer.set.TrainingSet;
 import at.hgz.vocabletrainer.xml.XmlUtil;
+import at.hgz.vocabletrainer.xml.XmlUtil.Entity;
 
 public class DictionaryListActivity extends ListActivity {
 
 	private static final int EDIT_ACTION = 1;
-	private static final int CONFIG_ACTION = 1;
+	private static final int CONFIG_ACTION = 2;
+	private static final int IMPORT_ACTION = 3;
 	private List<Dictionary> list = new ArrayList<Dictionary>();
 	
 	private DictionaryArrayAdapter adapter;
@@ -133,7 +139,9 @@ public class DictionaryListActivity extends ListActivity {
 	        }
 	        case R.id.importFromExternalStorage:
 	        {
-	        	return false;
+				Intent intent = new Intent(DictionaryListActivity.this, ImportActivity.class);
+				DictionaryListActivity.this.startActivityForResult(intent, IMPORT_ACTION);
+	        	return true;
 	        }
 	        default:
 	            return super.onOptionsItemSelected(item);
@@ -174,7 +182,7 @@ public class DictionaryListActivity extends ListActivity {
 		    } catch (IOException ex) {
 		    	throw new RuntimeException(ex.getMessage(), ex);
 		    }
-			String text = getResources().getString(R.string.exportedDictionary);
+			String text = getResources().getString(R.string.exportedDictionary, file.getName());
 		    Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 		} else {
 			String text = getResources().getString(R.string.errorExportingDictionary);
@@ -277,10 +285,13 @@ public class DictionaryListActivity extends ListActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == EDIT_ACTION || requestCode == CONFIG_ACTION) {
+		if (requestCode == EDIT_ACTION || requestCode == CONFIG_ACTION || requestCode == IMPORT_ACTION) {
 			String result = "";
 			if (resultCode == RESULT_OK) {
 				result = data.getStringExtra("result");
+				if (requestCode == IMPORT_ACTION) {
+					importDictionaryFromExternalStorage(data.getData());
+				}
 			}
 			if (resultCode == RESULT_CANCELED) {
 			}
@@ -304,6 +315,23 @@ public class DictionaryListActivity extends ListActivity {
 					}
 				}
 			}
+		}
+	}
+
+	private void importDictionaryFromExternalStorage(Uri importFile) {
+		try {
+			InputStream in = getContentResolver().openInputStream(importFile);
+			byte[] dictionaryBytes = IOUtils.toByteArray(in);
+			XmlUtil util = XmlUtil.getInstance();
+			Entity entity = util.unmarshall(dictionaryBytes);
+			Resources resources = getApplicationContext().getResources();
+			String text = resources.getString(R.string.savingDictionary);
+			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+			toast.show();
+			VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
+			helper.persist(entity.getDictionary(), entity.getVocables());
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage(), ex);
 		}
 	}
 

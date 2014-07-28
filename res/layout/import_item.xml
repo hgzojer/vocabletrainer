@@ -19,12 +19,29 @@
         android:contentDescription="@string/deleteFile"
         android:src="@drawable/ic_action_button_delete" />
 
-    <TextView
-        android:id="@+id/listItemName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="left|center_vertical"
-        android:layout_margin="3dp"
-        android:text="@string/file" />
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/listItemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:gravity="left|bottom"
+            android:text="@string/file" />
+
+        <TextView
+            android:id="@+id/listItemDictionary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:gravity="left|top"
+            android:text="@string/dictionary1"
+            android:textColor="#888"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
 
 </LinearLayout>

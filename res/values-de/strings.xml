@@ -53,5 +53,15 @@
     <string name="confirmResetDatabaseTitle">Datenbank wiederherstellen</string>
     <string name="confirmResetDatabaseText">Möchten Sie wirklich die Standard-Wörterbucher wiederherstellen? Achtung: dabei werden alle aktuellen Wörterbücher gelöscht!</string>
     <string name="resettingDatabase">Datenbank wird wiederhergestellt.</string>
+
+    <string name="exportToExternalStorage">Export zum externen Speicher</string>
+    <string name="importFromExternalStorage">Import vom externen Speicher</string>
+    
+    <string name="errorExportingDictionary">Fehler beim exportieren des Wörterbuchs auf den externen Speicher.</string>
+    <string name="exportedDictionary">Das Wörterbuch wurde auf Datei %s am externen Speicher exportiert.</string>
+    
+    <string name="selectFileToImport">Datei zum Importieren auswählen:</string>
+    <string name="deleteFile">Datei löschen</string>
+    <string name="file">DICT_123.vt</string>
     	
 </resources>

@@ -64,5 +64,6 @@
     <string name="selectFileToImport">Select file to import:</string>
     <string name="deleteFile">delete file</string>
     <string name="file">DICT_123.vt</string>
+    <string name="importingDictionary">Importing dictionary.</string>
     
 </resources>

@@ -64,5 +64,6 @@
     <string name="selectFileToImport">Datei zum Importieren auswählen:</string>
     <string name="deleteFile">Datei löschen</string>
     <string name="file">DICT_123.vt</string>
+    <string name="importingDictionary">Wörterbuch wird importiert.</string>
     	
 </resources>

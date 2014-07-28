@@ -325,7 +325,7 @@ public class DictionaryListActivity extends ListActivity {
 			XmlUtil util = XmlUtil.getInstance();
 			Entity entity = util.unmarshall(dictionaryBytes);
 			Resources resources = getApplicationContext().getResources();
-			String text = resources.getString(R.string.savingDictionary);
+			String text = resources.getString(R.string.importingDictionary);
 			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
 			toast.show();
 			VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());

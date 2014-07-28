@@ -107,6 +107,7 @@ public class ImportActivity extends ListActivity {
 
 		private class ViewHolder {
 			public ImageButton buttonDelete;
+			public View listItem;
 			public TextView listItemName;
 			public TextView listItemDictionary;
 			public FileRow fileRow;
@@ -122,6 +123,7 @@ public class ImportActivity extends ListActivity {
 						R.layout.import_item, parent, false);
 				final ViewHolder vh = new ViewHolder();
 				vh.buttonDelete = (ImageButton) convertView.findViewById(R.id.buttonDelete);
+				vh.listItem = (View) convertView.findViewById(R.id.listItem);
 				vh.listItemName = (TextView) convertView.findViewById(R.id.listItemName);
 				vh.listItemDictionary = (TextView) convertView.findViewById(R.id.listItemDictionary);
 				
@@ -140,6 +142,7 @@ public class ImportActivity extends ListActivity {
 						ImportActivity.this.finish();
 					}
 				};
+				vh.listItem.setOnClickListener(selectFileListener);
 				vh.listItemName.setOnClickListener(selectFileListener);
 				vh.listItemDictionary.setOnClickListener(selectFileListener);
 				convertView.setTag(vh);

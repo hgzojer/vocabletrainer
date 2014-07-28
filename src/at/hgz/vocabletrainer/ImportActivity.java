@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ImportActivity extends ListActivity {
 
@@ -67,6 +68,10 @@ public class ImportActivity extends ListActivity {
 		.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int whichButton) {
 				if (file.delete()) {
+					Resources resources = getApplicationContext().getResources();
+					String text = resources.getString(R.string.deletingDictionary);
+					Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+					toast.show();
 					adapter.remove(file);
 				}
 		    }})

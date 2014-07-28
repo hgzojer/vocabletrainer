@@ -22,14 +22,14 @@
     <string name="finishedToast">*** Fertig ***</string>
     <string name="finishedToastDetails">Gratulation, Sie haben das Training-Set erfolgreich abgeschlossen.</string>
     
-    <string name="language12">Deutsch &lt;-&gt; English</string>
+    <string name="language12">Deutsch ↔ English</string>
     <string name="count">Anzahl: %d</string>
     <string name="edit">bearbeiten</string>
     <string name="training">Training</string>
     <string name="multipleChoice">MC</string>
     <string name="nodata">Keine Wörterbücher vorhanden</string>
     
-    <string name="languageDirection12">Deutsch -&gt; Toki Pona</string>
+    <string name="languageDirection12">Deutsch → Toki Pona</string>
     
     <string name="dictionaryNameLabel">Wörterbuchname</string>
     <string name="language1Label">Sprache 1</string>
@@ -45,9 +45,9 @@
     
     <string name="openConfig">Einstellungen</string>
     <string name="translationDirection">Übersetzungsrichtung</string>
-    <string name="translateForward">Sprache 1 -&gt; Sprache 2</string>
-    <string name="translateBidrectional">Sprache 1 &lt;-&gt; Sprache 2</string>
-    <string name="translateBackward">Sprache 1 &lt;- Sprache 2</string>
+    <string name="translateForward">Sprache 1 → Sprache 2</string>
+    <string name="translateBidrectional">Sprache 1 ↔ Sprache 2</string>
+    <string name="translateBackward">Sprache 1 ← Sprache 2</string>
     <string name="resetDatabase">Datenbank wiederherstellen</string>
     
     <string name="confirmResetDatabaseTitle">Datenbank wiederherstellen</string>

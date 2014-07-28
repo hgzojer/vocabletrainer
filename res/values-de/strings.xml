@@ -60,6 +60,7 @@
     <string name="errorExportingDictionary">Fehler beim exportieren des Wörterbuchs auf den externen Speicher.</string>
     <string name="exportedDictionary">Das Wörterbuch wurde auf Datei %s am externen Speicher exportiert.</string>
     
+    <string name="title_activity_import">Import vom externen Speicher</string>
     <string name="selectFileToImport">Datei zum Importieren auswählen:</string>
     <string name="deleteFile">Datei löschen</string>
     <string name="file">DICT_123.vt</string>

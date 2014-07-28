@@ -60,6 +60,7 @@
     <string name="errorExportingDictionary">Error exporting dictionary to external storage.</string>
     <string name="exportedDictionary">Exported dictionary to external storage file %s.</string>
     
+    <string name="title_activity_import">Import from external storage</string>
     <string name="selectFileToImport">Select file to import:</string>
     <string name="deleteFile">delete file</string>
     <string name="file">DICT_123.vt</string>

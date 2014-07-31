@@ -1,5 +1,6 @@
 package at.hgz.vocabletrainer;
 
+import java.io.File;
 import java.util.List;
 
 import at.hgz.vocabletrainer.db.Dictionary;
@@ -20,6 +21,8 @@ public class State {
 	
 	private int direction;
 	private boolean configChanged;
+	
+	private File currentDirectory;
 	
 	public Dictionary getDictionary() {
 		return dictionary;
@@ -115,5 +118,13 @@ public class State {
 
 	public void setConfigChanged(boolean configChanged) {
 		this.configChanged = configChanged;
+	}
+
+	public File getCurrentDirectory() {
+		return currentDirectory;
+	}
+
+	public void setCurrentDirectory(File currentDirectory) {
+		this.currentDirectory = currentDirectory;
 	}
 }

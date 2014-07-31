@@ -45,7 +45,20 @@ public class ImportActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_import);
 
-		File dir = getExternalFilesDir(null);
+		
+		if (TrainingApplication.getState().getCurrentDirectory() == null) {
+			File dir = getExternalFilesDir(null);
+			TrainingApplication.getState().setCurrentDirectory(dir);
+		}
+		TextView currentPath = (TextView) findViewById(R.id.currentPath);
+		currentPath.setText("" + TrainingApplication.getState().getCurrentDirectory());
+		loadFiles();
+		adapter = new FileArrayAdapter(this, R.layout.import_item, list);
+		setListAdapter(adapter);
+	}
+
+	private void loadFiles() {
+		File dir = TrainingApplication.getState().getCurrentDirectory();
 		list.clear();
 		File[] files = dir.listFiles(new FilenameFilter() {
 			private Pattern p = Pattern.compile("^.*\\.vt$");
@@ -61,18 +74,15 @@ public class ImportActivity extends ListActivity {
 		for (File file : files) {
 			FileRow fileRow = new FileRow();
 			fileRow.file = file;
-			fileRow.dictionary = "";
 			try {
 				InputStream in = new FileInputStream(file);
 				byte[] dictionaryBytes = IOUtils.toByteArray(in);
 				fileRow.dictionary = XmlUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
 			} catch (Exception ex) {
-				// do nothing
+				fileRow.dictionary = "(X_X)";
 			}
 			list.add(fileRow);
 		}
-		adapter = new FileArrayAdapter(this, R.layout.import_item, list);
-		setListAdapter(adapter);
 	}
 
 	private void deleteFile(final FileRow fileRow) {

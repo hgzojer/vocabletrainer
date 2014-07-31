@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,19 +51,18 @@ public class DictionaryListActivity extends ListActivity {
 	private DictionaryArrayAdapter adapter;
 	
 	private String directionSymbol = "↔";
-	
-	private boolean dictionarySelected;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dictionary_list);
 
-        SharedPreferences settings = DictionaryListActivity.this.getPreferences(MODE_PRIVATE);
-        int direction = settings.getInt(ConfigActivity.TRANSLATION_DIRECTION, TrainingSet.DIRECTION_BIDIRECTIONAL);
-        TrainingApplication.getState().setDirection(direction);
-
+        loadConfig();
+		loadDirectionSymbol();
 		loadDictionaryList();
+
+		adapter = new DictionaryArrayAdapter(this, R.layout.dictionary_list_item, list);
+		setListAdapter(adapter);
 	}
 	
 	@Override
@@ -83,6 +83,12 @@ public class DictionaryListActivity extends ListActivity {
 		super.onStop();
 	}
 
+	private void loadConfig() {
+		SharedPreferences settings = DictionaryListActivity.this.getPreferences(MODE_PRIVATE);
+        int direction = settings.getInt(ConfigActivity.TRANSLATION_DIRECTION, TrainingSet.DIRECTION_BIDIRECTIONAL);
+        TrainingApplication.getState().setDirection(direction);
+	}
+
 	private void saveConfig() {
 		if (TrainingApplication.getState().hasConfigChanged()) {
 			SharedPreferences settings = this.getPreferences(MODE_PRIVATE);
@@ -91,6 +97,10 @@ public class DictionaryListActivity extends ListActivity {
 			editor.commit();
 			TrainingApplication.getState().setConfigChanged(false);
 		}
+	}
+
+	private boolean isDictionarySelected() {
+		return TrainingApplication.getState().getDictionary() != null;
 	}
 
 	@Override
@@ -103,7 +113,7 @@ public class DictionaryListActivity extends ListActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem exportToExternalStorage = menu.findItem(R.id.exportToExternalStorage);
-		exportToExternalStorage.setVisible(dictionarySelected);
+		exportToExternalStorage.setVisible(isDictionarySelected());
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -191,6 +201,14 @@ public class DictionaryListActivity extends ListActivity {
 	}
 
 	private void loadDictionaryList() {
+		VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
+		list.clear();
+		for (Dictionary lib : helper.getDictionaries()) {
+			list.add(lib);
+		}
+	}
+
+	private void loadDirectionSymbol() {
 		int direction = TrainingApplication.getState().getDirection();
 		switch (direction) {
 		case TrainingSet.DIRECTION_FORWARD:
@@ -203,122 +221,75 @@ public class DictionaryListActivity extends ListActivity {
 			directionSymbol = "←";
 			break;
 		}
-
-		VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
-		list.clear();
-		for (Dictionary lib : helper.getDictionaries()) {
-			list.add(lib);
-		}
-
-		adapter = new DictionaryArrayAdapter(this, R.layout.dictionary_list_item, list);
-		setListAdapter(adapter);
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		
-		final int position1 = position;
-		for (int i = 0; i < l.getChildCount(); i++) {
-			if (i != position) {
-				View c = l.getChildAt(i);
-				c.findViewById(R.id.listItemCount).setVisibility(View.GONE);
-				c.findViewById(R.id.buttonEdit).setVisibility(View.GONE);
-				c.findViewById(R.id.buttonTraining).setVisibility(View.GONE);
-				c.findViewById(R.id.buttonMultipleChoice).setVisibility(View.GONE);
-			}
-		}
-		dictionarySelected = true;
-		
-		expandItem(v, position1);
+		loadDictionaryVocables(position);
+		adapter.notifyDataSetChanged();
+		setSelection(position);
 	}
 
-	private void expandItem(View v, final int position) {
+	private void loadDictionaryVocables(final int position) {
 		VocableOpenHelper helper = VocableOpenHelper.getInstance(DictionaryListActivity.this);
 		Dictionary dictionary = list.get(position);
 		List<Vocable> vocables = helper.getVocables(dictionary.getId());
 		TrainingApplication.getState().setDictionary(dictionary);
 		TrainingApplication.getState().setVocables(vocables);
-		int count = vocables.size();
-		
-		TextView listItemCount = (TextView) v.findViewById(R.id.listItemCount);
-		Resources resources = getApplicationContext().getResources();
-		listItemCount.setText(resources.getString(R.string.count, count));
-		listItemCount.setVisibility(View.VISIBLE);
-		
-		View buttonEdit = v.findViewById(R.id.buttonEdit);
-		buttonEdit.setVisibility(View.VISIBLE);
-		buttonEdit.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(DictionaryListActivity.this, VocableListActivity.class);
-				//intent.putExtra("dictionaryId", dictionaryId);
-				DictionaryListActivity.this.startActivityForResult(intent, EDIT_ACTION);
-			}
-		});
-		
-		if (count > 0) {
-			View buttonTraining = v.findViewById(R.id.buttonTraining);
-			buttonTraining.setVisibility(View.VISIBLE);
-			buttonTraining.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(DictionaryListActivity.this, TrainingActivity.class);
-					//intent.putExtra("dictionaryId", dictionaryId);
-					DictionaryListActivity.this.startActivity(intent);
-				}
-			});
-			
-			View buttonMultipleChoice = v.findViewById(R.id.buttonMultipleChoice);
-			buttonMultipleChoice.setVisibility(View.VISIBLE);
-			buttonMultipleChoice.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(DictionaryListActivity.this, MultipleChoiceActivity.class);
-					//intent.putExtra("dictionaryId", dictionaryId);
-					DictionaryListActivity.this.startActivity(intent);
-				}
-			});
-		}
-		setSelection(position);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == EDIT_ACTION || requestCode == CONFIG_ACTION || requestCode == IMPORT_ACTION) {
+		
+		if (requestCode == EDIT_ACTION) {
 			String result = "";
 			if (resultCode == RESULT_OK) {
 				result = data.getStringExtra("result");
-				if (requestCode == IMPORT_ACTION) {
-					importDictionaryFromExternalStorage(data.getData());
+				if ("save".equals(result)) {
+					int position = list.indexOf(TrainingApplication.getState().getDictionary());
+					loadDictionaryVocables(position);
+					adapter.notifyDataSetChanged();
+					setSelection(position);
+				} else if ("add".equals(result)) {
+					loadDictionaryList();
+					int position = list.size() - 1;
+					loadDictionaryVocables(position);
+					adapter.notifyDataSetChanged();
+					setSelection(position);
+				} else if ("delete".equals(result)) {
+					loadDictionaryList();
+					TrainingApplication.getState().setDictionary(null);
+					TrainingApplication.getState().setVocables(null);
+					adapter.notifyDataSetChanged();
 				}
 			}
 			if (resultCode == RESULT_CANCELED) {
 			}
-			
-			ListView l = getListView();
-			for (int i = 0; i < l.getChildCount(); i++) {
-				View c = l.getChildAt(i);
-				c.findViewById(R.id.listItemCount).setVisibility(View.GONE);
-				c.findViewById(R.id.buttonEdit).setVisibility(View.GONE);
-				c.findViewById(R.id.buttonTraining).setVisibility(View.GONE);
-				c.findViewById(R.id.buttonMultipleChoice).setVisibility(View.GONE);
-			}
-			dictionarySelected = false;
-			loadDictionaryList();
+		}
+		
+		if (requestCode == CONFIG_ACTION) {
+			loadDirectionSymbol();
 			adapter.notifyDataSetChanged();
-			if ("save".equals(result)) {
-				for (int i = 0; i < l.getChildCount(); i++) {
-					if (l.getItemAtPosition(i) == TrainingApplication.getState().getDictionary()) {
-						View c = l.getChildAt(i);
-						expandItem(c, i);
-					}
+		}
+		
+		if (requestCode == IMPORT_ACTION) {
+			if (resultCode == RESULT_OK) {
+				if (importDictionaryFromExternalStorage(data.getData())) {
+					loadDictionaryList();
+					int position = list.size() - 1;
+					loadDictionaryVocables(position);
+					adapter.notifyDataSetChanged();
+					setSelection(position);
 				}
+			}
+			if (resultCode == RESULT_CANCELED) {
 			}
 		}
 	}
 
-	private void importDictionaryFromExternalStorage(Uri importFile) {
+	private boolean importDictionaryFromExternalStorage(Uri importFile) {
 		try {
 			InputStream in = getContentResolver().openInputStream(importFile);
 			byte[] dictionaryBytes = IOUtils.toByteArray(in);
@@ -330,8 +301,13 @@ public class DictionaryListActivity extends ListActivity {
 			toast.show();
 			VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
 			helper.persist(entity.getDictionary(), entity.getVocables());
+			return true;
 		} catch (Exception ex) {
-			throw new RuntimeException(ex.getMessage(), ex);
+			Resources resources = getApplicationContext().getResources();
+			String text = resources.getString(R.string.errorImportingDictionary);
+			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+			toast.show();
+			return false;
 		}
 	}
 
@@ -341,24 +317,82 @@ public class DictionaryListActivity extends ListActivity {
 				List<Dictionary> objects) {
 			super(context, resource, objects);
 		}
+		
+		private class ViewHolder {
+			public TextView listItemName;
+			public TextView listItemLanguage12;
+			public Dictionary dictionary;
+			public TextView listItemCount;
+			public Button buttonEdit;
+			public Button buttonTraining;
+			public Button buttonMultipleChoice;
+		}
 
 	    @Override
 	    public View getView(int position, View convertView, ViewGroup parent) {
 
-	       Dictionary dictionary = getItem(position);    
+			Dictionary dictionary = getItem(position);
 
-	       if (convertView == null) {
-	          convertView = LayoutInflater.from(getContext()).inflate(R.layout.dictionary_list_item, parent, false);
-	       }
+			if (convertView == null) {
+				convertView = LayoutInflater.from(getContext()).inflate(
+						R.layout.dictionary_list_item, parent, false);
+				final ViewHolder vh = new ViewHolder();
+				vh.listItemName = (TextView) convertView.findViewById(R.id.listItemName);
+				vh.listItemLanguage12 = (TextView) convertView.findViewById(R.id.listItemLanguage12);
+				vh.listItemCount = (TextView) convertView.findViewById(R.id.listItemCount);
+				vh.buttonEdit = (Button) convertView.findViewById(R.id.buttonEdit);
+				vh.buttonTraining = (Button) convertView.findViewById(R.id.buttonTraining);
+				vh.buttonMultipleChoice = (Button) convertView.findViewById(R.id.buttonMultipleChoice);
+				vh.buttonEdit.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(DictionaryListActivity.this, VocableListActivity.class);
+						//intent.putExtra("dictionaryId", dictionaryId);
+						DictionaryListActivity.this.startActivityForResult(intent, EDIT_ACTION);
+					}
+				});
+				vh.buttonTraining.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(DictionaryListActivity.this, TrainingActivity.class);
+						//intent.putExtra("dictionaryId", dictionaryId);
+						DictionaryListActivity.this.startActivity(intent);
+					}
+				});
+				vh.buttonMultipleChoice.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(DictionaryListActivity.this, MultipleChoiceActivity.class);
+						//intent.putExtra("dictionaryId", dictionaryId);
+						DictionaryListActivity.this.startActivity(intent);
+					}
+				});
 
-	       TextView listItemName = (TextView) convertView.findViewById(R.id.listItemName);
-	       TextView listItemLanguage12 = (TextView) convertView.findViewById(R.id.listItemLanguage12);
-	        
-	       listItemName.setText(dictionary.getName());
-	       listItemLanguage12.setText(String.format("%s %s %s",  dictionary.getLanguage1(), directionSymbol, dictionary.getLanguage2()));
+				convertView.setTag(vh);
+			}
 
-	       return convertView;
-	   }		
+			ViewHolder vh = (ViewHolder) convertView.getTag();
+			vh.dictionary = dictionary;
+			vh.listItemName.setText(dictionary.getName());
+		    vh.listItemLanguage12.setText(String.format("%s %s %s",  dictionary.getLanguage1(), directionSymbol, dictionary.getLanguage2()));
+			int visibility = View.GONE;
+			int visibilityTraining = View.GONE;
+			if (vh.dictionary == TrainingApplication.getState().getDictionary()) {
+				visibility = View.VISIBLE;
+				int count = TrainingApplication.getState().getVocables().size();
+				Resources resources = getApplicationContext().getResources();
+				vh.listItemCount.setText(resources.getString(R.string.count, count));
+				if (count > 0) {
+					visibilityTraining = View.VISIBLE;
+				}
+			}
+			vh.listItemCount.setVisibility(visibility);
+			vh.buttonEdit.setVisibility(visibility);
+			vh.buttonTraining.setVisibility(visibilityTraining);
+			vh.buttonMultipleChoice.setVisibility(visibilityTraining);
+
+			return convertView;
+		}
 
 	}
 }

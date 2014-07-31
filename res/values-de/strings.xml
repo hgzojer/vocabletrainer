@@ -65,5 +65,6 @@
     <string name="deleteFile">Datei löschen</string>
     <string name="file">DICT_123.vt</string>
     <string name="importingDictionary">Wörterbuch wird importiert.</string>
+    <string name="errorImportingDictionary">Fehler beim Importieren des Wörterbuchs.</string>
     	
 </resources>

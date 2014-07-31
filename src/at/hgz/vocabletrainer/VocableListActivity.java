@@ -92,9 +92,10 @@ public class VocableListActivity extends ListActivity {
 
 	@Override
 	public void onBackPressed() {
+		String result = (TrainingApplication.getState().getDictionary().getId() == -1 ? "add" : "save");
 		saveState();
 		Intent returnIntent = new Intent();
-		returnIntent.putExtra("result", "save");
+		returnIntent.putExtra("result", result);
 		setResult(RESULT_OK,returnIntent);
 		//finish();
 		super.onBackPressed();

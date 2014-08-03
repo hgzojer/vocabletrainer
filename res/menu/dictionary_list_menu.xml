@@ -23,4 +23,14 @@
           android:title="@string/importFromExternalStorage"
           />
     
+    <item android:id="@+id/uploadToGoogleDrive"
+          android:icon="@drawable/ic_action_upload_to_google_drive"
+          android:title="@string/uploadToGoogleDrive"
+          />
+    
+    <item android:id="@+id/downloadFromGoogleDrive"
+          android:icon="@drawable/ic_action_download_from_google_drive"
+          android:title="@string/downloadFromGoogleDrive"
+          />
+    
 </menu>

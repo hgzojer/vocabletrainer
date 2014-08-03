@@ -16,6 +16,8 @@ import org.apache.commons.io.IOUtils;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -41,16 +43,33 @@ import at.hgz.vocabletrainer.set.TrainingSet;
 import at.hgz.vocabletrainer.xml.XmlUtil;
 import at.hgz.vocabletrainer.xml.XmlUtil.Entity;
 
-public class DictionaryListActivity extends ListActivity {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.MetadataChangeSet;
 
+public class DictionaryListActivity extends ListActivity implements ConnectionCallbacks, OnConnectionFailedListener {
+
+	private static final String TAG = "DictionaryListActivity";
 	private static final int EDIT_ACTION = 1;
 	private static final int CONFIG_ACTION = 2;
 	private static final int IMPORT_ACTION = 3;
+	private static final int RESOLVE_CONNECTION_REQUEST_CODE = 4;
+	private static final int REQUEST_CODE_CREATOR = 5;
 	private List<Dictionary> list = new ArrayList<Dictionary>();
 	
 	private DictionaryArrayAdapter adapter;
 	
 	private String directionSymbol = "↔";
+	
+	private GoogleApiClient googleApiClient;
+	
+	private boolean uploadFlag;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +93,9 @@ public class DictionaryListActivity extends ListActivity {
 	@Override
 	protected void onPause() {
         saveConfig();
+        if (googleApiClient != null) {
+            googleApiClient.disconnect();
+        }
 		super.onPause();
 	}
 
@@ -114,6 +136,8 @@ public class DictionaryListActivity extends ListActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem exportToExternalStorage = menu.findItem(R.id.exportToExternalStorage);
 		exportToExternalStorage.setVisible(isDictionarySelected());
+		MenuItem uploadToGoogleDrive = menu.findItem(R.id.uploadToGoogleDrive);
+		uploadToGoogleDrive.setVisible(isDictionarySelected());
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -153,6 +177,16 @@ public class DictionaryListActivity extends ListActivity {
 				DictionaryListActivity.this.startActivityForResult(intent, IMPORT_ACTION);
 	        	return true;
 	        }
+	        case R.id.uploadToGoogleDrive:
+	        {
+				uploadToGoogleDrive();
+	        	return true;
+	        }
+	        case R.id.downloadFromGoogleDrive:
+	        {
+				downloadFromGoogleDrive();
+	        	return true;
+	        }
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
@@ -167,7 +201,7 @@ public class DictionaryListActivity extends ListActivity {
 			File storageDir = getExternalFilesDir(null);
 			if (!storageDir.exists()) {
 				if (!storageDir.mkdirs()) {
-					Log.d("DictionaryListActivity", "failed to create directory");
+					Log.d(TAG, "failed to create directory");
 				}
 			}
 		    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
@@ -198,6 +232,128 @@ public class DictionaryListActivity extends ListActivity {
 			String text = getResources().getString(R.string.errorExportingDictionary);
 		    Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 		}
+	}
+	
+	private void uploadToGoogleDrive() {
+		uploadFlag = true;
+        connectToGoogleDrive();
+ 	}
+	
+	private void downloadFromGoogleDrive() {
+		uploadFlag = false;
+        connectToGoogleDrive();
+ 	}
+
+	private void connectToGoogleDrive() {
+		if (googleApiClient == null) {
+        	googleApiClient = new GoogleApiClient.Builder(this)
+	            .addApi(Drive.API)
+	            .addScope(Drive.SCOPE_FILE)
+	            .addConnectionCallbacks(this)
+	            .addOnConnectionFailedListener(this)
+	            .build();
+        }
+        if (!googleApiClient.isConnected()) {
+            googleApiClient.connect();
+        } else {
+    		if (uploadFlag) {
+    			doUploadToGoogleDrive();
+    		} else {
+    			doDownloadFromGoogleDrive();
+    		}
+        }
+	}
+	
+	@Override
+	public void onConnected(Bundle bundle) {
+		Log.d(TAG, "API client connected.");
+
+		if (uploadFlag) {
+			doUploadToGoogleDrive();
+		} else {
+			doDownloadFromGoogleDrive();
+		}
+	}
+	
+	private void doDownloadFromGoogleDrive() {
+	    IntentSender intentSender = Drive.DriveApi
+	            .newOpenFileActivityBuilder()
+	            .setMimeType(new String[] { "application/vnd.hgz.vocabletrainer" })
+	            .build(googleApiClient);
+	    try {
+	        startIntentSenderForResult(
+	                intentSender, REQUEST_CODE_OPENER, null, 0, 0, 0);
+	    } catch (SendIntentException e) {
+	        Log.w(TAG, "Unable to send intent", e);
+	    }
+	}
+
+	private void doUploadToGoogleDrive() {
+		ResultCallback<ContentsResult> newContentsCallback = new
+		        ResultCallback<ContentsResult>() {
+		    @Override
+		    public void onResult(ContentsResult result) {
+			    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+		    	String title = "DICT_"+ timeStamp + ".vt";
+		    	
+				XmlUtil util = XmlUtil.getInstance();
+				Dictionary dictionary = TrainingApplication.getState().getDictionary();
+				List<Vocable> vocables = TrainingApplication.getState().getVocables();
+				byte[] dictionaryBytes = util.marshall(dictionary, vocables);
+
+			    try {
+				    OutputStream out = result.getContents().getOutputStream();
+				    try {
+				    	out.write(dictionaryBytes);
+				    	out.flush();
+				    } catch (IOException ex) {
+				    	
+				    } finally {
+				    	if (out != null) {
+				    		out.close();
+				    	}
+				    }
+			    } catch (IOException ex) {
+			    	throw new RuntimeException(ex.getMessage(), ex);
+			    }
+		    	
+		        MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
+		                .setMimeType("application/vnd.hgz.vocabletrainer")
+		                .setTitle(title).build();
+		        IntentSender intentSender = Drive.DriveApi
+		                 .newCreateFileActivityBuilder()
+		                 .setInitialMetadata(metadataChangeSet)
+		                 .setInitialContents(result.getContents())
+		                 .build(DictionaryListActivity.this.googleApiClient);
+		        try {
+		            startIntentSenderForResult(
+		                    intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
+		        } catch (SendIntentException e) {
+		            Log.w(TAG, "Unable to send intent", e);
+					String text = getResources().getString(R.string.errorUploadingDictionary);
+				    Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
+		        }
+		    }
+		};
+		Drive.DriveApi.newContents(googleApiClient).setResultCallback(newContentsCallback);
+	}
+	
+	@Override
+	public void onConnectionSuspended(int arg0) {
+		Log.d(TAG, "API client connection suspended.");
+	}
+	
+	@Override
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+	    if (connectionResult.hasResolution()) {
+	        try {
+	            connectionResult.startResolutionForResult(this, RESOLVE_CONNECTION_REQUEST_CODE);
+	        } catch (IntentSender.SendIntentException e) {
+	            // TODO Unable to resolve, message user appropriately
+	        }
+	    } else {
+	        GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), this, 0).show();
+	    }
 	}
 
 	private void loadDictionaryList() {
@@ -286,6 +442,21 @@ public class DictionaryListActivity extends ListActivity {
 			}
 			if (resultCode == RESULT_CANCELED) {
 			}
+		}
+		
+		if (requestCode == RESOLVE_CONNECTION_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                googleApiClient.connect();
+            }
+		}
+		
+		if (requestCode == REQUEST_CODE_CREATOR) {
+            if (resultCode == RESULT_OK) {
+    			String text = getResources().getString(R.string.uploadedDictionary);
+    		    Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+            }
+            if (resultCode == RESULT_CANCELED) {
+            }
 		}
 	}
 

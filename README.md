@@ -16,6 +16,7 @@ Third party library license and source code:
 * gson, see https://code.google.com/p/google-gson/
 * commons-io, see http://commons.apache.org/proper/commons-io/
 * simple-xml, see http://simple.sourceforge.net/
+* google api (google drive), see https://developers.google.com/drive/android/
 
 Third party picture license and source:
 * menu icons, action icons, see http://developer.android.com/

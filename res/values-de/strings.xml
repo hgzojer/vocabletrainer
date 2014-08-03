@@ -72,5 +72,8 @@
     
     <string name="errorUploadingDictionary">Fehler beim Upload vom Wörterbuch nach Google Drive.</string>
     <string name="uploadedDictionary">Das Wörterbuch wurde nach Google Drive hochgeladen.</string>
+    
+    <string name="downloadingDictionary">Wörterbuch wird heruntergeladen.</string>
+    <string name="errorDownloadingDictionary">Fehler beim Herunterladen des Wörterbuchs.</string>
     	
 </resources>

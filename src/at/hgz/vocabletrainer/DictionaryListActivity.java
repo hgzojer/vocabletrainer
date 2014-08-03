@@ -49,9 +49,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.drive.Contents;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.drive.OpenFileActivityBuilder;
 
 public class DictionaryListActivity extends ListActivity implements ConnectionCallbacks, OnConnectionFailedListener {
 
@@ -61,6 +65,7 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 	private static final int IMPORT_ACTION = 3;
 	private static final int RESOLVE_CONNECTION_REQUEST_CODE = 4;
 	private static final int REQUEST_CODE_CREATOR = 5;
+	private static final int REQUEST_CODE_OPENER = 6;
 	private List<Dictionary> list = new ArrayList<Dictionary>();
 	
 	private DictionaryArrayAdapter adapter;
@@ -70,6 +75,7 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 	private GoogleApiClient googleApiClient;
 	
 	private boolean uploadFlag;
+	private boolean driveTransaction;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +99,7 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 	@Override
 	protected void onPause() {
         saveConfig();
-        if (googleApiClient != null) {
+        if (googleApiClient != null && !driveTransaction) {
             googleApiClient.disconnect();
         }
 		super.onPause();
@@ -236,11 +242,13 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 	
 	private void uploadToGoogleDrive() {
 		uploadFlag = true;
+		driveTransaction = true;
         connectToGoogleDrive();
  	}
 	
 	private void downloadFromGoogleDrive() {
 		uploadFlag = false;
+		driveTransaction = true;
         connectToGoogleDrive();
  	}
 
@@ -275,6 +283,60 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 		}
 	}
 	
+	private void doUploadToGoogleDrive() {
+		ResultCallback<ContentsResult> newContentsCallback = new
+		        ResultCallback<ContentsResult>() {
+		    @Override
+		    public void onResult(ContentsResult result) {
+		    	try {
+				    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+			    	String title = "DICT_"+ timeStamp + ".vt";
+			    	
+					XmlUtil util = XmlUtil.getInstance();
+					Dictionary dictionary = TrainingApplication.getState().getDictionary();
+					List<Vocable> vocables = TrainingApplication.getState().getVocables();
+					byte[] dictionaryBytes = util.marshall(dictionary, vocables);
+	
+				    try {
+					    OutputStream out = result.getContents().getOutputStream();
+					    try {
+					    	out.write(dictionaryBytes);
+					    	out.flush();
+					    } catch (IOException ex) {
+					    	
+					    } finally {
+					    	if (out != null) {
+					    		out.close();
+					    	}
+					    }
+				    } catch (IOException ex) {
+				    	throw new RuntimeException(ex.getMessage(), ex);
+				    }
+			    	
+			        MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
+			                .setMimeType("application/vnd.hgz.vocabletrainer")
+			                .setTitle(title).build();
+			        IntentSender intentSender = Drive.DriveApi
+			                 .newCreateFileActivityBuilder()
+			                 .setInitialMetadata(metadataChangeSet)
+			                 .setInitialContents(result.getContents())
+			                 .build(DictionaryListActivity.this.googleApiClient);
+			        try {
+			            startIntentSenderForResult(
+			                    intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
+			        } catch (SendIntentException e) {
+			            Log.w(TAG, "Unable to send intent", e);
+						String text = getResources().getString(R.string.errorUploadingDictionary);
+					    Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
+			        }
+		    	} finally {
+		    		driveTransaction = false;
+		    	}
+		    }
+		};
+		Drive.DriveApi.newContents(googleApiClient).setResultCallback(newContentsCallback);
+	}
+	
 	private void doDownloadFromGoogleDrive() {
 	    IntentSender intentSender = Drive.DriveApi
 	            .newOpenFileActivityBuilder()
@@ -285,59 +347,35 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 	                intentSender, REQUEST_CODE_OPENER, null, 0, 0, 0);
 	    } catch (SendIntentException e) {
 	        Log.w(TAG, "Unable to send intent", e);
+			String text = getResources().getString(R.string.errorDownloadingDictionary);
+		    Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
 	    }
 	}
 
-	private void doUploadToGoogleDrive() {
-		ResultCallback<ContentsResult> newContentsCallback = new
-		        ResultCallback<ContentsResult>() {
-		    @Override
-		    public void onResult(ContentsResult result) {
-			    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-		    	String title = "DICT_"+ timeStamp + ".vt";
-		    	
-				XmlUtil util = XmlUtil.getInstance();
-				Dictionary dictionary = TrainingApplication.getState().getDictionary();
-				List<Vocable> vocables = TrainingApplication.getState().getVocables();
-				byte[] dictionaryBytes = util.marshall(dictionary, vocables);
-
-			    try {
-				    OutputStream out = result.getContents().getOutputStream();
-				    try {
-				    	out.write(dictionaryBytes);
-				    	out.flush();
-				    } catch (IOException ex) {
-				    	
-				    } finally {
-				    	if (out != null) {
-				    		out.close();
-				    	}
-				    }
-			    } catch (IOException ex) {
-			    	throw new RuntimeException(ex.getMessage(), ex);
-			    }
-		    	
-		        MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
-		                .setMimeType("application/vnd.hgz.vocabletrainer")
-		                .setTitle(title).build();
-		        IntentSender intentSender = Drive.DriveApi
-		                 .newCreateFileActivityBuilder()
-		                 .setInitialMetadata(metadataChangeSet)
-		                 .setInitialContents(result.getContents())
-		                 .build(DictionaryListActivity.this.googleApiClient);
-		        try {
-		            startIntentSenderForResult(
-		                    intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
-		        } catch (SendIntentException e) {
-		            Log.w(TAG, "Unable to send intent", e);
-					String text = getResources().getString(R.string.errorUploadingDictionary);
-				    Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
-		        }
-		    }
-		};
-		Drive.DriveApi.newContents(googleApiClient).setResultCallback(newContentsCallback);
+	private boolean doDownloadFromGoogleDriveNow(Contents contents) {
+		try {
+			InputStream in = contents.getInputStream();
+			byte[] dictionaryBytes = IOUtils.toByteArray(in);
+			XmlUtil util = XmlUtil.getInstance();
+			Entity entity = util.unmarshall(dictionaryBytes);
+			Resources resources = getApplicationContext().getResources();
+			String text = resources.getString(R.string.downloadingDictionary);
+			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+			toast.show();
+			VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
+			helper.persist(entity.getDictionary(), entity.getVocables());
+			return true;
+		} catch (Exception ex) {
+			Resources resources = getApplicationContext().getResources();
+			String text = resources.getString(R.string.errorDownloadingDictionary);
+			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+			toast.show();
+			return false;
+		} finally {
+			driveTransaction = false;
+		}
 	}
-	
+
 	@Override
 	public void onConnectionSuspended(int arg0) {
 		Log.d(TAG, "API client connection suspended.");
@@ -456,6 +494,39 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
     		    Toast.makeText(this, text, Toast.LENGTH_LONG).show();
             }
             if (resultCode == RESULT_CANCELED) {
+	    		driveTransaction = false;
+            }
+		}
+		
+		if (requestCode == REQUEST_CODE_OPENER) {
+            if (resultCode == RESULT_OK) {
+            	DriveId driveId = (DriveId) data.getParcelableExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
+            	
+        		DriveFile driveFile = Drive.DriveApi.getFile(googleApiClient, driveId);
+        		ResultCallback<ContentsResult> contentsOpenedCallback =
+        		        new ResultCallback<ContentsResult>() {
+        		    @Override
+        		    public void onResult(ContentsResult result) {
+        		        if (!result.getStatus().isSuccess()) {
+        	    			String text = getResources().getString(R.string.errorDownloadingDictionary);
+        	    		    Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
+        		    		driveTransaction = false;
+        		            return;
+        		        }
+        		        Contents contents = result.getContents();
+        				if (doDownloadFromGoogleDriveNow(contents)) {
+        					loadDictionaryList();
+        					int position = list.size() - 1;
+        					loadDictionaryVocables(position);
+        					adapter.notifyDataSetChanged();
+        					setSelection(position);
+        				}
+        		    }
+        		};
+        		driveFile.openContents(googleApiClient, DriveFile.MODE_READ_ONLY, null).setResultCallback(contentsOpenedCallback);
+            }
+            if (resultCode == RESULT_CANCELED) {
+	    		driveTransaction = false;
             }
 		}
 	}

@@ -73,4 +73,7 @@
     <string name="errorUploadingDictionary">Error uploading dictionary to Google Drive.</string>
     <string name="uploadedDictionary">Uploaded dictionary to Google Drive.</string>
     
+    <string name="downloadingDictionary">Downloading dictionary.</string>
+    <string name="errorDownloadingDictionary">Error downloading dictionary.</string>
+    
 </resources>

@@ -92,8 +92,13 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 		Intent intent = getIntent();
 		if (intent != null) {
 			if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-				Uri uri = intent.getData();
-				importDictionaryFromExternalStorage(uri);
+				if (importDictionaryFromExternalStorage(intent.getData())) {
+					loadDictionaryList();
+					int position = list.size() - 1;
+					loadDictionaryVocables(position);
+					adapter.notifyDataSetChanged();
+					setSelection(position);
+				}
 			}
 		}
 	}

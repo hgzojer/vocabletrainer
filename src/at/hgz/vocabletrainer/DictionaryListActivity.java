@@ -88,6 +88,14 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 
 		adapter = new DictionaryArrayAdapter(this, R.layout.dictionary_list_item, list);
 		setListAdapter(adapter);
+		
+		Intent intent = getIntent();
+		if (intent != null) {
+			if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+				Uri uri = intent.getData();
+				importDictionaryFromExternalStorage(uri);
+			}
+		}
 	}
 	
 	@Override

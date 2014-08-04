@@ -76,4 +76,6 @@
     <string name="downloadingDictionary">Wörterbuch wird heruntergeladen.</string>
     <string name="errorDownloadingDictionary">Fehler beim Herunterladen des Wörterbuchs.</string>
     	
+    <string name="about">Über Vokabel Trainer</string>
+    
 </resources>

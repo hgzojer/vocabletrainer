@@ -76,4 +76,6 @@
     <string name="downloadingDictionary">Downloading dictionary.</string>
     <string name="errorDownloadingDictionary">Error downloading dictionary.</string>
     
+    <string name="about">About Vocable Trainer</string>
+    
 </resources>

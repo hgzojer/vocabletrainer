@@ -193,6 +193,12 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 				downloadFromGoogleDrive();
 	        	return true;
 	        }
+	        case R.id.about:
+	        {
+				Intent intent = new Intent(DictionaryListActivity.this, AboutActivity.class);
+	        	DictionaryListActivity.this.startActivity(intent);
+	        	return true;
+	        }
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }

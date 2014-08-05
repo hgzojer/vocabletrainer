@@ -214,8 +214,13 @@ public final class VocableOpenHelper extends SQLiteOpenHelper {
 				values.put(NAME_COL_NAME, dictionary.getName());
 				values.put(LANGUAGE1_COL_NAME, dictionary.getLanguage1());
 				values.put(LANGUAGE2_COL_NAME, dictionary.getLanguage2());
-				db.update(DICTIONARY_TABLE_NAME, values, ID_COL_NAME + " = ?", new String[] {""+dictionaryId});
-			} else {
+				int ret = db.update(DICTIONARY_TABLE_NAME, values, ID_COL_NAME + " = ?", new String[] {""+dictionaryId});
+				if (ret < 1) {
+					// if dictionary was deleted meanwhile
+					dictionaryId = -1;
+				}
+			}
+			if (dictionaryId == -1) {
 				dictionaryId = getDictionaryIdNext(db);
 				addDictionary(db, dictionaryId, dictionary.getName(), dictionary.getLanguage1(), dictionary.getLanguage2());
 			}

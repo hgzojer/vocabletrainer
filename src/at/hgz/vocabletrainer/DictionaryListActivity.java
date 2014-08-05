@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -90,16 +91,11 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 		setListAdapter(adapter);
 		
 		Intent intent = getIntent();
-		if (intent != null) {
-			if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-				if (importDictionaryFromExternalStorage(intent.getData())) {
-					loadDictionaryList();
-					int position = list.size() - 1;
-					loadDictionaryVocables(position);
-					adapter.notifyDataSetChanged();
-					setSelection(position);
-				}
-			}
+		if (intent.getBooleanExtra("import", false) && savedInstanceState == null) {
+			int position = list.size() - 1;
+			loadDictionaryVocables(position);
+			adapter.notifyDataSetChanged();
+			setSelection(position);
 		}
 	}
 	
@@ -462,9 +458,11 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 				result = data.getStringExtra("result");
 				if ("save".equals(result)) {
 					int position = list.indexOf(TrainingApplication.getState().getDictionary());
-					loadDictionaryVocables(position);
-					adapter.notifyDataSetChanged();
-					setSelection(position);
+					if (position != -1) {
+						loadDictionaryVocables(position);
+						adapter.notifyDataSetChanged();
+						setSelection(position);
+					}
 				} else if ("add".equals(result)) {
 					loadDictionaryList();
 					int position = list.size() - 1;
@@ -489,7 +487,7 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 		
 		if (requestCode == IMPORT_ACTION) {
 			if (resultCode == RESULT_OK) {
-				if (importDictionaryFromExternalStorage(data.getData())) {
+				if (importDictionaryFromExternalStorage(this, data.getData())) {
 					loadDictionaryList();
 					int position = list.size() - 1;
 					loadDictionaryVocables(position);
@@ -550,23 +548,23 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 		}
 	}
 
-	private boolean importDictionaryFromExternalStorage(Uri importFile) {
+	public static boolean importDictionaryFromExternalStorage(Activity activity, Uri importFile) {
 		try {
-			InputStream in = getContentResolver().openInputStream(importFile);
+			InputStream in = activity.getContentResolver().openInputStream(importFile);
 			byte[] dictionaryBytes = IOUtils.toByteArray(in);
 			XmlUtil util = XmlUtil.getInstance();
 			Entity entity = util.unmarshall(dictionaryBytes);
-			Resources resources = getApplicationContext().getResources();
+			Resources resources = activity.getApplicationContext().getResources();
 			String text = resources.getString(R.string.importingDictionary);
-			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+			Toast toast = Toast.makeText(activity.getApplicationContext(), text, Toast.LENGTH_SHORT);
 			toast.show();
-			VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
+			VocableOpenHelper helper = VocableOpenHelper.getInstance(activity.getApplicationContext());
 			helper.persist(entity.getDictionary(), entity.getVocables());
 			return true;
 		} catch (Exception ex) {
-			Resources resources = getApplicationContext().getResources();
+			Resources resources = activity.getApplicationContext().getResources();
 			String text = resources.getString(R.string.errorImportingDictionary);
-			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+			Toast toast = Toast.makeText(activity.getApplicationContext(), text, Toast.LENGTH_SHORT);
 			toast.show();
 			return false;
 		}

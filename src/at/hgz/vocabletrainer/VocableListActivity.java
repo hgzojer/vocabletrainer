@@ -27,6 +27,8 @@ import at.hgz.vocabletrainer.db.VocableOpenHelper;
 
 public class VocableListActivity extends ListActivity {
 	
+	private State state;
+	
 	private VocableArrayAdapter adapter;
 
 	@Override
@@ -34,8 +36,9 @@ public class VocableListActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_vocable_list);
 
-		State state = TrainingApplication.getState();
-		
+		Intent intent = getIntent();
+		state = TrainingApplication.getState(intent.getIntExtra(State.STATE_ID, -1));
+				 
 		EditText editTextDictionaryName = (EditText) findViewById(R.id.editTextDictionaryName);
 		editTextDictionaryName.setText(state.getDictionary().getName());
 		EditText editTextLanguage1 = (EditText) findViewById(R.id.editTextLanguage1);
@@ -92,7 +95,7 @@ public class VocableListActivity extends ListActivity {
 
 	@Override
 	public void onBackPressed() {
-		String result = (TrainingApplication.getState().getDictionary().getId() == -1 ? "add" : "save");
+		String result = (state.getDictionary().getId() == -1 ? "add" : "save");
 		saveState();
 		Intent returnIntent = new Intent();
 		returnIntent.putExtra("result", result);
@@ -102,7 +105,6 @@ public class VocableListActivity extends ListActivity {
 	}
 
 	private void saveState() {
-		State state = TrainingApplication.getState();
 		Dictionary dictionary = state.getDictionary();
 		
 		EditText editTextDictionaryName = (EditText) findViewById(R.id.editTextDictionaryName);
@@ -128,7 +130,6 @@ public class VocableListActivity extends ListActivity {
 	}
 
 	private void deleteState() {
-		State state = TrainingApplication.getState();
 		Dictionary dictionary = state.getDictionary();
 		List<Vocable> vocables = state.getVocables();
 		

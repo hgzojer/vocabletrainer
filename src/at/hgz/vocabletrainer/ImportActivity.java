@@ -32,6 +32,8 @@ import at.hgz.vocabletrainer.xml.XmlUtil;
 
 public class ImportActivity extends ListActivity {
 	
+	private State state;
+
 	private static class FileRow {
 		public File file;
 		public String dictionary;
@@ -45,20 +47,22 @@ public class ImportActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_import);
 
-		
-		if (TrainingApplication.getState().getCurrentDirectory() == null) {
+		Intent intent = getIntent();
+		state = TrainingApplication.getState(intent.getIntExtra(State.STATE_ID, -1));
+				 
+		if (state.getCurrentDirectory() == null) {
 			File dir = getExternalFilesDir(null);
-			TrainingApplication.getState().setCurrentDirectory(dir);
+			state.setCurrentDirectory(dir);
 		}
 		TextView currentPath = (TextView) findViewById(R.id.currentPath);
-		currentPath.setText("" + TrainingApplication.getState().getCurrentDirectory());
+		currentPath.setText("" + state.getCurrentDirectory());
 		loadFiles();
 		adapter = new FileArrayAdapter(this, R.layout.import_item, list);
 		setListAdapter(adapter);
 	}
 
 	private void loadFiles() {
-		File dir = TrainingApplication.getState().getCurrentDirectory();
+		File dir = state.getCurrentDirectory();
 		list.clear();
 		File[] files = dir.listFiles(new FilenameFilter() {
 			private Pattern p = Pattern.compile("^.*\\.vt$");

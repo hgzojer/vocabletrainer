@@ -3,6 +3,7 @@ package at.hgz.vocabletrainer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -14,14 +15,18 @@ import at.hgz.vocabletrainer.set.TrainingSet;
 
 public class ConfigActivity extends Activity {
 	
-    public static final String TRANSLATION_DIRECTION = "translationDirection";
+    private State state;
+	public static final String TRANSLATION_DIRECTION = "translationDirection";
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
         
-        int direction = TrainingApplication.getState().getDirection();
+		Intent intent = getIntent();
+		state = TrainingApplication.getState(intent.getIntExtra(State.STATE_ID, -1));
+				 
+        int direction = state.getDirection();
         
         RadioGroup radioGroupDirection = (RadioGroup) this.findViewById(R.id.radioGroupDirection);
 		switch (direction) {
@@ -45,16 +50,16 @@ public class ConfigActivity extends Activity {
 		if (checked) {
 			switch (view.getId()) {
 			case R.id.radioDirection1:
-				TrainingApplication.getState().setDirection(TrainingSet.DIRECTION_FORWARD);
-				TrainingApplication.getState().setConfigChanged(true);
+				state.setDirection(TrainingSet.DIRECTION_FORWARD);
+				state.setConfigChanged(true);
 				break;
 			case R.id.radioDirection2:
-				TrainingApplication.getState().setDirection(TrainingSet.DIRECTION_BIDIRECTIONAL);
-				TrainingApplication.getState().setConfigChanged(true);
+				state.setDirection(TrainingSet.DIRECTION_BIDIRECTIONAL);
+				state.setConfigChanged(true);
 				break;
 			case R.id.radioDirection3:
-				TrainingApplication.getState().setDirection(TrainingSet.DIRECTION_BACKWARD);
-				TrainingApplication.getState().setConfigChanged(true);
+				state.setDirection(TrainingSet.DIRECTION_BACKWARD);
+				state.setConfigChanged(true);
 				break;
 			}
 		}

@@ -9,6 +9,10 @@ import at.hgz.vocabletrainer.set.TrainingElem;
 
 public class State {
 	
+	public static final String STATE_ID = "stateId";
+	
+	private int id;
+	
 	private Dictionary dictionary;
 	private List<Vocable> vocables;
 	
@@ -23,6 +27,14 @@ public class State {
 	private boolean configChanged;
 	
 	private File currentDirectory;
+	
+	public State(int id) {
+		this.id = id;
+	}
+	
+	public int getId() {
+		return id;
+	}
 	
 	public Dictionary getDictionary() {
 		return dictionary;

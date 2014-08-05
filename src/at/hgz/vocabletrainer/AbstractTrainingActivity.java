@@ -1,6 +1,7 @@
 package at.hgz.vocabletrainer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,9 +20,9 @@ public abstract class AbstractTrainingActivity extends Activity {
 	}
 
 	protected void onCreate2() {
-		state = TrainingApplication.getState();
-        //Intent intent = getIntent();
-        //state.setDictionaryId(intent.getIntExtra("dictionaryId", state.getDictionaryId()));
+		Intent intent = getIntent();
+		state = TrainingApplication.getState(intent.getIntExtra(State.STATE_ID, -1));
+
     	if (state.isNeedInit()) {
             loadVocable();
             state.setNeedInit(false);

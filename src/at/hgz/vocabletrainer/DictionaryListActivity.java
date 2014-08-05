@@ -77,6 +77,8 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 	
 	private boolean uploadFlag;
 	private boolean driveTransaction;
+	
+	private boolean alreadyRefreshed;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,7 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 			adapter.notifyDataSetChanged();
 			setSelection(position);
 		}
+		alreadyRefreshed = true;
 	}
 	
 	@Override
@@ -450,6 +453,36 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		if (!alreadyRefreshed) {
+			int dictionaryId = -1;
+			if (TrainingApplication.getState().getDictionary() != null) {
+				dictionaryId = TrainingApplication.getState().getDictionary().getId();
+			}
+			loadDictionaryList();
+			boolean found = false;
+			if (dictionaryId != -1) {
+				for (Dictionary dictionary : list) {
+					if (dictionary.getId() == dictionaryId) {
+						int position = list.indexOf(dictionary);
+						loadDictionaryVocables(position);
+						adapter.notifyDataSetChanged();
+						setSelection(position);
+						found = true;
+					}
+				}
+			}
+			if (!found) {
+				TrainingApplication.getState().setDictionary(null);
+				TrainingApplication.getState().setVocables(null);
+				adapter.notifyDataSetChanged();
+			}
+		}
+		alreadyRefreshed = false;
+	}
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
 		if (requestCode == EDIT_ACTION) {
@@ -469,11 +502,13 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 					loadDictionaryVocables(position);
 					adapter.notifyDataSetChanged();
 					setSelection(position);
+					alreadyRefreshed = true;
 				} else if ("delete".equals(result)) {
 					loadDictionaryList();
 					TrainingApplication.getState().setDictionary(null);
 					TrainingApplication.getState().setVocables(null);
 					adapter.notifyDataSetChanged();
+					alreadyRefreshed = true;
 				}
 			}
 			if (resultCode == RESULT_CANCELED) {
@@ -493,6 +528,7 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 					loadDictionaryVocables(position);
 					adapter.notifyDataSetChanged();
 					setSelection(position);
+					alreadyRefreshed = true;
 				}
 			}
 			if (resultCode == RESULT_CANCELED) {

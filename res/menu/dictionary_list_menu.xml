@@ -33,6 +33,12 @@
           android:title="@string/downloadFromGoogleDrive"
           />
     
+    <item
+            android:id="@+id/menu_item_share"
+            android:title="@string/share"
+            android:actionProviderClass=
+                "android.widget.ShareActionProvider" />
+    
     <item android:id="@+id/about"
           android:title="@string/about"
           />

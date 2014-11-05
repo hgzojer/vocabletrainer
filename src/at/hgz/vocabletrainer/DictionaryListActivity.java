@@ -24,6 +24,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 import at.hgz.vocabletrainer.db.Dictionary;
@@ -82,6 +84,8 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 	private boolean driveTransaction;
 	
 	private boolean alreadyRefreshed;
+	
+	private ShareActionProvider mShareActionProvider;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,9 +110,7 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 		Intent intent = getIntent();
 		if (intent.getBooleanExtra("import", false) && savedInstanceState == null) {
 			int position = list.size() - 1;
-			loadDictionaryVocables(position);
-			adapter.notifyDataSetChanged();
-			setSelection(position);
+			selectDictionary(position);
 		}
 		alreadyRefreshed = true;
 	}
@@ -167,7 +169,15 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.dictionary_list_menu, menu);
+	    MenuItem item = menu.findItem(R.id.menu_item_share);
+	    mShareActionProvider = (ShareActionProvider) item.getActionProvider();
 	    return true;
+	}
+	
+	private void setShareIntent(Intent shareIntent) {
+	    if (mShareActionProvider != null) {
+	        mShareActionProvider.setShareIntent(shareIntent);
+	    }
 	}
 	
 	@Override
@@ -176,6 +186,8 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 		exportToExternalStorage.setVisible(isDictionarySelected());
 		MenuItem uploadToGoogleDrive = menu.findItem(R.id.uploadToGoogleDrive);
 		uploadToGoogleDrive.setVisible(isDictionarySelected());
+		MenuItem share = menu.findItem(R.id.menu_item_share);
+		share.setVisible(isDictionarySelected());
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -460,9 +472,26 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		
+		selectDictionary(position);
+	}
+
+	private void selectDictionary(int position) {
 		loadDictionaryVocables(position);
 		adapter.notifyDataSetChanged();
 		setSelection(position);
+		//TODO provideShareIntent();
+	}
+
+	private void provideShareIntent() {
+		if (isDictionarySelected()) {
+			Intent shareIntent = new Intent(Intent.ACTION_SEND);
+			shareIntent.setType("application/vnd.hgz.vocabletrainer");
+			//Uri uri = Uri.fromFile(new File(getFilesDir(), "foo.jpg"));
+			Uri uri = null; // TODO contentProvider, android.support.v4.content.FileProvider, DocumentsProvider
+			DocumentsProvider p = null;
+			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+			setShareIntent(shareIntent);
+		}
 	}
 
 	private void loadDictionaryVocables(final int position) {
@@ -487,9 +516,7 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 				for (Dictionary dictionary : list) {
 					if (dictionary.getId() == dictionaryId) {
 						int position = list.indexOf(dictionary);
-						loadDictionaryVocables(position);
-						adapter.notifyDataSetChanged();
-						setSelection(position);
+						selectDictionary(position);
 						found = true;
 					}
 				}
@@ -513,16 +540,12 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 				if ("save".equals(result)) {
 					int position = list.indexOf(state.getDictionary());
 					if (position != -1) {
-						loadDictionaryVocables(position);
-						adapter.notifyDataSetChanged();
-						setSelection(position);
+						selectDictionary(position);
 					}
 				} else if ("add".equals(result)) {
 					loadDictionaryList();
 					int position = list.size() - 1;
-					loadDictionaryVocables(position);
-					adapter.notifyDataSetChanged();
-					setSelection(position);
+					selectDictionary(position);
 					alreadyRefreshed = true;
 				} else if ("delete".equals(result)) {
 					loadDictionaryList();
@@ -546,9 +569,7 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 				if (importDictionaryFromExternalStorage(this, data.getData())) {
 					loadDictionaryList();
 					int position = list.size() - 1;
-					loadDictionaryVocables(position);
-					adapter.notifyDataSetChanged();
-					setSelection(position);
+					selectDictionary(position);
 					alreadyRefreshed = true;
 				}
 			}
@@ -591,9 +612,7 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
         				if (doDownloadFromGoogleDriveNow(contents)) {
         					loadDictionaryList();
         					int position = list.size() - 1;
-        					loadDictionaryVocables(position);
-        					adapter.notifyDataSetChanged();
-        					setSelection(position);
+        					selectDictionary(position);
         				}
         		    }
         		};

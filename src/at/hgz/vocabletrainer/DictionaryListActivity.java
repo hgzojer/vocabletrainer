@@ -238,6 +238,11 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 				downloadFromGoogleDrive();
 	        	return true;
 	        }
+	        case R.id.menu_item_share:
+	        {
+	        	provideShareIntent();
+	            return super.onOptionsItemSelected(item);
+	        }
 	        case R.id.about:
 	        {
 				Intent intent = new Intent(DictionaryListActivity.this, AboutActivity.class);
@@ -247,6 +252,42 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
+	}
+
+	private File exportDictionaryToCacheDir() {
+		XmlUtil util = XmlUtil.getInstance();
+		Dictionary dictionary = state.getDictionary();
+		List<Vocable> vocables = state.getVocables();
+		byte[] dictionaryBytes = util.marshall(dictionary, vocables);
+		File storageDir = getCacheDir();
+		if (!storageDir.exists()) {
+			if (!storageDir.mkdirs()) {
+				Log.d(TAG, "failed to create directory");
+			}
+		}
+	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+	    File file;
+	    int i = 1;
+	    do {
+	    	file = new File(storageDir, "DICT_"+ timeStamp + (i > 1 ? "_" + i : "") + ".vt");
+	    	i++;
+	    } while (file.exists());
+	    try {
+		    OutputStream out = new FileOutputStream(file);
+		    try {
+		    	out.write(dictionaryBytes);
+		    	out.flush();
+		    } catch (IOException ex) {
+		    	
+		    } finally {
+		    	if (out != null) {
+		    		out.close();
+		    	}
+		    }
+	    } catch (IOException ex) {
+	    	throw new RuntimeException(ex.getMessage(), ex);
+	    }
+	    return file;
 	}
 
 	private void exportDictionaryToExternalStorage() {
@@ -479,16 +520,17 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 		loadDictionaryVocables(position);
 		adapter.notifyDataSetChanged();
 		setSelection(position);
-		//TODO provideShareIntent();
+		provideShareIntent();
 	}
 
 	private void provideShareIntent() {
+		// TODO
 		if (isDictionarySelected()) {
+			File file = exportDictionaryToCacheDir();
 			Intent shareIntent = new Intent(Intent.ACTION_SEND);
 			shareIntent.setType("application/vnd.hgz.vocabletrainer");
-			//Uri uri = Uri.fromFile(new File(getFilesDir(), "foo.jpg"));
-			Uri uri = null; // TODO contentProvider, android.support.v4.content.FileProvider, DocumentsProvider
-			DocumentsProvider p = null;
+			Uri uri = Uri.parse("content://at.hgz.vocabletrainer.provider/" + file.getName());
+			Log.e("abc", "provideShareIntent " + uri);
 			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
 			setShareIntent(shareIntent);
 		}

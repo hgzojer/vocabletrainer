@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="at.hgz.vocabletrainer"
-    android:versionCode="8"
-    android:versionName="1.2.1" >
+    android:versionCode="9"
+    android:versionName="1.3.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -67,6 +67,10 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <provider
+            android:name="at.hgz.vocabletrainer.VocableTrainerProvider"
+            android:authorities="at.hgz.vocabletrainer.provider"
+            android:exported="true" />      
     </application>
 
 </manifest>

@@ -530,7 +530,6 @@ public class DictionaryListActivity extends ListActivity implements ConnectionCa
 			Intent shareIntent = new Intent(Intent.ACTION_SEND);
 			shareIntent.setType("application/vnd.hgz.vocabletrainer");
 			Uri uri = Uri.parse("content://at.hgz.vocabletrainer.provider/" + file.getName());
-			Log.e("abc", "provideShareIntent " + uri);
 			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
 			setShareIntent(shareIntent);
 		}

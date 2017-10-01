@@ -2,6 +2,7 @@ package at.hgz.vocabletrainer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -13,11 +14,19 @@ import android.util.Log;
 public class VocableTrainerProvider extends ContentProvider {
 	
 	@Override
-	public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {       
-	     File cacheDir = getContext().getCacheDir();
-	     File privateFile = new File(cacheDir, uri.getLastPathSegment());
+	public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
+		try {
+			String cacheDir = getContext().getCacheDir().toString();
+			File privateFile = new File(cacheDir, uri.getLastPathSegment());
 
-	     return ParcelFileDescriptor.open(privateFile, ParcelFileDescriptor.MODE_READ_ONLY);
+			if (!privateFile.getCanonicalPath().startsWith(cacheDir)) {
+				throw new IllegalArgumentException();
+			}
+
+			return ParcelFileDescriptor.open(privateFile, ParcelFileDescriptor.MODE_READ_ONLY);
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage(), e);
+		}
 	}
 	
 	@Override

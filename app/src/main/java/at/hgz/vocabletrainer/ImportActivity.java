@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -84,6 +85,7 @@ public class ImportActivity extends ListActivity {
 				fileRow.dictionary = XmlUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
 			} catch (Exception ex) {
 				fileRow.dictionary = "(X_X)";
+				Log.d("VocableTrainer", "Error loading dictionary: " + ex.getMessage(), ex);
 			}
 			list.add(fileRow);
 		}

@@ -297,7 +297,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 			Dictionary dictionary = state.getDictionary();
 			List<Vocable> vocables = state.getVocables();
 			byte[] dictionaryBytes = util.marshall(dictionary, vocables);
-			File storageDir = getExternalFilesDir(null);
+			File storageDir = ImportActivity.getSDCardDir(this);
 			if (!storageDir.exists()) {
 				if (!storageDir.mkdirs()) {
 					Log.d(TAG, "failed to create directory");

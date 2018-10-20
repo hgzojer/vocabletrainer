@@ -52,7 +52,7 @@ public class ImportActivity extends ListActivity {
 		state = TrainingApplication.getState(intent.getIntExtra(State.STATE_ID, -1));
 				 
 		if (state.getCurrentDirectory() == null) {
-			File dir = getExternalFilesDir(null);
+			File dir = getSDCardDir(this);
 			state.setCurrentDirectory(dir);
 		}
 		TextView currentPath = (TextView) findViewById(R.id.currentPath);
@@ -60,6 +60,12 @@ public class ImportActivity extends ListActivity {
 		loadFiles();
 		adapter = new FileArrayAdapter(this, R.layout.import_item, list);
 		setListAdapter(adapter);
+	}
+
+	public static File getSDCardDir(Context context) {
+		// return context.getExternalFilesDir(null);
+		File[] dirs = context.getExternalFilesDirs(null);
+		return dirs[dirs.length - 1];
 	}
 
 	private void loadFiles() {

@@ -67,7 +67,16 @@
         <provider
             android:name="at.hgz.vocabletrainer.VocableTrainerProvider"
             android:authorities="at.hgz.vocabletrainer.provider"
-            android:exported="true" />      
+            android:exported="true" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="at.hgz.vocabletrainer.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
     </application>
 
 <!--

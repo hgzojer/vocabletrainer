@@ -79,5 +79,6 @@
     <string name="about">Über Vokabel Trainer</string>
     
     <string name="share">Teilen</string>
-    
+    <string name="errorLoadingLicense">Fehler beim Laden der Lizenz.</string>
+
 </resources>

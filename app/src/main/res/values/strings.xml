@@ -79,5 +79,6 @@
     <string name="about">About Vocable Trainer</string>
     
     <string name="share">Share</string>
-    
+    <string name="errorLoadingLicense">Error loading license.</string>
+
 </resources>

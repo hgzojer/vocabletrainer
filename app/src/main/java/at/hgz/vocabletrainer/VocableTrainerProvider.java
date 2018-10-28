@@ -12,7 +12,11 @@ import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 public class VocableTrainerProvider extends ContentProvider {
-	
+
+	public static final String MIMETYPE_VOCABLETRAINER_JSON = "application/vnd.hgz.vocabletrainer.json";
+	public static final String MIMETYPE_VOCABLETRAINER_CSV = "application/vnd.hgz.vocabletrainer.csv";
+	public static final String MIMETYPE_VOCABLETRAINER = "application/vnd.hgz.vocabletrainer";
+
 	@Override
 	public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
 		try {
@@ -36,8 +40,16 @@ public class VocableTrainerProvider extends ContentProvider {
 	}
 
 	@Override
-	public String getType(Uri arg0) {
-		return "application/vnd.hgz.vocabletrainer";
+	public String getType(Uri uri) {
+		String mimeType;
+		if (uri.getPath().endsWith(".vtj")) {
+			mimeType = MIMETYPE_VOCABLETRAINER_JSON;
+		} else if (uri.getPath().endsWith(".vtc")) {
+			mimeType = MIMETYPE_VOCABLETRAINER_CSV;
+		} else {
+			mimeType = MIMETYPE_VOCABLETRAINER;
+		}
+		return mimeType;
 	}
 
 	@Override

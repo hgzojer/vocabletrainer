@@ -57,6 +57,8 @@
                 <data android:scheme="file" />
                 <data android:scheme="content" />
                 <data android:mimeType="application/vnd.hgz.vocabletrainer"/>
+                <data android:mimeType="application/vnd.hgz.vocabletrainer.json"/>
+                <data android:mimeType="application/vnd.hgz.vocabletrainer.csv"/>
                 <data android:pathPattern=".*\\.vt" />
                 <data android:pathPattern=".*\\.vtj" />
                 <data android:pathPattern=".*\\.vtc" />

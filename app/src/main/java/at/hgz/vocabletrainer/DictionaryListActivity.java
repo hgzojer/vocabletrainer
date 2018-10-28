@@ -41,6 +41,8 @@ import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import at.hgz.vocabletrainer.csv.CsvUtil;
 import at.hgz.vocabletrainer.db.Dictionary;
 import at.hgz.vocabletrainer.db.Vocable;
 import at.hgz.vocabletrainer.db.VocableOpenHelper;
@@ -288,10 +290,8 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 			JsonUtil util = JsonUtil.getInstance();
 			dictionaryBytes = util.marshall(dictionary, vocables);
 		} else if (state.getFileFormat() == ConfigActivity.FILE_FORMAT_CSV) {
-			// TODO
-			//JsonUtil util = JsonUtil.getInstance();
-			//dictionaryBytes = util.marshall(dictionary, vocables);
-			dictionaryBytes = null;
+			CsvUtil util = CsvUtil.getInstance();
+			dictionaryBytes = util.marshall(dictionary, vocables);
 		} else {
 			XmlUtil util = XmlUtil.getInstance();
 			dictionaryBytes = util.marshall(dictionary, vocables);
@@ -310,7 +310,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 		File file;
 		int i = 1;
 		do {
-			file = new File(storageDir, "DICT_"+ timeStamp + (i > 1 ? "_" + i : "") + ".vt");
+			file = new File(storageDir, "DICT_"+ timeStamp + (i > 1 ? "_" + i : "") + "." + getFileExtension());
 			i++;
 		} while (file.exists());
 		try (OutputStream out = new FileOutputStream(file)) {
@@ -320,6 +320,32 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 			throw new RuntimeException(ex.getMessage(), ex);
 		}
 		return file;
+	}
+
+	@NonNull
+	private String getFileExtension() {
+		String fileExtension;
+		if (state.getFileFormat() == ConfigActivity.FILE_FORMAT_JSON) {
+			fileExtension = "vtj";
+		} else if (state.getFileFormat() == ConfigActivity.FILE_FORMAT_CSV) {
+			fileExtension = "vtc";
+		} else {
+			fileExtension = "vt";
+		}
+		return fileExtension;
+	}
+
+	@NonNull
+	private String getMimeType() {
+		String mimeType;
+		if (state.getFileFormat() == ConfigActivity.FILE_FORMAT_JSON) {
+			mimeType = VocableTrainerProvider.MIMETYPE_VOCABLETRAINER_JSON;
+		} else if (state.getFileFormat() == ConfigActivity.FILE_FORMAT_CSV) {
+			mimeType = VocableTrainerProvider.MIMETYPE_VOCABLETRAINER_CSV;
+		} else {
+			mimeType = VocableTrainerProvider.MIMETYPE_VOCABLETRAINER;
+		}
+		return mimeType;
 	}
 
 	private void uploadToGoogleDrive() {
@@ -372,7 +398,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 		    public void onResult(ContentsResult result) {
 		    	try {
 				    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-			    	String title = "DICT_"+ timeStamp + ".vt";
+			    	String title = "DICT_"+ timeStamp + "." + getFileExtension();
 			    	
 					XmlUtil util = XmlUtil.getInstance();
 					Dictionary dictionary = state.getDictionary();
@@ -387,7 +413,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 				    }
 			    	
 			        MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
-			                .setMimeType("application/vnd.hgz.vocabletrainer")
+			                .setMimeType(getMimeType())
 			                .setTitle(title).build();
 			        IntentSender intentSender = Drive.DriveApi
 			                 .newCreateFileActivityBuilder()
@@ -413,7 +439,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	private void doDownloadFromGoogleDrive() {
 	    IntentSender intentSender = Drive.DriveApi
 	            .newOpenFileActivityBuilder()
-	            .setMimeType(new String[] { "application/vnd.hgz.vocabletrainer" })
+	            .setMimeType(new String[] { "application/vnd.hgz.vocabletrainer", "application/vnd.hgz.vocabletrainer.json", "application/vnd.hgz.vocabletrainer.csv" })
 	            .build(googleApiClient);
 	    try {
 	        startIntentSenderForResult(
@@ -507,7 +533,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 		if (isDictionarySelected()) {
 			File file = exportDictionaryToCacheDir();
 			Intent shareIntent = new Intent(Intent.ACTION_SEND);
-			shareIntent.setType("application/vnd.hgz.vocabletrainer");
+			shareIntent.setType(getMimeType());
 			Uri uri = Uri.parse("content://at.hgz.vocabletrainer.provider/" + file.getName());
 			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
 			setShareIntent(shareIntent);
@@ -648,8 +674,18 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 		try {
 			InputStream in = activity.getContentResolver().openInputStream(importFile);
 			byte[] dictionaryBytes = IOUtils.toByteArray(in);
-			XmlUtil util = XmlUtil.getInstance();
-			Entity entity = util.unmarshall(dictionaryBytes);
+			Entity entity;
+			State state = null;
+			if (importFile.getPath().endsWith(".vtj")) {
+				JsonUtil util = JsonUtil.getInstance();
+				entity = util.unmarshall(dictionaryBytes);
+			} else if (importFile.getPath().endsWith(".vtc")) {
+				CsvUtil util = CsvUtil.getInstance();
+				entity = util.unmarshall(dictionaryBytes);
+			} else {
+				XmlUtil util = XmlUtil.getInstance();
+				entity = util.unmarshall(dictionaryBytes);
+			}
 			Resources resources = activity.getApplicationContext().getResources();
 			String text = resources.getString(R.string.importingDictionary);
 			Toast toast = Toast.makeText(activity.getApplicationContext(), text, Toast.LENGTH_SHORT);

@@ -173,7 +173,8 @@ public class ImportActivity extends ListActivity {
 					@Override
 					public void onClick(View v) {
 						Intent resultIntent = new Intent();
-						resultIntent.setData(Uri.fromFile(vh.fileRow.file));
+						String mimeType = VocableTrainerProvider.getMimeType(vh.fileRow.file.getName());
+						resultIntent.setDataAndType(Uri.fromFile(vh.fileRow.file), mimeType);
 						setResult(Activity.RESULT_OK, resultIntent);
 						ImportActivity.this.finish();
 					}

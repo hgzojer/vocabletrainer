@@ -24,9 +24,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsProvider;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -612,7 +610,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 		
 		if (requestCode == IMPORT_ACTION) {
 			if (resultCode == RESULT_OK) {
-				if (importDictionaryFromExternalStorage(this, data.getData())) {
+				if (importDictionaryFromExternalStorage(this, data.getData(), data.getType())) {
 					loadDictionaryList();
 					int position = list.size() - 1;
 					selectDictionary(position);
@@ -670,16 +668,16 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 		}
 	}
 
-	public static boolean importDictionaryFromExternalStorage(Activity activity, Uri importFile) {
+	public static boolean importDictionaryFromExternalStorage(Activity activity, Uri importFile, String mimeType) {
 		try {
 			InputStream in = activity.getContentResolver().openInputStream(importFile);
 			byte[] dictionaryBytes = IOUtils.toByteArray(in);
 			Entity entity;
 			State state = null;
-			if (importFile.getPath().endsWith(".vtj")) {
+			if (importFile.getPath().endsWith(".vtj") || VocableTrainerProvider.MIMETYPE_VOCABLETRAINER_JSON.equals(mimeType)) {
 				JsonUtil util = JsonUtil.getInstance();
 				entity = util.unmarshall(dictionaryBytes);
-			} else if (importFile.getPath().endsWith(".vtc")) {
+			} else if (importFile.getPath().endsWith(".vtc") || VocableTrainerProvider.MIMETYPE_VOCABLETRAINER_CSV.equals(mimeType)) {
 				CsvUtil util = CsvUtil.getInstance();
 				entity = util.unmarshall(dictionaryBytes);
 			} else {

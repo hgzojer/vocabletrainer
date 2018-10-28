@@ -13,7 +13,7 @@ public class ViewActivity extends Activity {
 		
 		Intent intent = getIntent();
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-			if (DictionaryListActivity.importDictionaryFromExternalStorage(this, intent.getData())) {
+			if (DictionaryListActivity.importDictionaryFromExternalStorage(this, intent.getData(), intent.getType())) {
 			}
 		}
 		Intent intent1 = new Intent(ViewActivity.this, DictionaryListActivity.class);

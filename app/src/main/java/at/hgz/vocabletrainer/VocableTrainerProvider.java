@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 public class VocableTrainerProvider extends ContentProvider {
@@ -41,10 +42,16 @@ public class VocableTrainerProvider extends ContentProvider {
 
 	@Override
 	public String getType(Uri uri) {
+		String path = uri.getPath();
+		return getMimeType(path);
+	}
+
+	@NonNull
+	public static String getMimeType(String path) {
 		String mimeType;
-		if (uri.getPath().endsWith(".vtj")) {
+		if (path.endsWith(".vtj")) {
 			mimeType = MIMETYPE_VOCABLETRAINER_JSON;
-		} else if (uri.getPath().endsWith(".vtc")) {
+		} else if (path.endsWith(".vtc")) {
 			mimeType = MIMETYPE_VOCABLETRAINER_CSV;
 		} else {
 			mimeType = MIMETYPE_VOCABLETRAINER;

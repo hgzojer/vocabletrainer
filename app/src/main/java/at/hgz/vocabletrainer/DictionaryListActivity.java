@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsProvider;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ import android.widget.Toast;
 import at.hgz.vocabletrainer.db.Dictionary;
 import at.hgz.vocabletrainer.db.Vocable;
 import at.hgz.vocabletrainer.db.VocableOpenHelper;
+import at.hgz.vocabletrainer.json.JsonUtil;
 import at.hgz.vocabletrainer.set.TrainingSet;
 import at.hgz.vocabletrainer.xml.XmlUtil;
 import at.hgz.vocabletrainer.xml.XmlUtil.Entity;
@@ -150,6 +152,8 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 		SharedPreferences settings = DictionaryListActivity.this.getPreferences(MODE_PRIVATE);
         int direction = settings.getInt(ConfigActivity.TRANSLATION_DIRECTION, TrainingSet.DIRECTION_BIDIRECTIONAL);
         state.setDirection(direction);
+		int fileFormat = settings.getInt(ConfigActivity.FILE_FORMAT, ConfigActivity.FILE_FORMAT_XML);
+		state.setFileFormat(fileFormat);
 	}
 
 	private void saveConfig() {
@@ -157,6 +161,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 			SharedPreferences settings = this.getPreferences(MODE_PRIVATE);
 	        SharedPreferences.Editor editor = settings.edit();
 			editor.putInt(ConfigActivity.TRANSLATION_DIRECTION, state.getDirection());
+			editor.putInt(ConfigActivity.FILE_FORMAT, state.getFileFormat());
 			editor.commit();
 			state.setConfigChanged(false);
 		}
@@ -256,57 +261,17 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	}
 
 	private File exportDictionaryToCacheDir() {
-		XmlUtil util = XmlUtil.getInstance();
-		Dictionary dictionary = state.getDictionary();
-		List<Vocable> vocables = state.getVocables();
-		byte[] dictionaryBytes = util.marshall(dictionary, vocables);
+		byte[] dictionaryBytes = marshallDictionary();
 		File storageDir = getCacheDir();
-		if (!storageDir.exists()) {
-			if (!storageDir.mkdirs()) {
-				Log.d(TAG, "failed to create directory");
-			}
-		}
-	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-	    File file;
-	    int i = 1;
-	    do {
-	    	file = new File(storageDir, "DICT_"+ timeStamp + (i > 1 ? "_" + i : "") + ".vt");
-	    	i++;
-	    } while (file.exists());
-	    try (OutputStream out = new FileOutputStream(file)) {
-			out.write(dictionaryBytes);
-			out.flush();
-	    } catch (IOException ex) {
-	    	throw new RuntimeException(ex.getMessage(), ex);
-	    }
+		File file = exportDictionary(dictionaryBytes, storageDir);
 	    return file;
 	}
 
 	private void exportDictionaryToExternalStorage() {
 		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-			XmlUtil util = XmlUtil.getInstance();
-			Dictionary dictionary = state.getDictionary();
-			List<Vocable> vocables = state.getVocables();
-			byte[] dictionaryBytes = util.marshall(dictionary, vocables);
+			byte[] dictionaryBytes = marshallDictionary();
 			File storageDir = ImportActivity.getSDCardDir(this);
-			if (!storageDir.exists()) {
-				if (!storageDir.mkdirs()) {
-					Log.d(TAG, "failed to create directory");
-				}
-			}
-		    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-		    File file;
-		    int i = 1;
-		    do {
-		    	file = new File(storageDir, "DICT_"+ timeStamp + (i > 1 ? "_" + i : "") + ".vt");
-		    	i++;
-		    } while (file.exists());
-		    try (OutputStream out = new FileOutputStream(file)) {
-				out.write(dictionaryBytes);
-				out.flush();
-		    } catch (IOException ex) {
-		    	throw new RuntimeException(ex.getMessage(), ex);
-		    }
+			File file = exportDictionary(dictionaryBytes, storageDir);
 			String text = getResources().getString(R.string.exportedDictionary, file.getName());
 		    Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 		} else {
@@ -314,7 +279,49 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 		    Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 		}
 	}
-	
+
+	private byte[] marshallDictionary() {
+		Dictionary dictionary = state.getDictionary();
+		List<Vocable> vocables = state.getVocables();
+		byte[] dictionaryBytes;
+		if (state.getFileFormat() == ConfigActivity.FILE_FORMAT_JSON) {
+			JsonUtil util = JsonUtil.getInstance();
+			dictionaryBytes = util.marshall(dictionary, vocables);
+		} else if (state.getFileFormat() == ConfigActivity.FILE_FORMAT_CSV) {
+			// TODO
+			//JsonUtil util = JsonUtil.getInstance();
+			//dictionaryBytes = util.marshall(dictionary, vocables);
+			dictionaryBytes = null;
+		} else {
+			XmlUtil util = XmlUtil.getInstance();
+			dictionaryBytes = util.marshall(dictionary, vocables);
+		}
+		return dictionaryBytes;
+	}
+
+	@NonNull
+	private File exportDictionary(byte[] dictionaryBytes, File storageDir) {
+		if (!storageDir.exists()) {
+			if (!storageDir.mkdirs()) {
+				Log.d(TAG, "failed to create directory");
+			}
+		}
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+		File file;
+		int i = 1;
+		do {
+			file = new File(storageDir, "DICT_"+ timeStamp + (i > 1 ? "_" + i : "") + ".vt");
+			i++;
+		} while (file.exists());
+		try (OutputStream out = new FileOutputStream(file)) {
+			out.write(dictionaryBytes);
+			out.flush();
+		} catch (IOException ex) {
+			throw new RuntimeException(ex.getMessage(), ex);
+		}
+		return file;
+	}
+
 	private void uploadToGoogleDrive() {
 		uploadFlag = true;
 		driveTransaction = true;

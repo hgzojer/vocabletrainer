@@ -17,6 +17,10 @@ public class ConfigActivity extends Activity {
 	
     private State state;
 	public static final String TRANSLATION_DIRECTION = "translationDirection";
+	public static final String FILE_FORMAT = "fileFormat";
+	public static final int FILE_FORMAT_XML = 0;
+	public static final int FILE_FORMAT_JSON = 1;
+	public static final int FILE_FORMAT_CSV = 2;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,21 @@ public class ConfigActivity extends Activity {
 			radioGroupDirection.check(R.id.radioDirection3);
 			break;
 		}
+
+		int fileFormat = state.getFileFormat();
+
+		RadioGroup radioGroupFileFormat = (RadioGroup) this.findViewById(R.id.radioGroupFileFormat);
+		switch (fileFormat) {
+			case FILE_FORMAT_XML:
+				radioGroupFileFormat.check(R.id.radioFileFormat1);
+				break;
+			case FILE_FORMAT_JSON:
+				radioGroupFileFormat.check(R.id.radioFileFormat2);
+				break;
+			case FILE_FORMAT_CSV:
+				radioGroupFileFormat.check(R.id.radioFileFormat3);
+				break;
+		}
     }
     
 	public void onRadioButtonClicked(View view) {
@@ -59,6 +78,18 @@ public class ConfigActivity extends Activity {
 				break;
 			case R.id.radioDirection3:
 				state.setDirection(TrainingSet.DIRECTION_BACKWARD);
+				state.setConfigChanged(true);
+				break;
+			case R.id.radioFileFormat1:
+				state.setFileFormat(FILE_FORMAT_XML);
+				state.setConfigChanged(true);
+				break;
+			case R.id.radioFileFormat2:
+				state.setFileFormat(FILE_FORMAT_JSON);
+				state.setConfigChanged(true);
+				break;
+			case R.id.radioFileFormat3:
+				state.setFileFormat(FILE_FORMAT_CSV);
 				state.setConfigChanged(true);
 				break;
 			}

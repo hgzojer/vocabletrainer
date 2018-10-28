@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +30,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import at.hgz.vocabletrainer.json.JsonUtil;
 import at.hgz.vocabletrainer.xml.XmlUtil;
 
 public class ImportActivity extends ListActivity {
@@ -72,7 +78,7 @@ public class ImportActivity extends ListActivity {
 		File dir = state.getCurrentDirectory();
 		list.clear();
 		File[] files = dir.listFiles(new FilenameFilter() {
-			private Pattern p = Pattern.compile("^.*\\.vt$");
+			private Pattern p = Pattern.compile("^.*\\.(vt|vtj|vtc)$");
 			@Override
 			public boolean accept(File dir, String filename) {
 				return p.matcher(filename.toLowerCase(Locale.US)).matches();
@@ -88,7 +94,15 @@ public class ImportActivity extends ListActivity {
 			try {
 				InputStream in = new FileInputStream(file);
 				byte[] dictionaryBytes = IOUtils.toByteArray(in);
-				fileRow.dictionary = XmlUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
+				String dictionaryName;
+				if (file.getName().endsWith(".vtj")) {
+					dictionaryName = JsonUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
+				} else if (file.getName().endsWith("vtc")) {
+					dictionaryName = file.getName().substring(0, file.getName().length() - 4);
+				} else {
+					dictionaryName = XmlUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
+				}
+				fileRow.dictionary = dictionaryName;
 			} catch (Exception ex) {
 				fileRow.dictionary = "(X_X)";
 				Log.d("VocableTrainer", "Error loading dictionary: " + ex.getMessage(), ex);

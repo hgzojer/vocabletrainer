@@ -58,6 +58,8 @@
                 <data android:scheme="content" />
                 <data android:mimeType="application/vnd.hgz.vocabletrainer"/>
                 <data android:pathPattern=".*\\.vt" />
+                <data android:pathPattern=".*\\.vtj" />
+                <data android:pathPattern=".*\\.vtc" />
                 <data android:host="*" />
             </intent-filter>
         </activity>

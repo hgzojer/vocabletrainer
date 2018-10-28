@@ -41,6 +41,41 @@
             android:text="@string/translateBackward" />
     </RadioGroup>
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fileFormat" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupFileFormat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp" >
+
+        <RadioButton
+            android:id="@+id/radioFileFormat1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:checked="true"
+            android:text="@string/fileFormatXML" />
+
+        <RadioButton
+            android:id="@+id/radioFileFormat2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/fileFormatJSON" />
+
+        <RadioButton
+            android:id="@+id/radioFileFormat3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/fileFormatCSV" />
+    </RadioGroup>
+
     <Button
         android:id="@+id/buttonResetDatabase"
         android:layout_width="wrap_content"

@@ -24,6 +24,7 @@ public class State {
 	private boolean needInit = true;
 	
 	private int direction;
+	private int fileFormat;
 	private boolean configChanged;
 	
 	private File currentDirectory;
@@ -122,6 +123,14 @@ public class State {
 
 	public void setDirection(int direction) {
 		this.direction = direction;
+	}
+
+	public int getFileFormat() {
+		return fileFormat;
+	}
+
+	public void setFileFormat(int fileFormat) {
+		this.fileFormat = fileFormat;
 	}
 
 	public boolean hasConfigChanged() {

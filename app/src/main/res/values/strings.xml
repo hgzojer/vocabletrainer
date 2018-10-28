@@ -81,4 +81,9 @@
     <string name="share">Share</string>
     <string name="errorLoadingLicense">Error loading license.</string>
 
+    <string name="fileFormat">export format</string>
+    <string name="fileFormatXML">XML (.vt)</string>
+    <string name="fileFormatJSON">JSON (.vtj)</string>
+    <string name="fileFormatCSV">CSV (.vtc)</string>
+
 </resources>

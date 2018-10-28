@@ -17,12 +17,12 @@ public class TrainingElem {
 	private boolean flipVocables;
 	
 	/**
-	 * 
-	 * @param word
-	 * @param translation
-	 * @param language1
-	 * @param language2
-	 * @param vocables
+	 * Constructor.
+	 * @param word word
+	 * @param translation translation
+	 * @param language1 language 1
+	 * @param language2 language 2
+	 * @param vocables vocables
 	 * @param flipVocables false if DIRECTION_FORWARD, true if DIRECTION_BACKWARD
 	 */
 	public TrainingElem(String word, String translation, String language1,
@@ -44,7 +44,7 @@ public class TrainingElem {
 	}
 	
 	public String[] getAlternatives() {
-		List<Vocable> pool = new LinkedList<Vocable>(vocables);
+		List<Vocable> pool = new LinkedList<>(vocables);
 		if (flipVocables) {
 			for (Iterator<Vocable> it = pool.iterator(); it.hasNext(); ) {
 				Vocable vocable = it.next();

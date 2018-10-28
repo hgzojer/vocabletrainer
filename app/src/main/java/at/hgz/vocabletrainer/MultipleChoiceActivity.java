@@ -53,7 +53,7 @@ public class MultipleChoiceActivity extends AbstractTrainingActivity {
 	protected void updateDisplay() {
 		TrainingElem vocable = state.getVocable();
 		String[] alternatives = vocable.getAlternatives();
-		List<String> choices = new ArrayList<String>(3);
+		List<String> choices = new ArrayList<>(3);
 		choices.add(vocable.getTranslation());
 		choices.add(alternatives[0]);
 		choices.add(alternatives[1]);

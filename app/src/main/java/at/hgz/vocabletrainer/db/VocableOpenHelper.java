@@ -1,6 +1,7 @@
 package at.hgz.vocabletrainer.db;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -89,7 +90,7 @@ public final class VocableOpenHelper extends SQLiteOpenHelper {
 			Resources res = context.getResources();
 
 			InputStream in = res.openRawResource(R.raw.default_dictionaries);
-			String json = IOUtils.toString(in);
+			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			JsonParser parser = new JsonParser();
 			JsonObject root = parser.parse(json).getAsJsonObject();
 
@@ -138,7 +139,7 @@ public final class VocableOpenHelper extends SQLiteOpenHelper {
 	public List<Dictionary> getDictionaries() {
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor cursor = db.query(DICTIONARY_TABLE_NAME, new String[] { ID_COL_NAME, NAME_COL_NAME, LANGUAGE1_COL_NAME, LANGUAGE2_COL_NAME }, null, null, null, null, ID_COL_NAME);
-		List<Dictionary> list = new LinkedList<Dictionary>();
+		List<Dictionary> list = new LinkedList<>();
 		while (cursor.moveToNext()) {
 			int id = cursor.getInt(0);
 			String name = cursor.getString(1);
@@ -153,7 +154,7 @@ public final class VocableOpenHelper extends SQLiteOpenHelper {
 	public List<Vocable> getVocables(int dictionaryId) {
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor cursor = db.query(VOCABLE_TABLE_NAME, new String[] { ID_COL_NAME, DICTIONARY_ID_COL_NAME, WORD_COL_NAME, TRANSLATION_COL_NAME }, DICTIONARY_ID_COL_NAME + " = ?", new String[] {""+dictionaryId}, null, null, ID_COL_NAME);
-		List<Vocable> list = new LinkedList<Vocable>();
+		List<Vocable> list = new LinkedList<>();
 		while (cursor.moveToNext()) {
 			int id = cursor.getInt(0);
 			int dictionaryId1 = cursor.getInt(1);

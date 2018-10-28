@@ -3,6 +3,7 @@ package at.hgz.vocabletrainer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class AboutActivity extends ListActivity {
 
-	private List<License> list = new ArrayList<License>();
+	private List<License> list = new ArrayList<>();
 
 	private LicenseArrayAdapter adapter;
 
@@ -51,7 +52,7 @@ public class AboutActivity extends ListActivity {
 	private String getLicense(int id) {
 		InputStream in = getResources().openRawResource(id);
 		try {
-			return IOUtils.toString(in);
+			return IOUtils.toString(in, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
@@ -73,7 +74,7 @@ public class AboutActivity extends ListActivity {
 				}
 				String fileName = license.getModuleName().replace('.', '_') + ".txt";
 				File licenseFile = new File(licensePath, fileName);
-				FileUtils.writeStringToFile(licenseFile, license.getLicenseText());
+				FileUtils.writeStringToFile(licenseFile, license.getLicenseText(), StandardCharsets.UTF_8);
 				Uri contentUri = FileProvider.getUriForFile(context,
 						"at.hgz.vocabletrainer.fileprovider",
 						licenseFile);

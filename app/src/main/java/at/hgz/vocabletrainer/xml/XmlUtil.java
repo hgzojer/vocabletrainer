@@ -30,7 +30,7 @@ public final class XmlUtil {
 			xmlDictionary.setName(dictionary.getName());
 			xmlDictionary.setLanguage1(dictionary.getLanguage1());
 			xmlDictionary.setLanguage2(dictionary.getLanguage2());
-			ArrayList<XmlVocable> xmlVocables = new ArrayList<XmlVocable>();
+			ArrayList<XmlVocable> xmlVocables = new ArrayList<>();
 			xmlDictionary.setVocables(xmlVocables);
 			for (Vocable vocable : vocables) {
 				xmlVocables.add(new XmlVocable(vocable.getWord(), vocable.getTranslation()));
@@ -74,7 +74,7 @@ public final class XmlUtil {
 				language2 = null;
 			}
 			Dictionary dictionary = new Dictionary(-1, name, language1, language2);
-			List<Vocable> vocables = new ArrayList<Vocable>();
+			List<Vocable> vocables = new ArrayList<>();
 			if (xmlDictionary != null && xmlDictionary.getVocables() != null) {
 				for (XmlVocable xmlVocable : xmlDictionary.getVocables()) {
 					if (xmlVocable != null) {

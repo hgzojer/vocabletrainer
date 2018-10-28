@@ -18,7 +18,7 @@ public class TrainingSet {
 
 	public TrainingSet(Dictionary dictionary, List<Vocable> vocables, int direction) {
 		this.dictionary = dictionary;
-		list = new LinkedList<TrainingElem>();
+		list = new LinkedList<>();
 		if (direction == DIRECTION_FORWARD || direction == DIRECTION_BIDIRECTIONAL) {
 			createList1to2(vocables);
 		}
@@ -31,7 +31,7 @@ public class TrainingSet {
 	/**
 	 * List for language 1 to language 2
 	 * 
-	 * @param vocables
+	 * @param vocables vocables
 	 */
 	private void createList1to2(List<Vocable> vocables) {
 		for (Vocable vocable : vocables) {
@@ -44,7 +44,7 @@ public class TrainingSet {
 	/**
 	 * List for language 2 to language 1
 	 * 
-	 * @param vocables
+	 * @param vocables vocables
 	 */
 	private void createList2to1(List<Vocable> vocables) {
 		for (Vocable vocable : vocables) {

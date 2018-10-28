@@ -7,7 +7,7 @@ public class TrainingApplication extends Application {
 	
 	private static int nextId = 0;
 	
-	private static SparseArray<State> states = new SparseArray<State>();
+	private static SparseArray<State> states = new SparseArray<>();
 
 	public static State getState(int id) {
 		if (id < 0) {

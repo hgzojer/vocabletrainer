@@ -73,7 +73,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	
 	private State state;
 	
-	private List<Dictionary> list = new ArrayList<Dictionary>();
+	private List<Dictionary> list = new ArrayList<>();
 	
 	private DictionaryArrayAdapter adapter;
 	
@@ -198,7 +198,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	        case R.id.addDictionary:
 	        {
 	        	state.setDictionary(new Dictionary(-1, "", "", ""));
-	        	List<Vocable> vocables = new ArrayList<Vocable>(1);
+	        	List<Vocable> vocables = new ArrayList<>(1);
 	        	vocables.add(new Vocable(-1, -1, "", ""));
 	        	vocables.add(new Vocable(-1, -1, "", ""));
 	        	vocables.add(new Vocable(-1, -1, "", ""));
@@ -273,18 +273,9 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	    	file = new File(storageDir, "DICT_"+ timeStamp + (i > 1 ? "_" + i : "") + ".vt");
 	    	i++;
 	    } while (file.exists());
-	    try {
-		    OutputStream out = new FileOutputStream(file);
-		    try {
-		    	out.write(dictionaryBytes);
-		    	out.flush();
-		    } catch (IOException ex) {
-		    	
-		    } finally {
-		    	if (out != null) {
-		    		out.close();
-		    	}
-		    }
+	    try (OutputStream out = new FileOutputStream(file)) {
+			out.write(dictionaryBytes);
+			out.flush();
 	    } catch (IOException ex) {
 	    	throw new RuntimeException(ex.getMessage(), ex);
 	    }
@@ -310,18 +301,9 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 		    	file = new File(storageDir, "DICT_"+ timeStamp + (i > 1 ? "_" + i : "") + ".vt");
 		    	i++;
 		    } while (file.exists());
-		    try {
-			    OutputStream out = new FileOutputStream(file);
-			    try {
-			    	out.write(dictionaryBytes);
-			    	out.flush();
-			    } catch (IOException ex) {
-			    	
-			    } finally {
-			    	if (out != null) {
-			    		out.close();
-			    	}
-			    }
+		    try (OutputStream out = new FileOutputStream(file)) {
+				out.write(dictionaryBytes);
+				out.flush();
 		    } catch (IOException ex) {
 		    	throw new RuntimeException(ex.getMessage(), ex);
 		    }
@@ -390,18 +372,9 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 					List<Vocable> vocables = state.getVocables();
 					byte[] dictionaryBytes = util.marshall(dictionary, vocables);
 	
-				    try {
-					    OutputStream out = result.getContents().getOutputStream();
-					    try {
-					    	out.write(dictionaryBytes);
-					    	out.flush();
-					    } catch (IOException ex) {
-					    	
-					    } finally {
-					    	if (out != null) {
-					    		out.close();
-					    	}
-					    }
+				    try (OutputStream out = result.getContents().getOutputStream()) {
+						out.write(dictionaryBytes);
+						out.flush();
 				    } catch (IOException ex) {
 				    	throw new RuntimeException(ex.getMessage(), ex);
 				    }
@@ -490,9 +463,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	private void loadDictionaryList() {
 		VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
 		list.clear();
-		for (Dictionary lib : helper.getDictionaries()) {
-			list.add(lib);
-		}
+		list.addAll(helper.getDictionaries());
 	}
 
 	private void loadDirectionSymbol() {

@@ -45,7 +45,7 @@ public class ImportActivity extends ListActivity {
 		public String dictionary;
 	}
 
-	private List<FileRow> list = new ArrayList<FileRow>();
+	private List<FileRow> list = new ArrayList<>();
 	private FileArrayAdapter adapter;
 
 	@Override

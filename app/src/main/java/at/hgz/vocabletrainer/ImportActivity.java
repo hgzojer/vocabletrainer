@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -30,9 +31,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import at.hgz.vocabletrainer.csv.CsvUtil;
 import at.hgz.vocabletrainer.json.JsonUtil;
@@ -89,6 +87,12 @@ public class ImportActivity extends ListActivity {
 		if (files == null) {
 			files = new File[0];
 		}
+		Arrays.sort(files, new Comparator<File>() {
+			@Override
+			public int compare(File c1, File c2) {
+				return c2.compareTo(c1);
+			}
+		});
 		for (File file : files) {
 			FileRow fileRow = new FileRow();
 			fileRow.file = file;

@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import at.hgz.vocabletrainer.csv.CsvUtil;
 import at.hgz.vocabletrainer.json.JsonUtil;
 import at.hgz.vocabletrainer.xml.XmlUtil;
 
@@ -98,7 +99,7 @@ public class ImportActivity extends ListActivity {
 				if (file.getName().endsWith(".vtj")) {
 					dictionaryName = JsonUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
 				} else if (file.getName().endsWith("vtc")) {
-					dictionaryName = file.getName().substring(0, file.getName().length() - 4);
+					dictionaryName = CsvUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
 				} else {
 					dictionaryName = XmlUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
 				}

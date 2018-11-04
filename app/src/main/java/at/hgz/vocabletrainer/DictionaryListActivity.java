@@ -674,10 +674,10 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 			byte[] dictionaryBytes = IOUtils.toByteArray(in);
 			Entity entity;
 			State state = null;
-			if (importFile.getPath().endsWith(".vtj") || VocableTrainerProvider.MIMETYPE_VOCABLETRAINER_JSON.equals(mimeType)) {
+			if (importFile.getPath().toLowerCase().endsWith(".vtj") || VocableTrainerProvider.MIMETYPE_VOCABLETRAINER_JSON.equals(mimeType)) {
 				JsonUtil util = JsonUtil.getInstance();
 				entity = util.unmarshall(dictionaryBytes);
-			} else if (importFile.getPath().endsWith(".vtc") || VocableTrainerProvider.MIMETYPE_VOCABLETRAINER_CSV.equals(mimeType)) {
+			} else if (importFile.getPath().toLowerCase().endsWith(".vtc") || VocableTrainerProvider.MIMETYPE_VOCABLETRAINER_CSV.equals(mimeType)) {
 				CsvUtil util = CsvUtil.getInstance();
 				entity = util.unmarshall(dictionaryBytes);
 			} else {

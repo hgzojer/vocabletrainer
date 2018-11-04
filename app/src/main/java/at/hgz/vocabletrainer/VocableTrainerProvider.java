@@ -49,9 +49,9 @@ public class VocableTrainerProvider extends ContentProvider {
 	@NonNull
 	public static String getMimeType(String path) {
 		String mimeType;
-		if (path.endsWith(".vtj")) {
+		if (path.toLowerCase().endsWith(".vtj")) {
 			mimeType = MIMETYPE_VOCABLETRAINER_JSON;
-		} else if (path.endsWith(".vtc")) {
+		} else if (path.toLowerCase().endsWith(".vtc")) {
 			mimeType = MIMETYPE_VOCABLETRAINER_CSV;
 		} else {
 			mimeType = MIMETYPE_VOCABLETRAINER;

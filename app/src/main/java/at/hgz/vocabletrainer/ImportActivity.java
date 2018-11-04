@@ -79,7 +79,7 @@ public class ImportActivity extends ListActivity {
 		File dir = state.getCurrentDirectory();
 		list.clear();
 		File[] files = dir.listFiles(new FilenameFilter() {
-			private Pattern p = Pattern.compile("^.*\\.(vt|vtj|vtc)$");
+			private Pattern p = Pattern.compile("^.*\\.(vt|vtj|vtc)$", Pattern.CASE_INSENSITIVE);
 			@Override
 			public boolean accept(File dir, String filename) {
 				return p.matcher(filename.toLowerCase(Locale.US)).matches();
@@ -96,9 +96,9 @@ public class ImportActivity extends ListActivity {
 				InputStream in = new FileInputStream(file);
 				byte[] dictionaryBytes = IOUtils.toByteArray(in);
 				String dictionaryName;
-				if (file.getName().endsWith(".vtj")) {
+				if (file.getName().toLowerCase().endsWith(".vtj")) {
 					dictionaryName = JsonUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
-				} else if (file.getName().endsWith("vtc")) {
+				} else if (file.getName().toLowerCase().endsWith(".vtc")) {
 					dictionaryName = CsvUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
 				} else {
 					dictionaryName = XmlUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();

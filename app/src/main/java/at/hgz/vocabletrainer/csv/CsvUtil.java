@@ -1,14 +1,6 @@
 package at.hgz.vocabletrainer.csv;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -16,9 +8,7 @@ import java.util.List;
 
 import at.hgz.vocabletrainer.db.Dictionary;
 import at.hgz.vocabletrainer.db.Vocable;
-import at.hgz.vocabletrainer.xml.XmlDictionary;
 import at.hgz.vocabletrainer.xml.XmlUtil.Entity;
-import at.hgz.vocabletrainer.xml.XmlVocable;
 
 public class CsvUtil {
 

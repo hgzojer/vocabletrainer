@@ -100,7 +100,7 @@ public class ConfigActivity extends Activity {
 		.setTitle(confirmDeleteDictionaryTitle)
 		.setMessage(confirmDeleteDictionaryText)
 		.setIcon(android.R.drawable.ic_dialog_alert)
-		.setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+		.setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
 			Resources resources1 = getApplicationContext().getResources();
 			String text = resources1.getString(R.string.resettingDatabase);
 			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
@@ -108,7 +108,7 @@ public class ConfigActivity extends Activity {
 			VocableOpenHelper helper = VocableOpenHelper.getInstance(ConfigActivity.this);
 			helper.resetDatabase();
 		})
-		.setNegativeButton(android.R.string.no, null).show();
+		.setNegativeButton(android.R.string.cancel, null).show();
     }
     
 }

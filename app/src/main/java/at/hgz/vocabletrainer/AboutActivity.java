@@ -1,15 +1,5 @@
 package at.hgz.vocabletrainer;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +14,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
@@ -45,8 +43,6 @@ public class AboutActivity extends ListActivity {
 		list.add(new License("google-gson", getLicense(R.raw.googlegson_license)));
 		list.add(new License("commons-io", getLicense(R.raw.commonsio_license)));
 		list.add(new License("simple-xml", getLicense(R.raw.simplexml_license)));
-		list.add(new License("google-play-services-lib", GooglePlayServicesUtil
-				.getOpenSourceSoftwareLicenseInfo(this)));
 		adapter = new LicenseArrayAdapter(this, R.layout.about_item, list);
 		setListAdapter(adapter);
 	}
@@ -99,19 +95,20 @@ public class AboutActivity extends ListActivity {
 		}
 	}
 
-	private class LicenseArrayAdapter extends ArrayAdapter<License> {
+	private static class LicenseArrayAdapter extends ArrayAdapter<License> {
 
 		public LicenseArrayAdapter(Context context, int resource,
 				List<License> objects) {
 			super(context, resource, objects);
 		}
 
-		private class ViewHolder {
+		private static class ViewHolder {
 			public TextView listItemName;
 			public License license;
 		}
 
 		@Override
+		@NonNull
 		public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
 			License license = getItem(position);

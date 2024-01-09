@@ -2,9 +2,9 @@ package at.hgz.vocabletrainer;
 
 public class License {
 
-	private String moduleName;
+	private final String moduleName;
 	
-	private String licenseText;
+	private final String licenseText;
 
 	public License(String moduleName, String licenseText) {
 		this.moduleName = moduleName;

@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -17,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,29 +23,13 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Contents;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
-import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveId;
-import com.google.android.gms.drive.DriveResource.MetadataResult;
-import com.google.android.gms.drive.Metadata;
-import com.google.android.gms.drive.MetadataChangeSet;
-import com.google.android.gms.drive.OpenFileActivityBuilder;
-
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,16 +46,13 @@ import at.hgz.vocabletrainer.set.TrainingSet;
 import at.hgz.vocabletrainer.xml.XmlUtil;
 import at.hgz.vocabletrainer.xml.XmlUtil.Entity;
 
-public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity implements ConnectionCallbacks, OnConnectionFailedListener {
+public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity {
 
 	private static final String TAG = "DictionaryListActivity";
 	private static final int EDIT_ACTION = 1;
 	private static final int CONFIG_ACTION = 2;
 	private static final int IMPORT_ACTION = 3;
-	private static final int RESOLVE_CONNECTION_REQUEST_CODE = 4;
-	private static final int REQUEST_CODE_CREATOR = 5;
-	private static final int REQUEST_CODE_OPENER = 6;
-	
+
 	private State state;
 	
 	private List<Dictionary> list = new ArrayList<>();
@@ -82,12 +60,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	private DictionaryArrayAdapter adapter;
 	
 	private String directionSymbol = "↔";
-	
-	private GoogleApiClient googleApiClient;
-	
-	private boolean uploadFlag;
-	private boolean driveTransaction;
-	
+
 	private boolean alreadyRefreshed;
 	
 	private ShareActionProvider mShareActionProvider;
@@ -96,16 +69,16 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dictionary_list);
-		
-		if (savedInstanceState == null) {
-			int id = TrainingApplication.getNextId();
-			state = TrainingApplication.getState(id);
-		} else {
-			int id = savedInstanceState.getInt(State.STATE_ID);
-			state = TrainingApplication.getState(id);
-		}
 
-        loadConfig();
+		int id;
+		if (savedInstanceState == null) {
+			id = TrainingApplication.getNextId();
+		} else {
+			id = savedInstanceState.getInt(State.STATE_ID);
+		}
+		state = TrainingApplication.getState(id);
+
+		loadConfig();
 		loadDirectionSymbol();
 		loadDictionaryList();
 
@@ -121,7 +94,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	}
 	
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt(State.STATE_ID, state.getId());
 	}
@@ -138,9 +111,6 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	@Override
 	protected void onPause() {
         saveConfig();
-        if (googleApiClient != null && !driveTransaction) {
-            googleApiClient.disconnect();
-        }
 		super.onPause();
 	}
 
@@ -228,12 +198,6 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 			intent.putExtra(State.STATE_ID, state.getId());
 			DictionaryListActivity.this.startActivityForResult(intent, IMPORT_ACTION);
 			return true;
-		} else if (id == R.id.uploadToGoogleDrive) {
-			uploadToGoogleDrive();
-			return true;
-		} else if (id == R.id.downloadFromGoogleDrive) {
-			downloadFromGoogleDrive();
-			return true;
 		} else if (id == R.id.menu_item_share) {
 			provideShareIntent();
 			return super.onOptionsItemSelected(item);
@@ -249,8 +213,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	private File exportDictionaryToCacheDir() {
 		byte[] dictionaryBytes = marshallDictionary();
 		File storageDir = getCacheDir();
-		File file = exportDictionary(dictionaryBytes, storageDir);
-	    return file;
+		return exportDictionary(dictionaryBytes, storageDir);
 	}
 
 	private void exportDictionaryToExternalStorage() {
@@ -297,7 +260,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 			file = new File(storageDir, "DICT_"+ timeStamp + (i > 1 ? "_" + i : "") + "." + getFileExtension());
 			i++;
 		} while (file.exists());
-		try (OutputStream out = new FileOutputStream(file)) {
+		try (OutputStream out = Files.newOutputStream(file.toPath())) {
 			out.write(dictionaryBytes);
 			out.flush();
 		} catch (IOException ex) {
@@ -330,143 +293,6 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 			mimeType = VocableTrainerProvider.MIMETYPE_VOCABLETRAINER;
 		}
 		return mimeType;
-	}
-
-	private void uploadToGoogleDrive() {
-		uploadFlag = true;
-		driveTransaction = true;
-        connectToGoogleDrive();
- 	}
-	
-	private void downloadFromGoogleDrive() {
-		uploadFlag = false;
-		driveTransaction = true;
-        connectToGoogleDrive();
- 	}
-
-	private void connectToGoogleDrive() {
-		if (googleApiClient == null) {
-        	googleApiClient = new GoogleApiClient.Builder(this)
-	            .addApi(Drive.API)
-	            .addScope(Drive.SCOPE_FILE)
-	            .addConnectionCallbacks(this)
-	            .addOnConnectionFailedListener(this)
-	            .build();
-        }
-        if (!googleApiClient.isConnected()) {
-            googleApiClient.connect();
-        } else {
-    		if (uploadFlag) {
-    			doUploadToGoogleDrive();
-    		} else {
-    			doDownloadFromGoogleDrive();
-    		}
-        }
-	}
-	
-	@Override
-	public void onConnected(Bundle bundle) {
-		Log.d(TAG, "API client connected.");
-
-		if (uploadFlag) {
-			doUploadToGoogleDrive();
-		} else {
-			doDownloadFromGoogleDrive();
-		}
-	}
-	
-	private void doUploadToGoogleDrive() {
-		ResultCallback<ContentsResult> newContentsCallback = result -> {
-			try {
-				String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-				String title = "DICT_"+ timeStamp + "." + getFileExtension();
-
-				byte[] dictionaryBytes = marshallDictionary();
-
-				try (OutputStream out = result.getContents().getOutputStream()) {
-					out.write(dictionaryBytes);
-					out.flush();
-				} catch (IOException ex) {
-					throw new RuntimeException(ex.getMessage(), ex);
-				}
-
-				MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
-						.setMimeType(getMimeType())
-						.setTitle(title).build();
-				IntentSender intentSender = Drive.DriveApi
-						 .newCreateFileActivityBuilder()
-						 .setInitialMetadata(metadataChangeSet)
-						 .setInitialContents(result.getContents())
-						 .build(DictionaryListActivity.this.googleApiClient);
-				try {
-					startIntentSenderForResult(
-							intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
-				} catch (SendIntentException e) {
-					Log.w(TAG, "Unable to send intent", e);
-					String text = getResources().getString(R.string.errorUploadingDictionary);
-					Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
-				}
-			} finally {
-				driveTransaction = false;
-			}
-		};
-		Drive.DriveApi.newContents(googleApiClient).setResultCallback(newContentsCallback);
-	}
-	
-	private void doDownloadFromGoogleDrive() {
-	    IntentSender intentSender = Drive.DriveApi
-	            .newOpenFileActivityBuilder()
-	            .setMimeType(new String[] { "application/vnd.hgz.vocabletrainer", "application/vnd.hgz.vocabletrainer.json", "application/vnd.hgz.vocabletrainer.csv" })
-	            .build(googleApiClient);
-	    try {
-	        startIntentSenderForResult(
-	                intentSender, REQUEST_CODE_OPENER, null, 0, 0, 0);
-	    } catch (SendIntentException e) {
-	        Log.w(TAG, "Unable to send intent", e);
-			String text = getResources().getString(R.string.errorDownloadingDictionary);
-		    Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
-	    }
-	}
-
-	private boolean doDownloadFromGoogleDriveNow(Contents contents, String fileName, String mimeType) {
-		try {
-			InputStream in = contents.getInputStream();
-			byte[] dictionaryBytes = IOUtils.toByteArray(in);
-			Entity entity = unmarshallDictionary(dictionaryBytes, fileName, mimeType);
-			Resources resources = getApplicationContext().getResources();
-			String text = resources.getString(R.string.downloadingDictionary);
-			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-			toast.show();
-			VocableOpenHelper helper = VocableOpenHelper.getInstance(getApplicationContext());
-			helper.persist(entity.getDictionary(), entity.getVocables());
-			return true;
-		} catch (Exception ex) {
-			Resources resources = getApplicationContext().getResources();
-			String text = resources.getString(R.string.errorDownloadingDictionary);
-			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-			toast.show();
-			return false;
-		} finally {
-			driveTransaction = false;
-		}
-	}
-
-	@Override
-	public void onConnectionSuspended(int arg0) {
-		Log.d(TAG, "API client connection suspended.");
-	}
-	
-	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult) {
-	    if (connectionResult.hasResolution()) {
-	        try {
-	            connectionResult.startResolutionForResult(this, RESOLVE_CONNECTION_REQUEST_CODE);
-	        } catch (IntentSender.SendIntentException e) {
-	            // TODO Unable to resolve, message user appropriately
-	        }
-	    } else {
-	        GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), this, 0).show();
-	    }
 	}
 
 	private void loadDictionaryList() {
@@ -598,61 +424,6 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 			if (resultCode == RESULT_CANCELED) {
 			}
 		}
-		
-		if (requestCode == RESOLVE_CONNECTION_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                googleApiClient.connect();
-            }
-		}
-		
-		if (requestCode == REQUEST_CODE_CREATOR) {
-            if (resultCode == RESULT_OK) {
-    			String text = getResources().getString(R.string.uploadedDictionary);
-    		    Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-            }
-            if (resultCode == RESULT_CANCELED) {
-	    		driveTransaction = false;
-            }
-		}
-		
-		if (requestCode == REQUEST_CODE_OPENER) {
-            if (resultCode == RESULT_OK) {
-            	DriveId driveId = (DriveId) data.getParcelableExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-            	
-        		final DriveFile driveFile = Drive.DriveApi.getFile(googleApiClient, driveId);
-				ResultCallback<MetadataResult> metadataCallback = result -> {
-					if (!result.getStatus().isSuccess()) {
-						String text = getResources().getString(R.string.errorDownloadingDictionary);
-						Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
-						driveTransaction = false;
-						return;
-					}
-					Metadata metadata = result.getMetadata();
-					final String fileName = metadata.getTitle();
-					final String mimeType = metadata.getMimeType();
-					ResultCallback<ContentsResult> contentsOpenedCallback =
-							result1 -> {
-								if (!result1.getStatus().isSuccess()) {
-									String text = getResources().getString(R.string.errorDownloadingDictionary);
-									Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
-									driveTransaction = false;
-									return;
-								}
-								Contents contents = result1.getContents();
-								if (doDownloadFromGoogleDriveNow(contents, fileName, mimeType)) {
-									loadDictionaryList();
-									int position = list.size() - 1;
-									selectDictionary(position);
-								}
-							};
-					driveFile.openContents(googleApiClient, DriveFile.MODE_READ_ONLY, null).setResultCallback(contentsOpenedCallback);
-				};
-				driveFile.getMetadata(googleApiClient).setResultCallback(metadataCallback);
-            }
-            if (resultCode == RESULT_CANCELED) {
-	    		driveTransaction = false;
-            }
-		}
 	}
 
 	public static boolean importDictionaryFromExternalStorage(Activity activity, Uri importFile, String mimeType) {
@@ -710,6 +481,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 		}
 
 	    @Override
+		@NonNull
 	    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
 			Dictionary dictionary = getItem(position);

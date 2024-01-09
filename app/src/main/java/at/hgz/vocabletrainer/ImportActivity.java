@@ -1,23 +1,9 @@
 package at.hgz.vocabletrainer;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Pattern;
-
-import org.apache.commons.io.IOUtils;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -32,6 +18,20 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
+
+import androidx.annotation.NonNull;
 import at.hgz.vocabletrainer.csv.CsvUtil;
 import at.hgz.vocabletrainer.json.JsonUtil;
 import at.hgz.vocabletrainer.xml.XmlUtil;
@@ -77,7 +77,7 @@ public class ImportActivity extends ListActivity {
 		File dir = state.getCurrentDirectory();
 		list.clear();
 		File[] files = dir.listFiles(new FilenameFilter() {
-			private Pattern p = Pattern.compile("^.*\\.(vt|vtj|vtc)$", Pattern.CASE_INSENSITIVE);
+			private final Pattern p = Pattern.compile("^.*\\.(vt|vtj|vtc)$", Pattern.CASE_INSENSITIVE);
 			@Override
 			public boolean accept(File dir, String filename) {
 				return p.matcher(filename.toLowerCase(Locale.US)).matches();
@@ -92,7 +92,7 @@ public class ImportActivity extends ListActivity {
 			FileRow fileRow = new FileRow();
 			fileRow.file = file;
 			try {
-				InputStream in = new FileInputStream(file);
+				InputStream in = Files.newInputStream(file.toPath());
 				byte[] dictionaryBytes = IOUtils.toByteArray(in);
 				String dictionaryName;
 				if (file.getName().toLowerCase().endsWith(".vtj")) {
@@ -121,7 +121,7 @@ public class ImportActivity extends ListActivity {
 		.setTitle(confirmDeleteDictionaryTitle)
 		.setMessage(confirmDeleteDictionaryText)
 		.setIcon(android.R.drawable.ic_dialog_alert)
-		.setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+		.setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
 			if (fileRow.file.delete()) {
 				Resources resources1 = getApplicationContext().getResources();
 				String text = resources1.getString(R.string.deletingDictionary);
@@ -130,7 +130,7 @@ public class ImportActivity extends ListActivity {
 				adapter.remove(fileRow);
 			}
 		})
-		.setNegativeButton(android.R.string.no, null).show();
+		.setNegativeButton(android.R.string.cancel, null).show();
 	}
 	
 	private class FileArrayAdapter extends ArrayAdapter<FileRow> {
@@ -149,7 +149,8 @@ public class ImportActivity extends ListActivity {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		@NonNull
+		public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
 			FileRow fileRow = getItem(position);
 

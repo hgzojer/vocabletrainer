@@ -1,11 +1,8 @@
 package at.hgz.vocabletrainer;
 
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -16,11 +13,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.List;
+
+import androidx.annotation.NonNull;
 import at.hgz.vocabletrainer.db.Dictionary;
 import at.hgz.vocabletrainer.db.Vocable;
 import at.hgz.vocabletrainer.db.VocableOpenHelper;
@@ -82,15 +82,14 @@ public class VocableListActivity extends ListActivity {
 		.setTitle(confirmDeleteDictionaryTitle)
 		.setMessage(confirmDeleteDictionaryText)
 		.setIcon(android.R.drawable.ic_dialog_alert)
-		.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-		    public void onClick(DialogInterface dialog, int whichButton) {
-				deleteState();
-				Intent returnIntent = new Intent();
-				returnIntent.putExtra("result", "delete");
-				setResult(RESULT_OK,returnIntent);
-				finish();
-		    }})
-		.setNegativeButton(android.R.string.no, null).show();
+		.setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+			deleteState();
+			Intent returnIntent = new Intent();
+			returnIntent.putExtra("result", "delete");
+			setResult(RESULT_OK,returnIntent);
+			finish();
+		})
+		.setNegativeButton(android.R.string.cancel, null).show();
 	}
 
 	@Override
@@ -142,14 +141,14 @@ public class VocableListActivity extends ListActivity {
 		helper.remove(dictionary, vocables);
 	}
 
-	private class VocableArrayAdapter extends ArrayAdapter<Vocable> {
+	private static class VocableArrayAdapter extends ArrayAdapter<Vocable> {
 		
 		public VocableArrayAdapter(Context context, int resource,
 				List<Vocable> objects) {
 			super(context, resource, objects);
 		}
 		
-		private class ViewHolder {
+		private static class ViewHolder {
 			public EditText listItemEditWord;
 			public EditText listItemEditTranslation;
 			public View buttonDeleteVocable;
@@ -157,7 +156,8 @@ public class VocableListActivity extends ListActivity {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		@NonNull
+		public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
 			final Vocable vocable = getItem(position);
 
@@ -197,12 +197,7 @@ public class VocableListActivity extends ListActivity {
 					}
 				});
 				
-				vh.buttonDeleteVocable.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						VocableArrayAdapter.this.remove(vh.vocable);
-					}
-				});
+				vh.buttonDeleteVocable.setOnClickListener(v -> VocableArrayAdapter.this.remove(vh.vocable));
 				convertView.setTag(vh);
 			}
 			

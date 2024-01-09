@@ -67,31 +67,25 @@ public class ConfigActivity extends Activity {
         
         // Check which radio button was clicked
 		if (checked) {
-			switch (view.getId()) {
-			case R.id.radioDirection1:
+			int id = view.getId();
+			if (id == R.id.radioDirection1) {
 				state.setDirection(TrainingSet.DIRECTION_FORWARD);
 				state.setConfigChanged(true);
-				break;
-			case R.id.radioDirection2:
+			} else if (id == R.id.radioDirection2) {
 				state.setDirection(TrainingSet.DIRECTION_BIDIRECTIONAL);
 				state.setConfigChanged(true);
-				break;
-			case R.id.radioDirection3:
+			} else if (id == R.id.radioDirection3) {
 				state.setDirection(TrainingSet.DIRECTION_BACKWARD);
 				state.setConfigChanged(true);
-				break;
-			case R.id.radioFileFormat1:
+			} else if (id == R.id.radioFileFormat1) {
 				state.setFileFormat(FILE_FORMAT_XML);
 				state.setConfigChanged(true);
-				break;
-			case R.id.radioFileFormat2:
+			} else if (id == R.id.radioFileFormat2) {
 				state.setFileFormat(FILE_FORMAT_JSON);
 				state.setConfigChanged(true);
-				break;
-			case R.id.radioFileFormat3:
+			} else if (id == R.id.radioFileFormat3) {
 				state.setFileFormat(FILE_FORMAT_CSV);
 				state.setConfigChanged(true);
-				break;
 			}
 		}
 	}
@@ -106,15 +100,14 @@ public class ConfigActivity extends Activity {
 		.setTitle(confirmDeleteDictionaryTitle)
 		.setMessage(confirmDeleteDictionaryText)
 		.setIcon(android.R.drawable.ic_dialog_alert)
-		.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-		    public void onClick(DialogInterface dialog, int whichButton) {
-				Resources resources = getApplicationContext().getResources();
-				String text = resources.getString(R.string.resettingDatabase);
-				Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-				toast.show();
-		    	VocableOpenHelper helper = VocableOpenHelper.getInstance(ConfigActivity.this);
-		    	helper.resetDatabase();
-		    }})
+		.setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+			Resources resources1 = getApplicationContext().getResources();
+			String text = resources1.getString(R.string.resettingDatabase);
+			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+			toast.show();
+			VocableOpenHelper helper = VocableOpenHelper.getInstance(ConfigActivity.this);
+			helper.resetDatabase();
+		})
 		.setNegativeButton(android.R.string.no, null).show();
     }
     

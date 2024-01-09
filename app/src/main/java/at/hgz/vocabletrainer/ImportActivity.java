@@ -87,12 +87,7 @@ public class ImportActivity extends ListActivity {
 		if (files == null) {
 			files = new File[0];
 		}
-		Arrays.sort(files, new Comparator<File>() {
-			@Override
-			public int compare(File c1, File c2) {
-				return c2.compareTo(c1);
-			}
-		});
+		Arrays.sort(files, Comparator.reverseOrder());
 		for (File file : files) {
 			FileRow fileRow = new FileRow();
 			fileRow.file = file;
@@ -126,16 +121,15 @@ public class ImportActivity extends ListActivity {
 		.setTitle(confirmDeleteDictionaryTitle)
 		.setMessage(confirmDeleteDictionaryText)
 		.setIcon(android.R.drawable.ic_dialog_alert)
-		.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-		    public void onClick(DialogInterface dialog, int whichButton) {
-				if (fileRow.file.delete()) {
-					Resources resources = getApplicationContext().getResources();
-					String text = resources.getString(R.string.deletingDictionary);
-					Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-					toast.show();
-					adapter.remove(fileRow);
-				}
-		    }})
+		.setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+			if (fileRow.file.delete()) {
+				Resources resources1 = getApplicationContext().getResources();
+				String text = resources1.getString(R.string.deletingDictionary);
+				Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+				toast.show();
+				adapter.remove(fileRow);
+			}
+		})
 		.setNegativeButton(android.R.string.no, null).show();
 	}
 	
@@ -168,21 +162,13 @@ public class ImportActivity extends ListActivity {
 				vh.listItemName = (TextView) convertView.findViewById(R.id.listItemName);
 				vh.listItemDictionary = (TextView) convertView.findViewById(R.id.listItemDictionary);
 				
-				vh.buttonDelete.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						deleteFile(vh.fileRow);
-					}
-				});
-				OnClickListener selectFileListener = new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent resultIntent = new Intent();
-						String mimeType = VocableTrainerProvider.getMimeType(vh.fileRow.file.getName());
-						resultIntent.setDataAndType(Uri.fromFile(vh.fileRow.file), mimeType);
-						setResult(Activity.RESULT_OK, resultIntent);
-						ImportActivity.this.finish();
-					}
+				vh.buttonDelete.setOnClickListener(v -> deleteFile(vh.fileRow));
+				OnClickListener selectFileListener = v -> {
+					Intent resultIntent = new Intent();
+					String mimeType = VocableTrainerProvider.getMimeType(vh.fileRow.file.getName());
+					resultIntent.setDataAndType(Uri.fromFile(vh.fileRow.file), mimeType);
+					setResult(Activity.RESULT_OK, resultIntent);
+					ImportActivity.this.finish();
 				};
 				vh.listItem.setOnClickListener(selectFileListener);
 				vh.listItemName.setOnClickListener(selectFileListener);

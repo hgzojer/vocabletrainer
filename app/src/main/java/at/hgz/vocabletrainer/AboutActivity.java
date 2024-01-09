@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 
 public class AboutActivity extends ListActivity {
@@ -111,7 +112,7 @@ public class AboutActivity extends ListActivity {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
 			License license = getItem(position);
 

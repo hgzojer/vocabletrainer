@@ -15,14 +15,12 @@ public class TrainingActivity extends AbstractTrainingActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
     	EditText inputTranslation = (EditText) findViewById(R.id.editTextTranslationLanguage2);
-    	inputTranslation.setOnEditorActionListener(new OnEditorActionListener() {
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                	check();
-                }    
-                return false;
-            }
-        });
+    	inputTranslation.setOnEditorActionListener((v, actionId, event) -> {
+			if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+				check();
+			}
+			return false;
+		});
     	onCreate2();
     }
     

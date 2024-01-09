@@ -91,8 +91,7 @@ public final class VocableOpenHelper extends SQLiteOpenHelper {
 
 			InputStream in = res.openRawResource(R.raw.default_dictionaries);
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
-			JsonParser parser = new JsonParser();
-			JsonObject root = parser.parse(json).getAsJsonObject();
+			JsonObject root = JsonParser.parseString(json).getAsJsonObject();
 
 			JsonArray dictionaries = root.getAsJsonArray("dictionaries");
 			for (JsonElement dictionariesElem : dictionaries) {

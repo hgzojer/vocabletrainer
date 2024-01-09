@@ -39,10 +39,10 @@ public class MultipleChoiceActivity extends AbstractTrainingActivity {
     }
     
 	public void onClick(View view) {
-		switch (view.getId()) {
-		case R.id.buttonChoice1:
-		case R.id.buttonChoice2:
-		case R.id.buttonChoice3:
+		int id = view.getId();
+		if (id == R.id.buttonChoice1
+				|| id == R.id.buttonChoice2
+				|| id == R.id.buttonChoice3) {
 			String translation = ((Button) view).getText().toString();
 	    	evaluate(translation);
 		}
@@ -86,9 +86,9 @@ public class MultipleChoiceActivity extends AbstractTrainingActivity {
 		TextView textViewRightCount = (TextView) findViewById(R.id.textViewRightCount);
 		textViewRightCount.setBackgroundColor(0x8000FF00);
 		TextView textViewWrong = (TextView) findViewById(R.id.textViewWrong);
-		textViewWrong.setBackgroundDrawable(defaultDrawableWrong);
+		textViewWrong.setBackground(defaultDrawableWrong);
 		TextView textViewWrongCount = (TextView) findViewById(R.id.textViewWrongCount);
-		textViewWrongCount.setBackgroundDrawable(defaultDrawableWrongCount);
+		textViewWrongCount.setBackground(defaultDrawableWrongCount);
 	}
 
 	@Override
@@ -96,9 +96,9 @@ public class MultipleChoiceActivity extends AbstractTrainingActivity {
 		TextView textViewStatistic = (TextView) findViewById(R.id.textViewStatistic);
 		textViewStatistic.setBackgroundColor(0x80FF0000);
 		TextView textViewRight = (TextView) findViewById(R.id.textViewRight);
-		textViewRight.setBackgroundDrawable(defaultDrawableRight);
+		textViewRight.setBackground(defaultDrawableRight);
 		TextView textViewRightCount = (TextView) findViewById(R.id.textViewRightCount);
-		textViewRightCount.setBackgroundDrawable(defaultDrawableRightCount);
+		textViewRightCount.setBackground(defaultDrawableRightCount);
 		TextView textViewWrong = (TextView) findViewById(R.id.textViewWrong);
 		textViewWrong.setBackgroundColor(0x80FF0000);
 		TextView textViewWrongCount = (TextView) findViewById(R.id.textViewWrongCount);
@@ -110,13 +110,13 @@ public class MultipleChoiceActivity extends AbstractTrainingActivity {
 		TextView textViewStatistic = (TextView) findViewById(R.id.textViewStatistic);
 		textViewStatistic.setBackgroundColor(0x800000FF);
 		TextView textViewRight = (TextView) findViewById(R.id.textViewRight);
-		textViewRight.setBackgroundDrawable(defaultDrawableRight);
+		textViewRight.setBackground(defaultDrawableRight);
 		TextView textViewRightCount = (TextView) findViewById(R.id.textViewRightCount);
-		textViewRightCount.setBackgroundDrawable(defaultDrawableRightCount);
+		textViewRightCount.setBackground(defaultDrawableRightCount);
 		TextView textViewWrong = (TextView) findViewById(R.id.textViewWrong);
-		textViewWrong.setBackgroundDrawable(defaultDrawableWrong);
+		textViewWrong.setBackground(defaultDrawableWrong);
 		TextView textViewWrongCount = (TextView) findViewById(R.id.textViewWrongCount);
-		textViewWrongCount.setBackgroundDrawable(defaultDrawableWrongCount);
+		textViewWrongCount.setBackground(defaultDrawableWrongCount);
 		
 		super.showFinishedToast();
 	}

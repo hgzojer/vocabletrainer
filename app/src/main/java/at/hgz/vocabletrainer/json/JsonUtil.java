@@ -45,8 +45,7 @@ public class JsonUtil {
     public Entity unmarshall(byte[] dictionaryBytes) {
         try {
             String json = new String(dictionaryBytes, StandardCharsets.UTF_8);
-            JsonParser parser = new JsonParser();
-            JsonObject jsonDictionary = parser.parse(json).getAsJsonObject();
+            JsonObject jsonDictionary = JsonParser.parseString(json).getAsJsonObject();
 
             String name, language1, language2;
             if (jsonDictionary != null) {

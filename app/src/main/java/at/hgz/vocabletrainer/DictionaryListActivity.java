@@ -201,64 +201,48 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	        case R.id.addDictionary:
-	        {
-	        	state.setDictionary(new Dictionary(-1, "", "", ""));
-	        	List<Vocable> vocables = new ArrayList<>(1);
-	        	vocables.add(new Vocable(-1, -1, "", ""));
-	        	vocables.add(new Vocable(-1, -1, "", ""));
-	        	vocables.add(new Vocable(-1, -1, "", ""));
-	        	vocables.add(new Vocable(-1, -1, "", ""));
-	        	vocables.add(new Vocable(-1, -1, "", ""));
-	        	state.setVocables(vocables);
-				Intent intent = new Intent(DictionaryListActivity.this, VocableListActivity.class);
-				intent.putExtra(State.STATE_ID, state.getId());
-				DictionaryListActivity.this.startActivityForResult(intent, EDIT_ACTION);
-	            return true;
-	        }
-	        case R.id.openConfig:
-	        {
-				Intent intent = new Intent(DictionaryListActivity.this, ConfigActivity.class);
-				intent.putExtra(State.STATE_ID, state.getId());
-				DictionaryListActivity.this.startActivityForResult(intent, CONFIG_ACTION);
-	            return true;
-	        }
-	        case R.id.exportToExternalStorage:
-	        {
-				exportDictionaryToExternalStorage();
-	        	return true;
-	        }
-	        case R.id.importFromExternalStorage:
-	        {
-				Intent intent = new Intent(DictionaryListActivity.this, ImportActivity.class);
-				intent.putExtra(State.STATE_ID, state.getId());
-				DictionaryListActivity.this.startActivityForResult(intent, IMPORT_ACTION);
-	        	return true;
-	        }
-	        case R.id.uploadToGoogleDrive:
-	        {
-				uploadToGoogleDrive();
-	        	return true;
-	        }
-	        case R.id.downloadFromGoogleDrive:
-	        {
-				downloadFromGoogleDrive();
-	        	return true;
-	        }
-	        case R.id.menu_item_share:
-	        {
-	        	provideShareIntent();
-	            return super.onOptionsItemSelected(item);
-	        }
-	        case R.id.about:
-	        {
-				Intent intent = new Intent(DictionaryListActivity.this, AboutActivity.class);
-	        	DictionaryListActivity.this.startActivity(intent);
-	        	return true;
-	        }
-	        default:
-	            return super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if (id == R.id.addDictionary) {
+			state.setDictionary(new Dictionary(-1, "", "", ""));
+			List<Vocable> vocables = new ArrayList<>(1);
+			vocables.add(new Vocable(-1, -1, "", ""));
+			vocables.add(new Vocable(-1, -1, "", ""));
+			vocables.add(new Vocable(-1, -1, "", ""));
+			vocables.add(new Vocable(-1, -1, "", ""));
+			vocables.add(new Vocable(-1, -1, "", ""));
+			state.setVocables(vocables);
+			Intent intent = new Intent(DictionaryListActivity.this, VocableListActivity.class);
+			intent.putExtra(State.STATE_ID, state.getId());
+			DictionaryListActivity.this.startActivityForResult(intent, EDIT_ACTION);
+			return true;
+		} else if (id == R.id.openConfig) {
+			Intent intent = new Intent(DictionaryListActivity.this, ConfigActivity.class);
+			intent.putExtra(State.STATE_ID, state.getId());
+			DictionaryListActivity.this.startActivityForResult(intent, CONFIG_ACTION);
+			return true;
+		} else if (id == R.id.exportToExternalStorage) {
+			exportDictionaryToExternalStorage();
+			return true;
+		} else if (id == R.id.importFromExternalStorage) {
+			Intent intent = new Intent(DictionaryListActivity.this, ImportActivity.class);
+			intent.putExtra(State.STATE_ID, state.getId());
+			DictionaryListActivity.this.startActivityForResult(intent, IMPORT_ACTION);
+			return true;
+		} else if (id == R.id.uploadToGoogleDrive) {
+			uploadToGoogleDrive();
+			return true;
+		} else if (id == R.id.downloadFromGoogleDrive) {
+			downloadFromGoogleDrive();
+			return true;
+		} else if (id == R.id.menu_item_share) {
+			provideShareIntent();
+			return super.onOptionsItemSelected(item);
+		} else if (id == R.id.about) {
+			Intent intent = new Intent(DictionaryListActivity.this, AboutActivity.class);
+			DictionaryListActivity.this.startActivity(intent);
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 	    }
 	}
 
@@ -392,43 +376,39 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	}
 	
 	private void doUploadToGoogleDrive() {
-		ResultCallback<ContentsResult> newContentsCallback = new
-		        ResultCallback<ContentsResult>() {
-		    @Override
-		    public void onResult(ContentsResult result) {
-		    	try {
-				    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-			    	String title = "DICT_"+ timeStamp + "." + getFileExtension();
-			    	
-					byte[] dictionaryBytes = marshallDictionary();
-	
-				    try (OutputStream out = result.getContents().getOutputStream()) {
-						out.write(dictionaryBytes);
-						out.flush();
-				    } catch (IOException ex) {
-				    	throw new RuntimeException(ex.getMessage(), ex);
-				    }
-			    	
-			        MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
-			                .setMimeType(getMimeType())
-			                .setTitle(title).build();
-			        IntentSender intentSender = Drive.DriveApi
-			                 .newCreateFileActivityBuilder()
-			                 .setInitialMetadata(metadataChangeSet)
-			                 .setInitialContents(result.getContents())
-			                 .build(DictionaryListActivity.this.googleApiClient);
-			        try {
-			            startIntentSenderForResult(
-			                    intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
-			        } catch (SendIntentException e) {
-			            Log.w(TAG, "Unable to send intent", e);
-						String text = getResources().getString(R.string.errorUploadingDictionary);
-					    Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
-			        }
-		    	} finally {
-		    		driveTransaction = false;
-		    	}
-		    }
+		ResultCallback<ContentsResult> newContentsCallback = result -> {
+			try {
+				String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+				String title = "DICT_"+ timeStamp + "." + getFileExtension();
+
+				byte[] dictionaryBytes = marshallDictionary();
+
+				try (OutputStream out = result.getContents().getOutputStream()) {
+					out.write(dictionaryBytes);
+					out.flush();
+				} catch (IOException ex) {
+					throw new RuntimeException(ex.getMessage(), ex);
+				}
+
+				MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
+						.setMimeType(getMimeType())
+						.setTitle(title).build();
+				IntentSender intentSender = Drive.DriveApi
+						 .newCreateFileActivityBuilder()
+						 .setInitialMetadata(metadataChangeSet)
+						 .setInitialContents(result.getContents())
+						 .build(DictionaryListActivity.this.googleApiClient);
+				try {
+					startIntentSenderForResult(
+							intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
+				} catch (SendIntentException e) {
+					Log.w(TAG, "Unable to send intent", e);
+					String text = getResources().getString(R.string.errorUploadingDictionary);
+					Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
+				}
+			} finally {
+				driveTransaction = false;
+			}
 		};
 		Drive.DriveApi.newContents(googleApiClient).setResultCallback(newContentsCallback);
 	}
@@ -576,7 +556,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
 		if (requestCode == EDIT_ACTION) {
-			String result = "";
+			String result;
 			if (resultCode == RESULT_OK) {
 				result = data.getStringExtra("result");
 				if ("save".equals(result)) {
@@ -640,38 +620,32 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
             	DriveId driveId = (DriveId) data.getParcelableExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
             	
         		final DriveFile driveFile = Drive.DriveApi.getFile(googleApiClient, driveId);
-				ResultCallback<MetadataResult> metadataCallback = new ResultCallback<MetadataResult>() {
-					@Override
-					public void onResult(MetadataResult result) {
-						if (!result.getStatus().isSuccess()) {
-							String text = getResources().getString(R.string.errorDownloadingDictionary);
-							Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
-							driveTransaction = false;
-							return;
-						}
-						Metadata metadata = result.getMetadata();
-						final String fileName = metadata.getTitle();
-						final String mimeType = metadata.getMimeType();
-						ResultCallback<ContentsResult> contentsOpenedCallback =
-								new ResultCallback<ContentsResult>() {
-									@Override
-									public void onResult(ContentsResult result) {
-										if (!result.getStatus().isSuccess()) {
-											String text = getResources().getString(R.string.errorDownloadingDictionary);
-											Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
-											driveTransaction = false;
-											return;
-										}
-										Contents contents = result.getContents();
-										if (doDownloadFromGoogleDriveNow(contents, fileName, mimeType)) {
-											loadDictionaryList();
-											int position = list.size() - 1;
-											selectDictionary(position);
-										}
-									}
-								};
-						driveFile.openContents(googleApiClient, DriveFile.MODE_READ_ONLY, null).setResultCallback(contentsOpenedCallback);
+				ResultCallback<MetadataResult> metadataCallback = result -> {
+					if (!result.getStatus().isSuccess()) {
+						String text = getResources().getString(R.string.errorDownloadingDictionary);
+						Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
+						driveTransaction = false;
+						return;
 					}
+					Metadata metadata = result.getMetadata();
+					final String fileName = metadata.getTitle();
+					final String mimeType = metadata.getMimeType();
+					ResultCallback<ContentsResult> contentsOpenedCallback =
+							result1 -> {
+								if (!result1.getStatus().isSuccess()) {
+									String text = getResources().getString(R.string.errorDownloadingDictionary);
+									Toast.makeText(DictionaryListActivity.this, text, Toast.LENGTH_LONG).show();
+									driveTransaction = false;
+									return;
+								}
+								Contents contents = result1.getContents();
+								if (doDownloadFromGoogleDriveNow(contents, fileName, mimeType)) {
+									loadDictionaryList();
+									int position = list.size() - 1;
+									selectDictionary(position);
+								}
+							};
+					driveFile.openContents(googleApiClient, DriveFile.MODE_READ_ONLY, null).setResultCallback(contentsOpenedCallback);
 				};
 				driveFile.getMetadata(googleApiClient).setResultCallback(metadataCallback);
             }
@@ -736,7 +710,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 		}
 
 	    @Override
-	    public View getView(int position, View convertView, ViewGroup parent) {
+	    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
 			Dictionary dictionary = getItem(position);
 
@@ -750,29 +724,20 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity i
 				vh.buttonEdit = (Button) convertView.findViewById(R.id.buttonEdit);
 				vh.buttonTraining = (Button) convertView.findViewById(R.id.buttonTraining);
 				vh.buttonMultipleChoice = (Button) convertView.findViewById(R.id.buttonMultipleChoice);
-				vh.buttonEdit.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(DictionaryListActivity.this, VocableListActivity.class);
-						intent.putExtra(State.STATE_ID, state.getId());
-						DictionaryListActivity.this.startActivityForResult(intent, EDIT_ACTION);
-					}
+				vh.buttonEdit.setOnClickListener(v -> {
+					Intent intent = new Intent(DictionaryListActivity.this, VocableListActivity.class);
+					intent.putExtra(State.STATE_ID, state.getId());
+					DictionaryListActivity.this.startActivityForResult(intent, EDIT_ACTION);
 				});
-				vh.buttonTraining.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(DictionaryListActivity.this, TrainingActivity.class);
-						intent.putExtra(State.STATE_ID, state.getId());
-						DictionaryListActivity.this.startActivity(intent);
-					}
+				vh.buttonTraining.setOnClickListener(v -> {
+					Intent intent = new Intent(DictionaryListActivity.this, TrainingActivity.class);
+					intent.putExtra(State.STATE_ID, state.getId());
+					DictionaryListActivity.this.startActivity(intent);
 				});
-				vh.buttonMultipleChoice.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(DictionaryListActivity.this, MultipleChoiceActivity.class);
-						intent.putExtra(State.STATE_ID, state.getId());
-						DictionaryListActivity.this.startActivity(intent);
-					}
+				vh.buttonMultipleChoice.setOnClickListener(v -> {
+					Intent intent = new Intent(DictionaryListActivity.this, MultipleChoiceActivity.class);
+					intent.putExtra(State.STATE_ID, state.getId());
+					DictionaryListActivity.this.startActivity(intent);
 				});
 
 				convertView.setTag(vh);

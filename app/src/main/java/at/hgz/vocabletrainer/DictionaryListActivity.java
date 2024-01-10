@@ -162,8 +162,6 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem exportToExternalStorage = menu.findItem(R.id.exportToExternalStorage);
 		exportToExternalStorage.setVisible(isDictionarySelected());
-		MenuItem uploadToGoogleDrive = menu.findItem(R.id.uploadToGoogleDrive);
-		uploadToGoogleDrive.setVisible(isDictionarySelected());
 		MenuItem share = menu.findItem(R.id.menu_item_share);
 		share.setVisible(isDictionarySelected());
 		return super.onPrepareOptionsMenu(menu);

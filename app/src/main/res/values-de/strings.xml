@@ -66,16 +66,7 @@
     <string name="file">DICT_123.vt</string>
     <string name="importingDictionary">Wörterbuch wird importiert.</string>
     <string name="errorImportingDictionary">Fehler beim Importieren des Wörterbuchs.</string>
-    
-    <string name="uploadToGoogleDrive">Upload nach Google Drive</string>
-    <string name="downloadFromGoogleDrive">Download von Google Drive</string>
-    
-    <string name="errorUploadingDictionary">Fehler beim Upload vom Wörterbuch nach Google Drive.</string>
-    <string name="uploadedDictionary">Das Wörterbuch wurde nach Google Drive hochgeladen.</string>
-    
-    <string name="downloadingDictionary">Wörterbuch wird heruntergeladen.</string>
-    <string name="errorDownloadingDictionary">Fehler beim Herunterladen des Wörterbuchs.</string>
-    	
+
     <string name="about">Über Vokabel Trainer</string>
     
     <string name="share">Teilen</string>

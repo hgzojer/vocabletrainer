@@ -66,16 +66,7 @@
     <string name="file">DICT_123.vt</string>
     <string name="importingDictionary">Importing dictionary.</string>
     <string name="errorImportingDictionary">Error importing dictionary.</string>
-    
-    <string name="uploadToGoogleDrive">upload to Google Drive</string>
-    <string name="downloadFromGoogleDrive">download from Google Drive</string>
-    
-    <string name="errorUploadingDictionary">Error uploading dictionary to Google Drive.</string>
-    <string name="uploadedDictionary">Uploaded dictionary to Google Drive.</string>
-    
-    <string name="downloadingDictionary">Downloading dictionary.</string>
-    <string name="errorDownloadingDictionary">Error downloading dictionary.</string>
-    
+
     <string name="about">About Vocable Trainer</string>
     
     <string name="share">Share</string>

@@ -10,10 +10,12 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 import at.hgz.vocabletrainer.db.VocableOpenHelper;
 import at.hgz.vocabletrainer.set.TrainingSet;
 
-public class ConfigActivity extends Activity {
+public class ConfigActivity extends AppCompatActivity {
 	
     private State state;
 	public static final String TRANSLATION_DIRECTION = "translationDirection";

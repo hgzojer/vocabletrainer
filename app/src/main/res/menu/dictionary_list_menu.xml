@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    
-    <item android:id="@+id/addDictionary"
-          android:icon="@drawable/ic_action_add"
-          android:title="@string/addDictionary"
-          android:showAsAction="ifRoom"
-          />
-    
-    <item android:id="@+id/openConfig"
-          android:icon="@drawable/ic_action_config"
-          android:title="@string/openConfig"
-          android:showAsAction="ifRoom"
-          />
-    
-    <item android:id="@+id/exportToExternalStorage"
-          android:icon="@drawable/ic_action_export_to_external_storage"
-          android:title="@string/exportToExternalStorage"
-          />
-    
-    <item android:id="@+id/importFromExternalStorage"
-          android:icon="@drawable/ic_action_import_from_external_storage"
-          android:title="@string/importFromExternalStorage"
-          />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_item_share"
-          android:icon="@drawable/ic_action_share"
-          android:title="@string/share"
-          android:actionProviderClass="android.widget.ShareActionProvider" />
-    
-    <item android:id="@+id/about"
-          android:title="@string/about"
-          />
-    
+    <item
+        android:id="@+id/addDictionary"
+        android:icon="@drawable/ic_action_add"
+        android:title="@string/addDictionary"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/openConfig"
+        android:icon="@drawable/ic_action_config"
+        android:title="@string/openConfig"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/exportToExternalStorage"
+        android:icon="@drawable/ic_action_export_to_external_storage"
+        android:title="@string/exportToExternalStorage" />
+
+    <item
+        android:id="@+id/importFromExternalStorage"
+        android:icon="@drawable/ic_action_import_from_external_storage"
+        android:title="@string/importFromExternalStorage" />
+
+    <item
+        android:id="@+id/menu_item_share"
+        android:icon="@drawable/ic_action_share"
+        android:title="@string/share"
+        app:actionProviderClass="androidx.appcompat.widget.ShareActionProvider" />
+
+    <item
+        android:id="@+id/about"
+        android:title="@string/about" />
+
 </menu>

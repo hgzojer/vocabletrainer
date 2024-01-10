@@ -20,12 +20,12 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView
-        android:id="@android:id/list"
+        android:id="@+id/import_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <TextView
-        android:id="@android:id/empty"
+        android:id="@+id/import_list_view_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/nodata" />

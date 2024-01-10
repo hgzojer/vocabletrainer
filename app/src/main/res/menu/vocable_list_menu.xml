@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    
-    <item android:id="@+id/addVocable"
-          android:icon="@drawable/ic_action_add"
-          android:title="@string/addVocable"
-          android:showAsAction="ifRoom"
-          />
-    
-    <item android:id="@+id/deleteDictionary"
-          android:icon="@drawable/ic_action_delete"
-          android:title="@string/deleteDictionary"
-          android:showAsAction="ifRoom"
-          />
-    
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/addVocable"
+        android:icon="@drawable/ic_action_add"
+        android:title="@string/addVocable"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/deleteDictionary"
+        android:icon="@drawable/ic_action_delete"
+        android:title="@string/deleteDictionary"
+        app:showAsAction="ifRoom" />
+
 </menu>

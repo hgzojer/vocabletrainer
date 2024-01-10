@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class ViewActivity extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class ViewActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

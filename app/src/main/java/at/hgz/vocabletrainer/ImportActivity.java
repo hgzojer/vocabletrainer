@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,11 +33,12 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import at.hgz.vocabletrainer.csv.CsvUtil;
 import at.hgz.vocabletrainer.json.JsonUtil;
 import at.hgz.vocabletrainer.xml.XmlUtil;
 
-public class ImportActivity extends ListActivity {
+public class ImportActivity extends AppCompatActivity {
 	
 	private State state;
 
@@ -48,10 +50,15 @@ public class ImportActivity extends ListActivity {
 	private List<FileRow> list = new ArrayList<>();
 	private FileArrayAdapter adapter;
 
+	private ListView listView;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_import);
+		listView = (ListView) findViewById(R.id.import_list_view);
+		TextView emptyText = (TextView)findViewById(R.id.import_list_view_empty);
+		listView.setEmptyView(emptyText);
 
 		Intent intent = getIntent();
 		state = TrainingApplication.getState(intent.getIntExtra(State.STATE_ID, -1));
@@ -64,7 +71,7 @@ public class ImportActivity extends ListActivity {
 		currentPath.setText("" + state.getCurrentDirectory());
 		loadFiles();
 		adapter = new FileArrayAdapter(this, R.layout.import_item, list);
-		setListAdapter(adapter);
+		listView.setAdapter(adapter);
 	}
 
 	public static File getSDCardDir(Context context) {

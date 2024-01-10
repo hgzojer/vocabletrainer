@@ -13,7 +13,6 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".DictionaryListActivity"
-            android:label="@string/app_name"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,36 +21,29 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TrainingActivity"
-            android:label="@string/app_name" >
+            android:name=".TrainingActivity">
         </activity>
         <activity
-            android:name=".MultipleChoiceActivity"
-            android:label="@string/app_name" >
+            android:name=".MultipleChoiceActivity">
         </activity>
         <activity
-            android:name=".VocableListActivity"
-            android:label="@string/app_name" >
+            android:name=".VocableListActivity">
         </activity>
         <activity
-            android:name=".ConfigActivity"
-            android:label="@string/app_name" >
+            android:name=".ConfigActivity">
         </activity>
         <activity
             android:name=".ImportActivity"
             android:label="@string/title_activity_import" >
         </activity>
         <activity
-            android:name=".AboutActivity"
-            android:label="@string/app_name" >
+            android:name=".AboutActivity">
         </activity>
         <activity
-            android:name=".LicenseActivity"
-            android:label="@string/app_name" >
+            android:name=".LicenseActivity">
         </activity>
         <activity
             android:name=".ViewActivity"
-            android:label="@string/app_name"
             android:noHistory="true"
             android:exported="true">
             <intent-filter>

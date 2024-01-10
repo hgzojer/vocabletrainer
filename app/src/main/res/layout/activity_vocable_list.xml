@@ -74,9 +74,15 @@
     </LinearLayout>
 
     <ListView
-        android:id="@android:id/list"
+        android:id="@+id/vocable_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:descendantFocusability="afterDescendants" />
+
+    <TextView
+        android:id="@+id/vocable_list_view_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/nodata" />
 
 </LinearLayout>

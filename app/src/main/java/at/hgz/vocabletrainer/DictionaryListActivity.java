@@ -16,10 +16,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.ShareActionProvider;
+import androidx.appcompat.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,8 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 import at.hgz.vocabletrainer.csv.CsvUtil;
 import at.hgz.vocabletrainer.db.Dictionary;
 import at.hgz.vocabletrainer.db.Vocable;
@@ -46,7 +49,7 @@ import at.hgz.vocabletrainer.set.TrainingSet;
 import at.hgz.vocabletrainer.xml.XmlUtil;
 import at.hgz.vocabletrainer.xml.XmlUtil.Entity;
 
-public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity {
+public class DictionaryListActivity extends AppCompatActivity {
 
 	private static final String TAG = "DictionaryListActivity";
 	private static final int EDIT_ACTION = 1;
@@ -54,21 +57,26 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity {
 	private static final int IMPORT_ACTION = 3;
 
 	private State state;
-	
+
 	private List<Dictionary> list = new ArrayList<>();
-	
+
 	private DictionaryArrayAdapter adapter;
-	
+
 	private String directionSymbol = "↔";
 
 	private boolean alreadyRefreshed;
-	
+
 	private ShareActionProvider mShareActionProvider;
+
+	private ListView listView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dictionary_list);
+		listView = (ListView) findViewById(R.id.dictionary_list_view);
+		TextView emptyText = (TextView)findViewById(R.id.dictionary_list_view_empty);
+		listView.setEmptyView(emptyText);
 
 		int id;
 		if (savedInstanceState == null) {
@@ -83,7 +91,8 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity {
 		loadDictionaryList();
 
 		adapter = new DictionaryArrayAdapter(this, R.layout.dictionary_list_item, list);
-		setListAdapter(adapter);
+		listView.setAdapter(adapter);
+		listView.setOnItemClickListener((l, v, position, id1) -> selectDictionary(position));
 
 		Intent intent = getIntent();
 		if (intent.getBooleanExtra("import", false) && savedInstanceState == null) {
@@ -92,7 +101,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity {
 		}
 		alreadyRefreshed = true;
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -148,16 +157,16 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.dictionary_list_menu, menu);
 	    MenuItem item = menu.findItem(R.id.menu_item_share);
-	    mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+	    mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
 	    return true;
 	}
-	
+
 	private void setShareIntent(Intent shareIntent) {
 	    if (mShareActionProvider != null) {
 	        mShareActionProvider.setShareIntent(shareIntent);
 	    }
 	}
-	
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem exportToExternalStorage = menu.findItem(R.id.exportToExternalStorage);
@@ -314,17 +323,10 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity {
 		}
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-
-		selectDictionary(position);
-	}
-
 	private void selectDictionary(int position) {
 		loadDictionaryVocables(position);
 		adapter.notifyDataSetChanged();
-		setSelection(position);
+		listView.setSelection(position);
 		provideShareIntent();
 	}
 
@@ -378,7 +380,8 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
+		super.onActivityResult(requestCode, resultCode, data);
+
 		if (requestCode == EDIT_ACTION) {
 			String result;
 			if (resultCode == RESULT_OK) {
@@ -404,12 +407,12 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity {
 			if (resultCode == RESULT_CANCELED) {
 			}
 		}
-		
+
 		if (requestCode == CONFIG_ACTION) {
 			loadDirectionSymbol();
 			adapter.notifyDataSetChanged();
 		}
-		
+
 		if (requestCode == IMPORT_ACTION) {
 			if (resultCode == RESULT_OK) {
 				if (importDictionaryFromExternalStorage(this, data.getData(), data.getType())) {
@@ -467,7 +470,7 @@ public class DictionaryListActivity extends /*AppCompatActivity*/ ListActivity {
 				List<Dictionary> objects) {
 			super(context, resource, objects);
 		}
-		
+
 		private class ViewHolder {
 			public TextView listItemName;
 			public TextView listItemLanguage12;

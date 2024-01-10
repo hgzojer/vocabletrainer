@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class LicenseActivity extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class LicenseActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

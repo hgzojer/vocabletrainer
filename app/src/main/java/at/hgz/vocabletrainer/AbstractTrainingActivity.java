@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import at.hgz.vocabletrainer.set.TrainingSet;
@@ -30,6 +34,11 @@ public abstract class AbstractTrainingActivity extends AppCompatActivity {
             state.setNeedInit(false);
         } else {
             updateDisplay();
+        }
+
+        ActionBar actionBar = this.getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -120,5 +129,18 @@ public abstract class AbstractTrainingActivity extends AppCompatActivity {
         outputWrong.setText("" + state.getWrong());
         TextView outputTodo = (TextView) findViewById(R.id.textViewTodoCount);
         outputTodo.setText("" + state.getTodo());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            Intent returnIntent = new Intent();
+            setResult(RESULT_CANCELED, returnIntent);
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }

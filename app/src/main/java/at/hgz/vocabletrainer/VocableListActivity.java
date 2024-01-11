@@ -22,6 +22,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import at.hgz.vocabletrainer.db.Dictionary;
 import at.hgz.vocabletrainer.db.Vocable;
@@ -55,6 +56,11 @@ public class VocableListActivity extends AppCompatActivity {
 
 		adapter = new VocableArrayAdapter(this, R.layout.vocable_list_item, state.getVocables());
 		listView.setAdapter(adapter);
+
+		ActionBar actionBar = this.getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 	}
 	
 	@Override
@@ -73,6 +79,14 @@ public class VocableListActivity extends AppCompatActivity {
 			return true;
 		} else if (id == R.id.deleteDictionary) {
 			deleteDictionary();
+			return true;
+		} else if (id == android.R.id.home) {
+			String result = (state.getDictionary().getId() == -1 ? "add" : "save");
+			saveState();
+			Intent returnIntent = new Intent();
+			returnIntent.putExtra("result", result);
+			setResult(RESULT_OK, returnIntent);
+			finish();
 			return true;
 		} else {
 			return super.onOptionsItemSelected(item);

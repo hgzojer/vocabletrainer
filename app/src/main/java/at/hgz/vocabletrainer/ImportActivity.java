@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import at.hgz.vocabletrainer.csv.CsvUtil;
 import at.hgz.vocabletrainer.json.JsonUtil;
@@ -72,6 +74,11 @@ public class ImportActivity extends AppCompatActivity {
 		loadFiles();
 		adapter = new FileArrayAdapter(this, R.layout.import_item, list);
 		listView.setAdapter(adapter);
+
+		ActionBar actionBar = this.getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 	}
 
 	public static File getSDCardDir(Context context) {
@@ -192,5 +199,18 @@ public class ImportActivity extends AppCompatActivity {
 			return convertView;
 		}
 
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		int id = item.getItemId();
+		if (id == android.R.id.home) {
+			Intent returnIntent = new Intent();
+			setResult(RESULT_CANCELED, returnIntent);
+			finish();
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }

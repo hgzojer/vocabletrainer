@@ -135,13 +135,7 @@ public abstract class AbstractTrainingActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            /*
-            Intent myIntent = new Intent(getApplicationContext(), DictionaryListActivity.class);
-            startActivityForResult(myIntent, 0);
-            return true;
-             */
             Intent returnIntent = new Intent();
-            returnIntent.putExtra("result", "back");
             setResult(RESULT_CANCELED, returnIntent);
             finish();
             return true;

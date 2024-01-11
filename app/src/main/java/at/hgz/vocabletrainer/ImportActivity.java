@@ -56,7 +56,6 @@ public class ImportActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_import);
-		setSupportActionBar(findViewById(R.id.import_toolbar));
 		listView = (ListView) findViewById(R.id.import_list_view);
 		TextView emptyText = (TextView)findViewById(R.id.import_list_view_empty);
 		listView.setEmptyView(emptyText);

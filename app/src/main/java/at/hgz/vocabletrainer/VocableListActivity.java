@@ -39,7 +39,6 @@ public class VocableListActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_vocable_list);
-		setSupportActionBar(findViewById(R.id.vocable_list_toolbar));
 		listView = (ListView) findViewById(R.id.vocable_list_view);
 		TextView emptyText = (TextView)findViewById(R.id.vocable_list_view_empty);
 		listView.setEmptyView(emptyText);

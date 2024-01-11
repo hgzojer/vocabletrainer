@@ -13,7 +13,6 @@ public class TrainingActivity extends AbstractTrainingActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
-		setSupportActionBar(findViewById(R.id.training_toolbar));
     	EditText inputTranslation = (EditText) findViewById(R.id.editTextTranslationLanguage2);
     	inputTranslation.setOnEditorActionListener((v, actionId, event) -> {
 			if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {

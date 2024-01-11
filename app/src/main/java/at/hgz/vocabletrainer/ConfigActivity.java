@@ -28,8 +28,7 @@ public class ConfigActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
-		setSupportActionBar(findViewById(R.id.config_toolbar));
-
+        
 		Intent intent = getIntent();
 		state = TrainingApplication.getState(intent.getIntExtra(State.STATE_ID, -1));
 				 

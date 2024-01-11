@@ -25,7 +25,6 @@ public class MultipleChoiceActivity extends AbstractTrainingActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiple_choice);
-		setSupportActionBar(findViewById(R.id.multiple_choice_toolbar));
 
 		TextView textViewRight = (TextView) findViewById(R.id.textViewRight);
 		defaultDrawableRight = textViewRight.getBackground();

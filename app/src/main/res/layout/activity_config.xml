@@ -1,129 +1,87 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scroll"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:orientation="vertical"
+    tools:context="${relativePackage}.ConfigActivity" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:context="${relativePackage}.ConfigActivity">
+        android:text="@string/translationDirection" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/config_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    <RadioGroup
+        android:id="@+id/radioGroupDirection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <RadioButton
+            android:id="@+id/radioDirection1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:orientation="vertical"
-            tools:context="${relativePackage}.ConfigActivity">
+            android:onClick="onRadioButtonClicked"
+            android:checked="true"
+            android:text="@string/translateForward" />
 
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/translationDirection" />
-
-            <RadioGroup
-                android:id="@+id/radioGroupDirection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dp">
-
-                <RadioButton
-                    android:id="@+id/radioDirection1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="@string/translateForward" />
-
-                <RadioButton
-                    android:id="@+id/radioDirection2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="@string/translateBidrectional" />
-
-                <RadioButton
-                    android:id="@+id/radioDirection3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="@string/translateBackward" />
-            </RadioGroup>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <RadioButton
+            android:id="@+id/radioDirection2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:orientation="vertical"
-            tools:context="${relativePackage}.ConfigActivity">
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/translateBidrectional" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/fileFormat" />
-
-            <RadioGroup
-                android:id="@+id/radioGroupFileFormat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dp">
-
-                <RadioButton
-                    android:id="@+id/radioFileFormat1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="@string/fileFormatXML" />
-
-                <RadioButton
-                    android:id="@+id/radioFileFormat2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="@string/fileFormatJSON" />
-
-                <RadioButton
-                    android:id="@+id/radioFileFormat3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="@string/fileFormatCSV" />
-            </RadioGroup>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <RadioButton
+            android:id="@+id/radioDirection3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:orientation="vertical"
-            tools:context="${relativePackage}.ConfigActivity">
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/translateBackward" />
+    </RadioGroup>
 
-            <Button
-                android:id="@+id/buttonResetDatabase"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:onClick="onClickResetDatabase"
-                android:text="@string/resetDatabase" />
-        </LinearLayout>
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fileFormat" />
 
-    </LinearLayout>
+    <RadioGroup
+        android:id="@+id/radioGroupFileFormat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp" >
 
-</ScrollView>
+        <RadioButton
+            android:id="@+id/radioFileFormat1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:checked="true"
+            android:text="@string/fileFormatXML" />
+
+        <RadioButton
+            android:id="@+id/radioFileFormat2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/fileFormatJSON" />
+
+        <RadioButton
+            android:id="@+id/radioFileFormat3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/fileFormatCSV" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/buttonResetDatabase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:onClick="onClickResetDatabase"
+        android:text="@string/resetDatabase" />
+
+</LinearLayout>

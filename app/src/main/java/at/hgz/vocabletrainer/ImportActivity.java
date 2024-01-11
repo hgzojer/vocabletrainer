@@ -2,7 +2,6 @@ package at.hgz.vocabletrainer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -39,159 +38,160 @@ import at.hgz.vocabletrainer.json.JsonUtil;
 import at.hgz.vocabletrainer.xml.XmlUtil;
 
 public class ImportActivity extends AppCompatActivity {
-	
-	private State state;
 
-	private static class FileRow {
-		public File file;
-		public String dictionary;
-	}
+    private State state;
 
-	private List<FileRow> list = new ArrayList<>();
-	private FileArrayAdapter adapter;
+    private static class FileRow {
+        public File file;
+        public String dictionary;
+    }
 
-	private ListView listView;
+    private List<FileRow> list = new ArrayList<>();
+    private FileArrayAdapter adapter;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_import);
-		setSupportActionBar(findViewById(R.id.import_toolbar));
-		listView = (ListView) findViewById(R.id.import_list_view);
-		TextView emptyText = (TextView)findViewById(R.id.import_list_view_empty);
-		listView.setEmptyView(emptyText);
+    private ListView listView;
 
-		Intent intent = getIntent();
-		state = TrainingApplication.getState(intent.getIntExtra(State.STATE_ID, -1));
-				 
-		if (state.getCurrentDirectory() == null) {
-			File dir = getSDCardDir(this);
-			state.setCurrentDirectory(dir);
-		}
-		TextView currentPath = (TextView) findViewById(R.id.currentPath);
-		currentPath.setText("" + state.getCurrentDirectory());
-		loadFiles();
-		adapter = new FileArrayAdapter(this, R.layout.import_item, list);
-		listView.setAdapter(adapter);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_import);
+        setSupportActionBar(findViewById(R.id.import_toolbar));
+        listView = (ListView) findViewById(R.id.import_list_view);
+        TextView emptyText = (TextView) findViewById(R.id.import_list_view_empty);
+        listView.setEmptyView(emptyText);
 
-	public static File getSDCardDir(Context context) {
-		// return context.getExternalFilesDir(null);
-		File[] dirs = context.getExternalFilesDirs(null);
-		return dirs[dirs.length - 1];
-	}
+        Intent intent = getIntent();
+        state = TrainingApplication.getState(intent.getIntExtra(State.STATE_ID, -1));
 
-	private void loadFiles() {
-		File dir = state.getCurrentDirectory();
-		list.clear();
-		File[] files = dir.listFiles(new FilenameFilter() {
-			private final Pattern p = Pattern.compile("^.*\\.(vt|vtj|vtc)$", Pattern.CASE_INSENSITIVE);
-			@Override
-			public boolean accept(File dir, String filename) {
-				return p.matcher(filename.toLowerCase(Locale.US)).matches();
-			}
+        if (state.getCurrentDirectory() == null) {
+            File dir = getSDCardDir(this);
+            state.setCurrentDirectory(dir);
+        }
+        TextView currentPath = (TextView) findViewById(R.id.currentPath);
+        currentPath.setText("" + state.getCurrentDirectory());
+        loadFiles();
+        adapter = new FileArrayAdapter(this, R.layout.import_item, list);
+        listView.setAdapter(adapter);
+    }
 
-		});
-		if (files == null) {
-			files = new File[0];
-		}
-		Arrays.sort(files, Comparator.reverseOrder());
-		for (File file : files) {
-			FileRow fileRow = new FileRow();
-			fileRow.file = file;
-			try {
-				InputStream in = Files.newInputStream(file.toPath());
-				byte[] dictionaryBytes = IOUtils.toByteArray(in);
-				String dictionaryName;
-				if (file.getName().toLowerCase().endsWith(".vtj")) {
-					dictionaryName = JsonUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
-				} else if (file.getName().toLowerCase().endsWith(".vtc")) {
-					dictionaryName = CsvUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
-				} else {
-					dictionaryName = XmlUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
-				}
-				fileRow.dictionary = dictionaryName;
-			} catch (Exception ex) {
-				fileRow.dictionary = "(X_X)";
-				Log.d("VocableTrainer", "Error loading dictionary: " + ex.getMessage(), ex);
-			}
-			list.add(fileRow);
-		}
-	}
+    public static File getSDCardDir(Context context) {
+        // return context.getExternalFilesDir(null);
+        File[] dirs = context.getExternalFilesDirs(null);
+        return dirs[dirs.length - 1];
+    }
 
-	private void deleteFile(final FileRow fileRow) {
+    private void loadFiles() {
+        File dir = state.getCurrentDirectory();
+        list.clear();
+        File[] files = dir.listFiles(new FilenameFilter() {
+            private final Pattern p = Pattern.compile("^.*\\.(vt|vtj|vtc)$", Pattern.CASE_INSENSITIVE);
 
-		Resources resources = getApplicationContext().getResources();
-		String confirmDeleteDictionaryTitle = resources.getString(R.string.confirmDeleteDictionaryTitle);
-		String confirmDeleteDictionaryText = resources.getString(R.string.confirmDeleteDictionaryText);
-		
-		new AlertDialog.Builder(this)
-		.setTitle(confirmDeleteDictionaryTitle)
-		.setMessage(confirmDeleteDictionaryText)
-		.setIcon(android.R.drawable.ic_dialog_alert)
-		.setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
-			if (fileRow.file.delete()) {
-				Resources resources1 = getApplicationContext().getResources();
-				String text = resources1.getString(R.string.deletingDictionary);
-				Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-				toast.show();
-				adapter.remove(fileRow);
-			}
-		})
-		.setNegativeButton(android.R.string.cancel, null).show();
-	}
-	
-	private class FileArrayAdapter extends ArrayAdapter<FileRow> {
+            @Override
+            public boolean accept(File dir, String filename) {
+                return p.matcher(filename.toLowerCase(Locale.US)).matches();
+            }
 
-		public FileArrayAdapter(Context context, int resource,
-				List<FileRow> objects) {
-			super(context, resource, objects);
-		}
+        });
+        if (files == null) {
+            files = new File[0];
+        }
+        Arrays.sort(files, Comparator.reverseOrder());
+        for (File file : files) {
+            FileRow fileRow = new FileRow();
+            fileRow.file = file;
+            try {
+                InputStream in = Files.newInputStream(file.toPath());
+                byte[] dictionaryBytes = IOUtils.toByteArray(in);
+                String dictionaryName;
+                if (file.getName().toLowerCase().endsWith(".vtj")) {
+                    dictionaryName = JsonUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
+                } else if (file.getName().toLowerCase().endsWith(".vtc")) {
+                    dictionaryName = CsvUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
+                } else {
+                    dictionaryName = XmlUtil.getInstance().unmarshall(dictionaryBytes).getDictionary().getName();
+                }
+                fileRow.dictionary = dictionaryName;
+            } catch (Exception ex) {
+                fileRow.dictionary = "(X_X)";
+                Log.d("VocableTrainer", "Error loading dictionary: " + ex.getMessage(), ex);
+            }
+            list.add(fileRow);
+        }
+    }
 
-		private class ViewHolder {
-			public ImageButton buttonDelete;
-			public View listItem;
-			public TextView listItemName;
-			public TextView listItemDictionary;
-			public FileRow fileRow;
-		}
+    private void deleteFile(final FileRow fileRow) {
 
-		@Override
-		@NonNull
-		public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        Resources resources = getApplicationContext().getResources();
+        String confirmDeleteDictionaryTitle = resources.getString(R.string.confirmDeleteDictionaryTitle);
+        String confirmDeleteDictionaryText = resources.getString(R.string.confirmDeleteDictionaryText);
 
-			FileRow fileRow = getItem(position);
+        new AlertDialog.Builder(this)
+                .setTitle(confirmDeleteDictionaryTitle)
+                .setMessage(confirmDeleteDictionaryText)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+                    if (fileRow.file.delete()) {
+                        Resources resources1 = getApplicationContext().getResources();
+                        String text = resources1.getString(R.string.deletingDictionary);
+                        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+                        toast.show();
+                        adapter.remove(fileRow);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null).show();
+    }
 
-			if (convertView == null) {
-				convertView = LayoutInflater.from(getContext()).inflate(
-						R.layout.import_item, parent, false);
-				final ViewHolder vh = new ViewHolder();
-				vh.buttonDelete = (ImageButton) convertView.findViewById(R.id.buttonDelete);
-				vh.listItem = (View) convertView.findViewById(R.id.listItem);
-				vh.listItemName = (TextView) convertView.findViewById(R.id.listItemName);
-				vh.listItemDictionary = (TextView) convertView.findViewById(R.id.listItemDictionary);
-				
-				vh.buttonDelete.setOnClickListener(v -> deleteFile(vh.fileRow));
-				OnClickListener selectFileListener = v -> {
-					Intent resultIntent = new Intent();
-					String mimeType = VocableTrainerProvider.getMimeType(vh.fileRow.file.getName());
-					resultIntent.setDataAndType(Uri.fromFile(vh.fileRow.file), mimeType);
-					setResult(Activity.RESULT_OK, resultIntent);
-					ImportActivity.this.finish();
-				};
-				vh.listItem.setOnClickListener(selectFileListener);
-				vh.listItemName.setOnClickListener(selectFileListener);
-				vh.listItemDictionary.setOnClickListener(selectFileListener);
-				convertView.setTag(vh);
-			}
+    private class FileArrayAdapter extends ArrayAdapter<FileRow> {
 
-			ViewHolder vh = (ViewHolder) convertView.getTag();
-			vh.fileRow = fileRow;
-			vh.listItemName.setText(fileRow.file.getName());
-			vh.listItemDictionary.setText(fileRow.dictionary);
+        public FileArrayAdapter(Context context, int resource,
+                                List<FileRow> objects) {
+            super(context, resource, objects);
+        }
 
-			return convertView;
-		}
+        private class ViewHolder {
+            public ImageButton buttonDelete;
+            public View listItem;
+            public TextView listItemName;
+            public TextView listItemDictionary;
+            public FileRow fileRow;
+        }
 
-	}
+        @Override
+        @NonNull
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+
+            FileRow fileRow = getItem(position);
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(
+                        R.layout.import_item, parent, false);
+                final ViewHolder vh = new ViewHolder();
+                vh.buttonDelete = (ImageButton) convertView.findViewById(R.id.buttonDelete);
+                vh.listItem = (View) convertView.findViewById(R.id.listItem);
+                vh.listItemName = (TextView) convertView.findViewById(R.id.listItemName);
+                vh.listItemDictionary = (TextView) convertView.findViewById(R.id.listItemDictionary);
+
+                vh.buttonDelete.setOnClickListener(v -> deleteFile(vh.fileRow));
+                OnClickListener selectFileListener = v -> {
+                    Intent resultIntent = new Intent();
+                    String mimeType = VocableTrainerProvider.getMimeType(vh.fileRow.file.getName());
+                    resultIntent.setDataAndType(Uri.fromFile(vh.fileRow.file), mimeType);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    ImportActivity.this.finish();
+                };
+                vh.listItem.setOnClickListener(selectFileListener);
+                vh.listItemName.setOnClickListener(selectFileListener);
+                vh.listItemDictionary.setOnClickListener(selectFileListener);
+                convertView.setTag(vh);
+            }
+
+            ViewHolder vh = (ViewHolder) convertView.getTag();
+            vh.fileRow = fileRow;
+            vh.listItemName.setText(fileRow.file.getName());
+            vh.listItemDictionary.setText(fileRow.dictionary);
+
+            return convertView;
+        }
+
+    }
 }

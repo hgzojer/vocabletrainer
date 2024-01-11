@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_margin="20dp"
     android:orientation="horizontal"
-    tools:context="${relativePackage}.AboutActivity" >
+    tools:context="${relativePackage}.AboutActivity">
 
     <TextView
         android:id="@+id/listItemName"

@@ -6,62 +6,62 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
-@Root(name="dictionary")
+@Root(name = "dictionary")
 public class XmlDictionary {
 
-	@Element
-	private String name;
-	
-	@Element
-	private String language1;
-	
-	@Element
-	private String language2;
-	
-	@ElementList
-	private ArrayList<XmlVocable> vocables;
+    @Element
+    private String name;
 
-	public XmlDictionary() {
-	}
+    @Element
+    private String language1;
 
-	public XmlDictionary(String name, String language1, String language2,
-			ArrayList<XmlVocable> vocables) {
-		this.name = name;
-		this.language1 = language1;
-		this.language2 = language2;
-		this.vocables = vocables;
-	}
+    @Element
+    private String language2;
 
-	public String getName() {
-		return name;
-	}
+    @ElementList
+    private ArrayList<XmlVocable> vocables;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public XmlDictionary() {
+    }
 
-	public String getLanguage1() {
-		return language1;
-	}
+    public XmlDictionary(String name, String language1, String language2,
+                         ArrayList<XmlVocable> vocables) {
+        this.name = name;
+        this.language1 = language1;
+        this.language2 = language2;
+        this.vocables = vocables;
+    }
 
-	public void setLanguage1(String language1) {
-		this.language1 = language1;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getLanguage2() {
-		return language2;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setLanguage2(String language2) {
-		this.language2 = language2;
-	}
+    public String getLanguage1() {
+        return language1;
+    }
 
-	public ArrayList<XmlVocable> getVocables() {
-		return vocables;
-	}
+    public void setLanguage1(String language1) {
+        this.language1 = language1;
+    }
 
-	public void setVocables(ArrayList<XmlVocable> vocables) {
-		this.vocables = vocables;
-	}
-	
+    public String getLanguage2() {
+        return language2;
+    }
+
+    public void setLanguage2(String language2) {
+        this.language2 = language2;
+    }
+
+    public ArrayList<XmlVocable> getVocables() {
+        return vocables;
+    }
+
+    public void setVocables(ArrayList<XmlVocable> vocables) {
+        this.vocables = vocables;
+    }
+
 }

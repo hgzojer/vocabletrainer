@@ -5,20 +5,20 @@
     android:layout_height="match_parent"
     android:layout_margin="20dp"
     android:orientation="horizontal"
-    tools:context="${relativePackage}.VocableListActivity" >
+    tools:context="${relativePackage}.VocableListActivity">
 
     <ImageButton
         android:id="@+id/buttonDeleteVocable"
         android:layout_width="1pt"
         android:layout_height="wrap_content"
         android:layout_marginLeft="3dp"
-        android:layout_marginRight="6dp"
         android:layout_marginTop="3dp"
+        android:layout_marginRight="6dp"
         android:layout_marginBottom="3dp"
         android:layout_weight="1"
         android:contentDescription="@string/deleteVocable"
         android:src="@drawable/ic_action_button_delete" />
-    
+
     <EditText
         android:id="@+id/listItemEditWord"
         android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
         android:layout_margin="3dp"
         android:layout_weight="1"
         android:ems="4"
-        android:inputType="text" >
+        android:inputType="text">
 
     </EditText>
 
@@ -37,7 +37,7 @@
         android:layout_margin="3dp"
         android:layout_weight="1"
         android:ems="4"
-        android:inputType="text" >
+        android:inputType="text">
 
     </EditText>
 

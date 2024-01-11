@@ -74,6 +74,7 @@ public class DictionaryListActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dictionary_list);
+		setSupportActionBar(findViewById(R.id.dictionary_list_toolbar));
 		listView = (ListView) findViewById(R.id.dictionary_list_view);
 		TextView emptyText = (TextView)findViewById(R.id.dictionary_list_view_empty);
 		listView.setEmptyView(emptyText);

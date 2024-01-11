@@ -1,33 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
     tools:context="${relativePackage}.${activityClass}" >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/import_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <TextView
         android:id="@+id/currentPath"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/bla123" />
+        android:text="@string/bla123"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/selectFileToImport"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        />
 
     <ListView
         android:id="@+id/import_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        />
 
     <TextView
         android:id="@+id/import_list_view_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/nodata" />
+        android:text="@string/nodata"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        />
 
 </LinearLayout>

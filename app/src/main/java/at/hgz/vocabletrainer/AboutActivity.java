@@ -36,6 +36,7 @@ public class AboutActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
+		setSupportActionBar(findViewById(R.id.about_toolbar));
 		ListView listView = (ListView) findViewById(R.id.about_list_view);
 		TextView emptyText = (TextView)findViewById(R.id.about_list_view_empty);
 		listView.setEmptyView(emptyText);

@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp" >
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/vocable_list_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
 
         <TextView
             android:id="@+id/textViewDictionaryNameLabel"
@@ -26,14 +36,15 @@
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:ems="4"
-            android:inputType="text" >
-        </EditText>
+            android:inputType="text"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
 
         <TextView
             android:id="@+id/textViewLanguage1Label"
@@ -50,8 +61,7 @@
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:ems="4"
-            android:inputType="text" >
-        </EditText>
+            android:inputType="text"/>
 
         <TextView
             android:id="@+id/textViewLanguage2Label"
@@ -68,21 +78,23 @@
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:ems="4"
-            android:inputType="text" >
-        </EditText>
-
+            android:inputType="text"/>
     </LinearLayout>
 
     <ListView
         android:id="@+id/vocable_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:descendantFocusability="afterDescendants" />
+        android:descendantFocusability="afterDescendants"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" />
 
     <TextView
         android:id="@+id/vocable_list_view_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:text="@string/nodata" />
 
 </LinearLayout>

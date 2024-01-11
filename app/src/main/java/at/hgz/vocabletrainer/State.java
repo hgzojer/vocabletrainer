@@ -8,144 +8,144 @@ import at.hgz.vocabletrainer.db.Vocable;
 import at.hgz.vocabletrainer.set.TrainingElem;
 
 public class State {
+	
+	public static final String STATE_ID = "stateId";
+	
+	private int id;
+	
+	private Dictionary dictionary;
+	private List<Vocable> vocables;
+	
+	private List<TrainingElem> list;
+	private TrainingElem vocable;
+	private int right;
+	private int wrong;
+	private int todo;
+	private boolean needInit = true;
+	
+	private int direction;
+	private int fileFormat;
+	private boolean configChanged;
+	
+	private File currentDirectory;
+	
+	public State(int id) {
+		this.id = id;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public Dictionary getDictionary() {
+		return dictionary;
+	}
 
-    public static final String STATE_ID = "stateId";
+	public void setDictionary(Dictionary dictionary) {
+		if (this.dictionary != dictionary) {
+			this.dictionary = dictionary;
+			needInit = true;
+			list = null;
+		}
+	}
 
-    private int id;
+	public List<Vocable> getVocables() {
+		return vocables;
+	}
 
-    private Dictionary dictionary;
-    private List<Vocable> vocables;
+	public void setVocables(List<Vocable> vocables) {
+		this.vocables = vocables;
+	}
 
-    private List<TrainingElem> list;
-    private TrainingElem vocable;
-    private int right;
-    private int wrong;
-    private int todo;
-    private boolean needInit = true;
+	public void incRight() {
+		right++;
+	}
 
-    private int direction;
-    private int fileFormat;
-    private boolean configChanged;
+	public void incWrong() {
+		wrong++;
+	}
 
-    private File currentDirectory;
+	public void decTodo() {
+		todo--;
+	}
 
-    public State(int id) {
-        this.id = id;
-    }
+	public TrainingElem getVocable() {
+		return vocable;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public void setVocable(TrainingElem vocable) {
+		this.vocable = vocable;
+	}
 
-    public Dictionary getDictionary() {
-        return dictionary;
-    }
+	public int getTodo() {
+		return todo;
+	}
 
-    public void setDictionary(Dictionary dictionary) {
-        if (this.dictionary != dictionary) {
-            this.dictionary = dictionary;
-            needInit = true;
-            list = null;
-        }
-    }
+	public int getRight() {
+		return right;
+	}
 
-    public List<Vocable> getVocables() {
-        return vocables;
-    }
+	public void setRight(int right) {
+		this.right = right;
+	}
 
-    public void setVocables(List<Vocable> vocables) {
-        this.vocables = vocables;
-    }
+	public int getWrong() {
+		return wrong;
+	}
 
-    public void incRight() {
-        right++;
-    }
+	public void setWrong(int wrong) {
+		this.wrong = wrong;
+	}
 
-    public void incWrong() {
-        wrong++;
-    }
+	public void setTodo(int todo) {
+		this.todo = todo;
+	}
 
-    public void decTodo() {
-        todo--;
-    }
+	public List<TrainingElem> getList() {
+		return list;
+	}
 
-    public TrainingElem getVocable() {
-        return vocable;
-    }
+	public void setList(List<TrainingElem> list) {
+		this.list = list;
+	}
 
-    public void setVocable(TrainingElem vocable) {
-        this.vocable = vocable;
-    }
+	public boolean isNeedInit() {
+		return needInit;
+	}
 
-    public int getTodo() {
-        return todo;
-    }
+	public void setNeedInit(boolean needInit) {
+		this.needInit = needInit;
+	}
 
-    public int getRight() {
-        return right;
-    }
+	public int getDirection() {
+		return direction;
+	}
 
-    public void setRight(int right) {
-        this.right = right;
-    }
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
 
-    public int getWrong() {
-        return wrong;
-    }
+	public int getFileFormat() {
+		return fileFormat;
+	}
 
-    public void setWrong(int wrong) {
-        this.wrong = wrong;
-    }
+	public void setFileFormat(int fileFormat) {
+		this.fileFormat = fileFormat;
+	}
 
-    public void setTodo(int todo) {
-        this.todo = todo;
-    }
+	public boolean hasConfigChanged() {
+		return configChanged;
+	}
 
-    public List<TrainingElem> getList() {
-        return list;
-    }
+	public void setConfigChanged(boolean configChanged) {
+		this.configChanged = configChanged;
+	}
 
-    public void setList(List<TrainingElem> list) {
-        this.list = list;
-    }
+	public File getCurrentDirectory() {
+		return currentDirectory;
+	}
 
-    public boolean isNeedInit() {
-        return needInit;
-    }
-
-    public void setNeedInit(boolean needInit) {
-        this.needInit = needInit;
-    }
-
-    public int getDirection() {
-        return direction;
-    }
-
-    public void setDirection(int direction) {
-        this.direction = direction;
-    }
-
-    public int getFileFormat() {
-        return fileFormat;
-    }
-
-    public void setFileFormat(int fileFormat) {
-        this.fileFormat = fileFormat;
-    }
-
-    public boolean hasConfigChanged() {
-        return configChanged;
-    }
-
-    public void setConfigChanged(boolean configChanged) {
-        this.configChanged = configChanged;
-    }
-
-    public File getCurrentDirectory() {
-        return currentDirectory;
-    }
-
-    public void setCurrentDirectory(File currentDirectory) {
-        this.currentDirectory = currentDirectory;
-    }
+	public void setCurrentDirectory(File currentDirectory) {
+		this.currentDirectory = currentDirectory;
+	}
 }

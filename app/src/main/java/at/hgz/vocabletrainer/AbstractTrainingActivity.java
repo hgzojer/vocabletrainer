@@ -1,5 +1,6 @@
 package at.hgz.vocabletrainer;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.view.Gravity;
@@ -9,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
+
 import at.hgz.vocabletrainer.set.TrainingSet;
 
 public abstract class AbstractTrainingActivity extends AppCompatActivity {

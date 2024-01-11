@@ -5,17 +5,17 @@
     android:layout_height="match_parent"
     android:layout_margin="20dp"
     android:orientation="horizontal"
-    tools:context="${relativePackage}.ImportActivity">
+    tools:context="${relativePackage}.ImportActivity" >
 
     <ImageButton
         android:id="@+id/buttonDelete"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_gravity="left|center_vertical"
-        android:layout_marginLeft="3dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginRight="6dp"
         android:layout_marginBottom="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="3dp"
         android:contentDescription="@string/deleteFile"
         android:src="@drawable/ic_action_button_delete" />
 
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="left|center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/listItemName"
@@ -41,8 +41,8 @@
             android:layout_margin="3dp"
             android:gravity="left|top"
             android:text="@string/dictionary1"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#888" />
+            android:textColor="#888"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
 </LinearLayout>

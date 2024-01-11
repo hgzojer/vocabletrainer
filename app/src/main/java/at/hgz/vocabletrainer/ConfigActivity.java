@@ -6,11 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import at.hgz.vocabletrainer.db.VocableOpenHelper;
 import at.hgz.vocabletrainer.set.TrainingSet;
@@ -60,6 +63,11 @@ public class ConfigActivity extends AppCompatActivity {
 			case FILE_FORMAT_CSV:
 				radioGroupFileFormat.check(R.id.radioFileFormat3);
 				break;
+		}
+
+		ActionBar actionBar = this.getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
     }
     
@@ -112,5 +120,24 @@ public class ConfigActivity extends AppCompatActivity {
 		})
 		.setNegativeButton(android.R.string.cancel, null).show();
     }
-    
+
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		int id = item.getItemId();
+		if (id == android.R.id.home) {
+            /*
+            Intent myIntent = new Intent(getApplicationContext(), DictionaryListActivity.class);
+            startActivityForResult(myIntent, 0);
+            return true;
+             */
+			Intent returnIntent = new Intent();
+			returnIntent.putExtra("result", "back");
+			setResult(RESULT_CANCELED, returnIntent);
+			finish();
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
 }

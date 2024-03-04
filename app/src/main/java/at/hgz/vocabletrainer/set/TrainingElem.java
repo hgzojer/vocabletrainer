@@ -46,12 +46,7 @@ public class TrainingElem {
 	public String[] getAlternatives() {
 		List<Vocable> pool = new LinkedList<>(vocables);
 		if (flipVocables) {
-			for (Iterator<Vocable> it = pool.iterator(); it.hasNext(); ) {
-				Vocable vocable = it.next();
-				if (vocable.getWord() == translation && vocable.getTranslation() == word) {
-					it.remove();
-				}
-			}
+			pool.removeIf(vocable -> vocable.getWord() == translation && vocable.getTranslation() == word);
 			if (pool.size() < 2) {
 				pool.add(new Vocable(-1, -1, translation + "a", word + "a"));
 				pool.add(new Vocable(-1, -1, translation + "o", word + "o"));
@@ -60,12 +55,7 @@ public class TrainingElem {
 			Vocable alt2 = pool.remove((int) (Math.random() * pool.size()));
 			return new String[] { alt1.getWord(), alt2.getWord() };
 		} else {
-			for (Iterator<Vocable> it = pool.iterator(); it.hasNext(); ) {
-				Vocable vocable = it.next();
-				if (vocable.getWord() == word && vocable.getTranslation() == translation) {
-					it.remove();
-				}
-			}
+			pool.removeIf(vocable -> vocable.getWord() == word && vocable.getTranslation() == translation);
 			if (pool.size() < 2) {
 				pool.add(new Vocable(-1, -1, word + "a", translation + "a"));
 				pool.add(new Vocable(-1, -1, word + "o", translation + "o"));
